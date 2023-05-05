@@ -1,7 +1,8 @@
 import EmailVerification from "../pages/email-verification";
 import Home from "../pages/home";
 import Index from "../pages/index";
-import MeEdit from "../pages/me/edit";
+import MeAccount from "../pages/me/account";
+import MeProfile from "../pages/me/profile";
 import NotFound from "../pages/not-found";
 import Onboard from "../pages/onboard";
 import SignIn from "../pages/sign-in";
@@ -10,7 +11,8 @@ const routes = [
   { path: "/email-verification", element: <EmailVerification /> },
   { path: "/home", element: <Home /> },
   { path: "/", element: <Index /> },
-  { path: "/me/edit", element: <MeEdit /> },
+  { path: "/me/account", element: <MeAccount /> },
+  { path: "/me/profile", element: <MeProfile /> },
   { path: "/not-found", element: <NotFound /> },
   { path: "/onboard", element: <Onboard /> },
   { path: "/sign-in", element: <SignIn /> },

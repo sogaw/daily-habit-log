@@ -1,5 +1,5 @@
 import { gql, useMutation } from "@apollo/client";
-import { Box, Button, Container, HStack, Input, Link, Stack } from "@chakra-ui/react";
+import { Button, Container, FormControl, FormLabel, HStack, Input, Link, Stack } from "@chakra-ui/react";
 import imageCompression from "browser-image-compression";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { useForm } from "react-hook-form";
@@ -26,9 +26,9 @@ type UpdateProfileForm = {
   name: string;
 };
 
-const MeEdit = Guard("WithOnboard", () => {
+const SettingsProfile = Guard("WithOnboard", () => {
   const toast = useAppToast();
-  const { authUser, me } = useMe();
+  const { me } = useMe();
   const { register, handleSubmit } = useForm<UpdateProfileForm>({ defaultValues: { name: me.name } });
   const iconInput = useImageInput({ defaultImageUrl: me.iconUrl || undefined });
 
@@ -56,16 +56,11 @@ const MeEdit = Guard("WithOnboard", () => {
   );
 
   return (
-    <Layout title="Edit Profile" backPath="/home">
+    <Layout title="Profile" backPath="/home">
       <Container maxW="md">
         <Stack spacing="4" as="form" onSubmit={handleSubmit(onSubmit)}>
-          <Stack>
-            <Box fontWeight="semibold">Email</Box>
-            <Box>{authUser.email}</Box>
-          </Stack>
-
-          <Stack>
-            <Box fontWeight="semibold">Icon</Box>
+          <FormControl>
+            <FormLabel>Icon</FormLabel>
             <Input type="file" accept="image/*" display="none" ref={iconInput.ref} onChange={iconInput.onChange} />
             <Stack>
               <AppAvatar alignSelf="center" src={iconInput.imageUrl} />
@@ -80,12 +75,12 @@ const MeEdit = Guard("WithOnboard", () => {
                 </Link>
               )}
             </Stack>
-          </Stack>
+          </FormControl>
 
-          <Stack>
-            <Box fontWeight="semibold">Name</Box>
+          <FormControl>
+            <FormLabel>Name</FormLabel>
             <Input type="text" required {...register("name")} placeholder="Name" />
-          </Stack>
+          </FormControl>
 
           <Button type="submit" isDisabled={loading}>
             Post
@@ -96,4 +91,4 @@ const MeEdit = Guard("WithOnboard", () => {
   );
 });
 
-export default MeEdit;
+export default SettingsProfile;

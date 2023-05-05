@@ -1,5 +1,5 @@
 import { gql, useMutation } from "@apollo/client";
-import { Box, Button, Flex, HStack, Input, Link, Stack } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormLabel, HStack, Input, Link, Stack } from "@chakra-ui/react";
 import imageCompression from "browser-image-compression";
 import { getAuth, signOut } from "firebase/auth";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
@@ -69,13 +69,13 @@ const Onboard = Guard("OnboardPage", () => {
         </Box>
 
         <Stack spacing="4" as="form" onSubmit={handleSubmit(onSubmit)}>
-          <Stack>
-            <Box fontWeight="semibold">Email</Box>
+          <FormControl>
+            <FormLabel>Email</FormLabel>
             <Box>{authUser.email}</Box>
-          </Stack>
+          </FormControl>
 
-          <Stack>
-            <Box fontWeight="semibold">Icon</Box>
+          <FormControl>
+            <FormLabel>Icon</FormLabel>
             <Input type="file" accept="image/*" display="none" ref={iconInput.ref} onChange={iconInput.onChange} />
             <Stack>
               <AppAvatar alignSelf="center" src={iconInput.imageUrl} />
@@ -90,12 +90,12 @@ const Onboard = Guard("OnboardPage", () => {
                 </Link>
               )}
             </Stack>
-          </Stack>
+          </FormControl>
 
-          <Stack>
-            <Box fontWeight="semibold">Name</Box>
+          <FormControl>
+            <FormLabel>Name</FormLabel>
             <Input type="text" required {...register("name")} placeholder="Name" />
-          </Stack>
+          </FormControl>
 
           <Flex direction="column">
             <Button type="submit" isDisabled={loading}>

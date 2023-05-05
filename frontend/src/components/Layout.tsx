@@ -1,4 +1,3 @@
-import { gql, useMutation } from "@apollo/client";
 import {
   Box,
   Container,
@@ -16,15 +15,6 @@ import { ReactNode } from "react";
 import { FaArrowLeft, FaBars } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-import { DeleteAccountDocument } from "@/generated/gql/graphql";
-import { useAppToast } from "@/hooks/use-app-toast";
-
-gql`
-  mutation deleteAccount {
-    deleteAccount
-  }
-`;
-
 export const Layout = ({
   title = "Daily Habit Log",
   backPath,
@@ -35,26 +25,10 @@ export const Layout = ({
   children: ReactNode;
 }) => {
   const navigate = useNavigate();
-  const toast = useAppToast();
 
   const onSignOut = async () => {
     await signOut(getAuth());
     location.href = "/";
-  };
-
-  const [deleteAccount] = useMutation(DeleteAccountDocument, {
-    onCompleted: async () => {
-      await signOut(getAuth());
-      location.href = "/";
-    },
-    onError: (e) => {
-      console.error(e);
-      toast.error();
-    },
-  });
-
-  const onDeleteAccount = async () => {
-    if (confirm("Are you sure?")) await deleteAccount();
   };
 
   return (
@@ -78,10 +52,10 @@ export const Layout = ({
           <Menu placement="bottom-end">
             <MenuButton as={IconButton} icon={<Icon as={FaBars} />} size="sm" variant="ghost" />
             <MenuList>
-              <MenuItem onClick={() => navigate("/me/edit")}>Edit profile</MenuItem>
+              <MenuItem onClick={() => navigate("/me/profile")}>Profile</MenuItem>
+              <MenuItem onClick={() => navigate("/me/account")}>Account</MenuItem>
               <MenuDivider />
               <MenuItem onClick={onSignOut}>Sign out</MenuItem>
-              <MenuItem onClick={onDeleteAccount}>Delete account</MenuItem>
             </MenuList>
           </Menu>
         </Box>
