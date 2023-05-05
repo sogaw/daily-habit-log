@@ -1,3 +1,3 @@
 import { initializeApp } from "firebase-admin/app";
 
-initializeApp({ storageBucket: "fire-gql-template.appspot.com" });
+initializeApp({ storageBucket: "daily-habit-log.appspot.com" });

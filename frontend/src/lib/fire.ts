@@ -4,13 +4,13 @@ import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { connectStorageEmulator, getStorage } from "firebase/storage";
 
 initializeApp({
-  apiKey: "AIzaSyAG2HdQcDgmOhlSljZ6aSO4VrbONlaxnng",
-  authDomain: "fire-gql-template.firebaseapp.com",
-  projectId: "fire-gql-template",
-  storageBucket: "fire-gql-template.appspot.com",
-  messagingSenderId: "551203617339",
-  appId: "1:551203617339:web:27c5c65f898decb2507a1e",
-  measurementId: "G-ZLMJSQB24H",
+  apiKey: "AIzaSyB8UYrIreCHuV50CBmxmdEwNShNYnPVmZg",
+  authDomain: "daily-habit-log.firebaseapp.com",
+  projectId: "daily-habit-log",
+  storageBucket: "daily-habit-log.appspot.com",
+  messagingSenderId: "721377545633",
+  appId: "1:721377545633:web:9afddb4d84724926da0fe0",
+  measurementId: "G-K7R35NM5NC",
 });
 
 if (!import.meta.env.PROD) {

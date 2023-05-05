@@ -26,7 +26,7 @@ gql`
 `;
 
 export const Layout = ({
-  title = "Fire GQL Template",
+  title = "Daily Habit Log",
   backPath,
   children,
 }: {

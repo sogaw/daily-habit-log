@@ -1,3 +1,4 @@
-- [] grep Fire-GQL-Template and change it to your app name
-- [] add .env.production.local and set VITE_APP_BACKEND_URL
+- [] rename fire-gql-template to YOUR_PROJECT_ID
+- [] rename Fire GQL Template to YOUR_APP_NAME
 - [] set firebase config on src/lib/fire
+- [] add .env.production.local and set VITE_APP_BACKEND_URL
