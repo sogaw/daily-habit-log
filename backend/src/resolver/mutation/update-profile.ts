@@ -23,9 +23,6 @@ builder.mutationField("updateProfile", (t) =>
     type: User,
     args: { input: t.arg({ type: UpdateProfileInput, required: true }) },
     resolve: async (_root, args, { auth, datasource }) => {
-      // DEBUG
-      // console.debug("[Mutation] updateProfile")
-
       parseAuth(auth);
       parseSchema(UpdateProfileInputSchema, args.input);
 

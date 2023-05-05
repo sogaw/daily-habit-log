@@ -7,9 +7,6 @@ builder.queryField("viewer", (t) =>
     type: User,
     nullable: true,
     resolve: async (_root, _args, { auth, datasource }) => {
-      // Debug
-      // console.debug("[Query] viewer");
-
       return auth ? datasource.users.findOneById(auth.uid) : null;
     },
   })

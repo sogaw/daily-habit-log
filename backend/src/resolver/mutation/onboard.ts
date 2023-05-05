@@ -22,9 +22,6 @@ builder.mutationField("onboard", (t) =>
     type: User,
     args: { input: t.arg({ type: OnboardInput, required: true }) },
     resolve: async (_root, args, { auth, datasource }) => {
-      // DEBUG
-      // console.debug("[Mutation] onboard");
-
       parseAuth(auth);
       parseSchema(OnboardInputSchema, args.input);
 

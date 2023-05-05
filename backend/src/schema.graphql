@@ -8,10 +8,29 @@ input UpdateProfileInput {
   iconPath: String
 }
 
+input CreateHabitInput {
+  name: String!
+  description: String!
+}
+
 type User {
   id: ID!
   name: String!
   iconUrl: String
+  habits: [Habit!]!
+}
+
+type Habit {
+  id: ID!
+  name: String!
+  description: String!
+  habitRecords: [HabitRecord!]!
+}
+
+type HabitRecord {
+  id: ID!
+  date: String!
+  status: String!
 }
 
 type Query {
@@ -20,6 +39,7 @@ type Query {
 
 type Mutation {
   onboard(input: OnboardInput!): User!
-  deleteAccount: ID!
   updateProfile(input: UpdateProfileInput!): User!
+  deleteAccount: ID!
+  createHabit(input: CreateHabitInput!): Habit!
 }

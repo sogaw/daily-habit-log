@@ -1,6 +1,6 @@
 import { getFirestore } from "firebase-admin/firestore";
 
-import { UsersCollection } from "@/datasource/fire-model";
+import { HabitRecordsCollectionGroup, HabitsCollectionGroup, UsersCollection } from "@/datasource/fire-model";
 import { decodeJWT, extractJWT } from "@/lib/auth";
 import { Context } from "@/types";
 
@@ -12,7 +12,11 @@ export const authContext = async ({ request }: { request: Request }): Promise<Co
 
 export const datasourceContext = (): Context["datasource"] => {
   const db = getFirestore();
+
   const users = new UsersCollection(db.collection("users"));
 
-  return { db, users };
+  const habits = new HabitsCollectionGroup(db.collectionGroup("habits"));
+  const habitRecords = new HabitRecordsCollectionGroup(db.collectionGroup("habitRecords"));
+
+  return { db, users, habits, habitRecords };
 };

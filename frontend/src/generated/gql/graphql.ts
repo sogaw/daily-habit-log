@@ -14,11 +14,37 @@ export type Scalars = {
   Float: number;
 };
 
+export type CreateHabitInput = {
+  description: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type Habit = {
+  __typename?: 'Habit';
+  description: Scalars['String'];
+  habitRecords: Array<HabitRecord>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+};
+
+export type HabitRecord = {
+  __typename?: 'HabitRecord';
+  date: Scalars['String'];
+  id: Scalars['ID'];
+  status: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createHabit: Habit;
   deleteAccount: Scalars['ID'];
   onboard: User;
   updateProfile: User;
+};
+
+
+export type MutationCreateHabitArgs = {
+  input: CreateHabitInput;
 };
 
 
@@ -48,6 +74,7 @@ export type UpdateProfileInput = {
 
 export type User = {
   __typename?: 'User';
+  habits: Array<Habit>;
   iconUrl?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   name: Scalars['String'];

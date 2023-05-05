@@ -1,4 +1,4 @@
-import { User } from "@/datasource";
+import { Habit, User } from "@/datasource";
 import { getSignedUrl } from "@/lib/storage";
 
 import { builder } from "../builder";
@@ -14,6 +14,10 @@ builder.objectType(User, {
         if (path) return getSignedUrl(path);
       },
       nullable: true,
+    }),
+    habits: t.field({
+      type: [Habit],
+      resolve: (user) => user.habits.findManyByQuery((ref) => ref.orderBy("updatedAt", "desc")),
     }),
   }),
 });
