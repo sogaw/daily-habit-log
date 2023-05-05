@@ -1,0 +1,25 @@
+input OnboardInput {
+  name: String!
+  iconPath: String
+}
+
+input UpdateProfileInput {
+  name: String!
+  iconPath: String
+}
+
+type User {
+  id: ID!
+  name: String!
+  iconUrl: String
+}
+
+type Query {
+  viewer: User
+}
+
+type Mutation {
+  onboard(input: OnboardInput!): User!
+  deleteAccount: ID!
+  updateProfile(input: UpdateProfileInput!): User!
+}

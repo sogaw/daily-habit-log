@@ -1,0 +1,4 @@
+- [] gcloud init
+- [] gcloud artifacts repositories create backend-repository --location asia-northeast1 --repository-format docker
+- [] enable iamcredentials.googleapis.com (?)
+- [] add "Service Account Token Creator" to `xxx-compute@developer.gserviceaccount.com`

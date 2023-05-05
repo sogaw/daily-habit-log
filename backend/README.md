@@ -1,0 +1,13 @@
+- 開発
+  - yarn dev:all
+  - または
+  - yarn fire:emu:dev
+  - yarn dev
+- テスト
+  - yarn fire:emu:test
+  - yarn test
+- GraphQL スキーマ生成
+  - yarn gen:gql
+- デプロイ
+  - yarn gcp:deploy
+  - yarn fire:deploy
