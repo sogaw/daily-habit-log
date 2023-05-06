@@ -4,15 +4,10 @@ type Constructor<T, TData extends DocumentData> = {
   new (id: string, ref: DocumentReference, data: TData): T;
 };
 
-type FireDocumentObject<TData extends DocumentData> = {
-  id: string;
-  ref: DocumentReference;
-} & TData;
-
 export class FireDocument<TData extends DocumentData> {
   constructor(public id: string, public ref: DocumentReference, public data: TData) {}
 
-  static create<T, TData extends DocumentData>(
+  static build<T, TData extends DocumentData>(
     this: Constructor<T, TData>,
     { ref }: { ref: CollectionReference },
     id: string | null,
@@ -26,17 +21,8 @@ export class FireDocument<TData extends DocumentData> {
     return new this(snapshot.id, snapshot.ref, snapshot.data() as TData);
   }
 
-  static fromObject<T, TData extends DocumentData>(this: Constructor<T, TData>, object: FireDocumentObject<TData>) {
-    const { id, ref, ...data } = object;
-    return new this(id, ref, data as unknown as TData);
-  }
-
-  update(data: Partial<TData>) {
+  updateData(data: Partial<TData>) {
     this.data = { ...this.data, ...data };
-  }
-
-  toObject() {
-    return { id: this.id, ref: this.ref, ...this.data };
   }
 
   toBatchInput() {

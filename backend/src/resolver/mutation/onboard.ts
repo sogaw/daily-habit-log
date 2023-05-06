@@ -25,7 +25,7 @@ builder.mutationField("onboard", (t) =>
       parseAuth(auth);
       parseSchema(OnboardInputSchema, args.input);
 
-      const user = User.createFrom(datasource.users, {
+      const user = User.create(datasource.users, {
         id: auth.uid,
         name: args.input.name,
         iconPath: args.input.iconPath,

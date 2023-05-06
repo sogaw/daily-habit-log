@@ -18,13 +18,13 @@ export type HabitRecordData = {
 };
 
 export class HabitRecord extends FireDocument<HabitRecordData> {
-  static createFrom(
+  static create(
     collection: HabitRecordsCollection,
     { date, status, userId, habitId }: Pick<HabitRecordData, "date" | "status" | "userId" | "habitId">
   ) {
     const id = genId();
     const now = genTimestamp();
-    return this.create(collection, id, {
+    return this.build(collection, id, {
       id,
       date,
       status,
@@ -35,8 +35,8 @@ export class HabitRecord extends FireDocument<HabitRecordData> {
     });
   }
 
-  updateFrom({ status }: Pick<HabitRecordData, "status">) {
-    this.update({ status, updatedAt: genTimestamp() });
+  update({ status }: Pick<HabitRecordData, "status">) {
+    this.updateData({ status, updatedAt: genTimestamp() });
   }
 }
 
@@ -62,7 +62,7 @@ export class HabitRecordsCollection extends FireCollection<HabitRecord> {
     const filled = interval.map((habitRecord) =>
       habitRecord instanceof HabitRecord
         ? habitRecord
-        : HabitRecord.createFrom(habit.habitRecords, {
+        : HabitRecord.create(habit.habitRecords, {
             date: habitRecord.date,
             status: "PENDING",
             userId: habit.data.userId,

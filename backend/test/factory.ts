@@ -20,7 +20,7 @@ export const TimestampFactory = (dateString: string) => {
 export const UserFactory = (collection: UsersCollection, id: string | null, data: Partial<UserData>) => {
   id = id || genId();
   const now = genTimestamp();
-  return User.create(collection, id, {
+  return User.build(collection, id, {
     id,
     name: "MyString",
     createdAt: now,
@@ -37,7 +37,7 @@ export const HabitFactory = (
 ) => {
   id = id || genId();
   const now = genTimestamp();
-  return Habit.create(collection, id, {
+  return Habit.build(collection, id, {
     id,
     name: "MyString",
     description: "MyString",
@@ -54,9 +54,9 @@ export const HabitRecordFactory = (
 ) => {
   id = id || genId();
   const now = genTimestamp();
-  return HabitRecord.create(collection, id, {
+  return HabitRecord.build(collection, id, {
     id,
-    date: "2023-01-01",
+    date: "1970-01-01",
     status: "PENDING",
     createdAt: now,
     updatedAt: now,

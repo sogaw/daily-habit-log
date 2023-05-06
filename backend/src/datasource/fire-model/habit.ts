@@ -17,13 +17,13 @@ export type HabitData = {
 export class Habit extends FireDocument<HabitData> {
   habitRecords = new HabitRecordsCollection(this.ref.collection("habitRecords"));
 
-  static createFrom(
+  static create(
     collection: HabitsCollection,
     { name, description, userId }: Pick<HabitData, "name" | "description" | "userId">
   ) {
     const id = genId();
     const now = genTimestamp();
-    return this.create(collection, id, {
+    return this.build(collection, id, {
       id,
       name,
       description,

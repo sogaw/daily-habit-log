@@ -16,9 +16,9 @@ export type UserData = {
 export class User extends FireDocument<UserData> {
   habits = new HabitsCollection(this.ref.collection("habits"));
 
-  static createFrom(collection: UsersCollection, { id, name, iconPath }: Pick<UserData, "id" | "name" | "iconPath">) {
+  static create(collection: UsersCollection, { id, name, iconPath }: Pick<UserData, "id" | "name" | "iconPath">) {
     const now = genTimestamp();
-    return this.create(collection, id, {
+    return this.build(collection, id, {
       id,
       name,
       iconPath,
@@ -27,8 +27,8 @@ export class User extends FireDocument<UserData> {
     });
   }
 
-  updateFrom({ name, iconPath }: Pick<UserData, "name" | "iconPath">) {
-    this.update({ name, iconPath, updatedAt: genTimestamp() });
+  update({ name, iconPath }: Pick<UserData, "name" | "iconPath">) {
+    this.updateData({ name, iconPath, updatedAt: genTimestamp() });
   }
 }
 
