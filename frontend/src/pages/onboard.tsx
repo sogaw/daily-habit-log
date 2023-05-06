@@ -45,7 +45,7 @@ const Onboard = Guard("OnboardPage", () => {
         return;
       }
 
-      await onboard({ variables: { input: { name: v.name } } });
+      await onboard({ variables: { input: { name: v.name, iconPath: "" } } });
     },
     {
       onCompleted: () => toast.success("Onboard."),

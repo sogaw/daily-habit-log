@@ -58,7 +58,7 @@ export type MutationUpdateProfileArgs = {
 };
 
 export type OnboardInput = {
-  iconPath?: InputMaybe<Scalars['String']>;
+  iconPath: Scalars['String'];
   name: Scalars['String'];
 };
 
@@ -68,7 +68,7 @@ export type Query = {
 };
 
 export type UpdateProfileInput = {
-  iconPath?: InputMaybe<Scalars['String']>;
+  iconPath: Scalars['String'];
   name: Scalars['String'];
 };
 

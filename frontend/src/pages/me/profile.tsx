@@ -43,7 +43,7 @@ const SettingsProfile = Guard("WithOnboard", () => {
         return;
       }
 
-      const iconPath = iconInput.imageUrl ? `users/${me.id}/icon` : null;
+      const iconPath = iconInput.imageUrl ? `users/${me.id}/icon` : "";
       await updateProfile({ variables: { input: { name: v.name, iconPath } } });
     },
     {

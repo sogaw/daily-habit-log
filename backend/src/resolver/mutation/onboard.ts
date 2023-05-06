@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import { User } from "@/datasource";
-import { genTimestamp } from "@/lib/gen";
 import { parseAuth, parseSchema } from "@/lib/parse";
 
 import { builder } from "../builder";
@@ -9,13 +8,13 @@ import { builder } from "../builder";
 const OnboardInput = builder.inputType("OnboardInput", {
   fields: (t) => ({
     name: t.string({ required: true }),
-    iconPath: t.string(),
+    iconPath: t.string({ required: true }),
   }),
 });
 
 const OnboardInputSchema = z.object({
   name: z.string().min(1),
-  iconPath: z.string().min(1).optional().nullable(),
+  iconPath: z.string(),
 });
 
 builder.mutationField("onboard", (t) =>
@@ -26,13 +25,10 @@ builder.mutationField("onboard", (t) =>
       parseAuth(auth);
       parseSchema(OnboardInputSchema, args.input);
 
-      const now = genTimestamp();
-      const user = User.create(datasource.users, auth.uid, {
+      const user = User.createFrom(datasource.users, {
         id: auth.uid,
         name: args.input.name,
-        iconPath: args.input.iconPath || null,
-        createdAt: now,
-        updatedAt: now,
+        iconPath: args.input.iconPath,
       });
 
       await user.save();

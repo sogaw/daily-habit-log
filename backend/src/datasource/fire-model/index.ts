@@ -17,7 +17,7 @@ import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model
 export type UserData = {
   id: string;
   name: string;
-  iconPath: string | null;
+  iconPath: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 };
@@ -43,17 +43,59 @@ export type HabitRecordData = {
 
 export class User extends FireDocument<UserData> {
   habits = new HabitsCollection(this.ref.collection("habits"));
+
+  static createFrom(collection: UsersCollection, { id, name, iconPath }: Pick<UserData, "id" | "name" | "iconPath">) {
+    const now = genTimestamp();
+    return this.create(collection, id, {
+      id,
+      name,
+      iconPath,
+      createdAt: now,
+      updatedAt: now,
+    });
+  }
+
+  updateFrom({ name, iconPath }: Pick<UserData, "name" | "iconPath">) {
+    this.update({ name, iconPath, updatedAt: genTimestamp() });
+  }
 }
 
 export class Habit extends FireDocument<HabitData> {
   habitRecords = new HabitRecordsCollection(this.ref.collection("habitRecords"));
+
+  static createFrom(
+    collection: HabitsCollection,
+    { name, description, userId }: Pick<HabitData, "name" | "description" | "userId">
+  ) {
+    const id = genId();
+    const now = genTimestamp();
+    return this.create(collection, id, {
+      id,
+      name,
+      description,
+      createdAt: now,
+      updatedAt: now,
+      userId,
+    });
+  }
 }
 
 export class HabitRecord extends FireDocument<HabitRecordData> {
-  static createFrom(collection: HabitRecordsCollection, data: Pick<HabitRecordData, "date" | "userId" | "habitId">) {
+  static createFrom(
+    collection: HabitRecordsCollection,
+    { date, userId, habitId }: Pick<HabitRecordData, "date" | "userId" | "habitId">
+  ) {
     const id = genId();
     const now = genTimestamp();
-    return this.create(collection, id, { id, status: "PENDING", createdAt: now, updatedAt: now, ...data });
+    return this.create(collection, id, {
+      id,
+      date,
+      status: "PENDING",
+      createdAt: now,
+      updatedAt: now,
+      userId,
+      habitId,
+    });
   }
 }
 
@@ -69,6 +111,10 @@ export class UsersCollection extends FireCollection<User> {
 export class HabitsCollection extends FireCollection<Habit> {
   constructor(ref: CollectionReference) {
     super(ref, (snap) => Habit.fromSnapshot(snap));
+  }
+
+  ordered() {
+    return this.findManyByQuery((ref) => ref.orderBy("updatedAt", "desc"));
   }
 }
 

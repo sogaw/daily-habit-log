@@ -1,11 +1,11 @@
 input OnboardInput {
   name: String!
-  iconPath: String
+  iconPath: String!
 }
 
 input UpdateProfileInput {
   name: String!
-  iconPath: String
+  iconPath: String!
 }
 
 input CreateHabitInput {

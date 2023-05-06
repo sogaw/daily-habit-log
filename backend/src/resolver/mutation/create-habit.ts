@@ -25,14 +25,9 @@ builder.mutationField("createHabit", (t) =>
 
       const me = await datasource.users.findOne(auth.uid);
 
-      const id = genId();
-      const now = genTimestamp();
-      const habit = Habit.create(me.habits, id, {
-        id,
+      const habit = Habit.createFrom(me.habits, {
         name: args.input.name,
         description: args.input.description,
-        createdAt: now,
-        updatedAt: now,
         userId: me.id,
       });
 

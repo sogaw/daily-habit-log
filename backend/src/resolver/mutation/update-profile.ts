@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import { User } from "@/datasource";
-import { genTimestamp } from "@/lib/gen";
 import { parseAuth, parseSchema } from "@/lib/parse";
 import { deleteFile } from "@/lib/storage";
 
@@ -10,13 +9,13 @@ import { builder } from "../builder";
 const UpdateProfileInput = builder.inputType("UpdateProfileInput", {
   fields: (t) => ({
     name: t.string({ required: true }),
-    iconPath: t.string(),
+    iconPath: t.string({ required: true }),
   }),
 });
 
 const UpdateProfileInputSchema = z.object({
   name: z.string().min(1),
-  iconPath: z.string().min(1).optional().nullable(),
+  iconPath: z.string(),
 });
 
 builder.mutationField("updateProfile", (t) =>
@@ -31,7 +30,7 @@ builder.mutationField("updateProfile", (t) =>
 
       if (!args.input.iconPath && user.data.iconPath) await deleteFile(user.data.iconPath);
 
-      user.update({ name: args.input.name, iconPath: args.input.iconPath || null, updatedAt: genTimestamp() });
+      user.updateFrom({ name: args.input.name, iconPath: args.input.iconPath });
 
       await user.save();
 

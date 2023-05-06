@@ -17,7 +17,7 @@ builder.objectType(User, {
     }),
     habits: t.field({
       type: [Habit],
-      resolve: (user) => user.habits.findManyByQuery((ref) => ref.orderBy("updatedAt", "desc")),
+      resolve: (user) => user.habits.ordered(),
     }),
   }),
 });
