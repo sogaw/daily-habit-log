@@ -18,11 +18,11 @@ builder.mutationField("updateProfile", (t) =>
     resolve: async (_root, args, { auth, datasource }) => {
       parseAuth(auth);
 
-      const user = await datasource.users.findOne(auth.uid);
+      const me = await datasource.users.findOne(auth.uid);
 
-      if (!args.input.iconPath && user.data.iconPath) await deleteFile(user.data.iconPath);
+      if (!args.input.iconPath && me.data.iconPath) await deleteFile(me.data.iconPath);
 
-      return user.update({ name: args.input.name, iconPath: args.input.iconPath }).save();
+      return me.update({ name: args.input.name, iconPath: args.input.iconPath }).save();
     },
   })
 );

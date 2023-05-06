@@ -32,6 +32,10 @@ export class Habit extends FireDocument<HabitData> {
       userId,
     });
   }
+
+  update({ name, description }: Pick<HabitData, "name" | "description">) {
+    return this.updateData({ name, description, updatedAt: genTimestamp() });
+  }
 }
 
 export class HabitsCollection extends FireCollection<Habit> {

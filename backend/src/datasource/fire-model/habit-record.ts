@@ -5,7 +5,6 @@ import { AsiaTokyoISO, DateFromISO } from "@/lib/date";
 import { genId, genNow, genTimestamp } from "@/lib/gen";
 
 import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model-package";
-import { Habit } from "./habit";
 
 export type HabitRecordData = {
   id: string;
@@ -45,7 +44,7 @@ export class HabitRecordsCollection extends FireCollection<HabitRecord> {
     super(ref, (snap) => HabitRecord.fromSnapshot(snap));
   }
 
-  async ordered({ habit, before }: { habit: Habit; before: string }) {
+  async ordered({ userId, habitId, before }: { userId: string; habitId: string; before: string }) {
     const habitRecords = await this.findManyByQuery((ref) => ref.orderBy("date", "desc").endAt(before));
 
     const interval = eachDayOfInterval({ start: new Date(before), end: genNow() })
@@ -62,11 +61,11 @@ export class HabitRecordsCollection extends FireCollection<HabitRecord> {
     const filled = interval.map((habitRecord) =>
       habitRecord instanceof HabitRecord
         ? habitRecord
-        : HabitRecord.create(habit.habitRecords, {
+        : HabitRecord.create(this, {
             date: habitRecord.date,
             status: "PENDING",
-            userId: habit.data.userId,
-            habitId: habit.id,
+            userId,
+            habitId,
           })
     );
 

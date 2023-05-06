@@ -19,7 +19,11 @@ builder.objectType(Habit, {
         const habitCreatedAt = habit.data.createdAt.toDate();
         const [before] = [sixDaysAgo, habitCreatedAt].sort(compareDesc);
 
-        return habit.habitRecords.ordered({ habit, before: DateFromISO(AsiaTokyoISO(before)) });
+        return habit.habitRecords.ordered({
+          userId: habit.data.userId,
+          habitId: habit.id,
+          before: DateFromISO(AsiaTokyoISO(before)),
+        });
       },
     }),
     tooHard: t.boolean({
@@ -28,7 +32,11 @@ builder.objectType(Habit, {
         const habitCreatedAt = habit.data.createdAt.toDate();
         const [before] = [twoDaysAgo, habitCreatedAt].sort(compareDesc);
 
-        const habitRecords = await habit.habitRecords.ordered({ habit, before: DateFromISO(AsiaTokyoISO(before)) });
+        const habitRecords = await habit.habitRecords.ordered({
+          userId: habit.data.userId,
+          habitId: habit.id,
+          before: DateFromISO(AsiaTokyoISO(before)),
+        });
 
         return habitRecords.filter((habitRecord) => habitRecord.data.status == "SUCCESS").length == 0;
       },

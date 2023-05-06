@@ -13,12 +13,10 @@ export const decodeJWT = async (token: string): Promise<Auth> => {
   try {
     const decoded = await getAuth().verifyIdToken(token);
     return decoded;
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     // NOTE: frontend で token を refresh する
     if (e?.errorInfo?.code == "auth/id-token-revoked") throw new Unauthorized("Unauthorized. Token revoked");
-
     throw new Unauthorized();
   }
 };
