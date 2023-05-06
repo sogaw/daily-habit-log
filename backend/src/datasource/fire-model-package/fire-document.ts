@@ -23,6 +23,7 @@ export class FireDocument<TData extends DocumentData> {
 
   updateData(data: Partial<TData>) {
     this.data = { ...this.data, ...data };
+    return this;
   }
 
   toBatchInput() {
@@ -39,14 +40,14 @@ export class FireDocument<TData extends DocumentData> {
   }
 
   save() {
-    return this.ref.set(this.data);
+    return this.ref.set(this.data).then(() => this);
   }
 
   destroy() {
-    return this.ref.delete();
+    return this.ref.delete().then(() => this);
   }
 
   recursiveDestroy() {
-    return this.ref.firestore.recursiveDelete(this.ref);
+    return this.ref.firestore.recursiveDelete(this.ref).then(() => this);
   }
 }

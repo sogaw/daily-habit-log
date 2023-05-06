@@ -36,7 +36,7 @@ export class HabitRecord extends FireDocument<HabitRecordData> {
   }
 
   update({ status }: Pick<HabitRecordData, "status">) {
-    this.updateData({ status, updatedAt: genTimestamp() });
+    return this.updateData({ status, updatedAt: genTimestamp() });
   }
 }
 

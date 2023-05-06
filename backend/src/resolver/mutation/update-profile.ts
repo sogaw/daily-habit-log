@@ -22,10 +22,7 @@ builder.mutationField("updateProfile", (t) =>
 
       if (!args.input.iconPath && user.data.iconPath) await deleteFile(user.data.iconPath);
 
-      user.update({ name: args.input.name, iconPath: args.input.iconPath });
-      await user.save();
-
-      return user;
+      return user.update({ name: args.input.name, iconPath: args.input.iconPath }).save();
     },
   })
 );

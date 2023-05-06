@@ -24,21 +24,15 @@ builder.mutationField("updateHabitRecord", (t) =>
       const existsHabitRecord = await habit.habitRecords.findByDate(args.input.date);
 
       if (existsHabitRecord) {
-        existsHabitRecord.update({ status: args.input.status });
-        await existsHabitRecord.save();
-
-        return existsHabitRecord;
+        return existsHabitRecord.update({ status: args.input.status }).save();
       }
 
-      const habitRecord = HabitRecord.create(habit.habitRecords, {
+      return HabitRecord.create(habit.habitRecords, {
         date: args.input.date,
         status: args.input.status,
         userId: me.id,
         habitId: habit.id,
-      });
-      await habitRecord.save();
-
-      return habitRecord;
+      }).save();
     },
   })
 );

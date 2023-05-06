@@ -28,7 +28,7 @@ export class User extends FireDocument<UserData> {
   }
 
   update({ name, iconPath }: Pick<UserData, "name" | "iconPath">) {
-    this.updateData({ name, iconPath, updatedAt: genTimestamp() });
+    return this.updateData({ name, iconPath, updatedAt: genTimestamp() });
   }
 }
 

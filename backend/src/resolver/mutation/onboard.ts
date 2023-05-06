@@ -17,14 +17,11 @@ builder.mutationField("onboard", (t) =>
     resolve: async (_root, args, { auth, datasource }) => {
       parseAuth(auth);
 
-      const user = User.create(datasource.users, {
+      return User.create(datasource.users, {
         id: auth.uid,
         name: args.input.name,
         iconPath: args.input.iconPath,
-      });
-      await user.save();
-
-      return user;
+      }).save();
     },
   })
 );
