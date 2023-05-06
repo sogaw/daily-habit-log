@@ -1,12 +1,14 @@
 import { gql, Reference, useMutation, useQuery } from "@apollo/client";
-import { Box, Button, Center, Divider, Flex, HStack, Icon, Spinner, Stack } from "@chakra-ui/react";
+import { Box, Button, Center, Divider, Flex, HStack, Icon, Link, Spinner, Stack } from "@chakra-ui/react";
 import { FaPen, FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 import { Layout } from "@/components/Layout";
 import { DeleteHabitDocument, HabitsDocument, UpdateHabitRecordDocument } from "@/generated/gql/graphql";
 import { HabitRecordStatus } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
 import { useAppToast } from "@/hooks/use-app-toast";
+import { useMe } from "@/providers/auth";
 
 gql`
   query habits {
@@ -54,7 +56,9 @@ const nextStatus = { SUCCESS: "FAILED", FAILED: "PENDING", PENDING: "SUCCESS" } 
 const statusColor = { SUCCESS: "green", FAILED: "red", PENDING: "gray" } as const;
 
 const Home = Guard("WithOnboard", () => {
+  const navigate = useNavigate();
   const toast = useAppToast();
+  const { me } = useMe();
 
   const { data, loading } = useQuery(HabitsDocument);
   const habits = data?.viewer?.habits;
@@ -72,6 +76,10 @@ const Home = Guard("WithOnboard", () => {
   const [deleteHabit] = useMutation(DeleteHabitDocument, {
     update: (cache, { data }) => {
       cache.modify({
+        id: cache.identify({
+          __typename: "User",
+          id: me.id,
+        }),
         fields: {
           habits: (existing: Reference[] = [], { readField }) => {
             return existing.filter((habitRef) => readField("id", habitRef) != data?.deleteHabit.id);
@@ -100,6 +108,12 @@ const Home = Guard("WithOnboard", () => {
         </Center>
       )}
 
+      {habits && habits.length == 0 && (
+        <Center py="4">
+          <Link onClick={() => navigate("/habits/new")}>Add new habit</Link>
+        </Center>
+      )}
+
       {habits && (
         <Stack py="4" spacing="4">
           {habits.map((habit) => (
@@ -113,7 +127,7 @@ const Home = Guard("WithOnboard", () => {
 
                     <HStack>
                       {!habit.tooHard && (
-                        <Button size="xs">
+                        <Button size="xs" onClick={() => navigate(`/habits/${habit.id}/edit`)}>
                           <Icon as={FaPen} />
                         </Button>
                       )}

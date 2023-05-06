@@ -1,4 +1,6 @@
 import EmailVerification from "../pages/email-verification";
+import HabitsHabitIdEdit from "../pages/habits/[habitId]/edit";
+import HabitsNew from "../pages/habits/new";
 import Home from "../pages/home";
 import Index from "../pages/index";
 import MeAccount from "../pages/me/account";
@@ -9,6 +11,8 @@ import SignIn from "../pages/sign-in";
 import SignUp from "../pages/sign-up";
 const routes = [
   { path: "/email-verification", element: <EmailVerification /> },
+  { path: "/habits/:habitId/edit", element: <HabitsHabitIdEdit /> },
+  { path: "/habits/new", element: <HabitsNew /> },
   { path: "/home", element: <Home /> },
   { path: "/", element: <Index /> },
   { path: "/me/account", element: <MeAccount /> },
