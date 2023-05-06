@@ -35,6 +35,7 @@ type User {
   name: String!
   iconUrl: String
   habits: [Habit!]!
+  habit(id: ID!): Habit!
 }
 
 type Habit {
