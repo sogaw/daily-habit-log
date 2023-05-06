@@ -7,7 +7,8 @@ builder.objectType(HabitRecord, {
   name: "HabitRecord",
   fields: (t) => ({
     id: t.exposeID("id"),
-    date: t.string({ resolve: (noteHistory) => noteHistory.data.date }),
-    status: t.field({ type: HabitRecordStatus, resolve: (noteHistory) => noteHistory.data.status }),
+    date: t.string({ resolve: (habitRecord) => habitRecord.data.date }),
+    status: t.field({ type: HabitRecordStatus, resolve: (habitRecord) => habitRecord.data.status }),
+    habitId: t.string({ resolve: (habitRecord) => habitRecord.data.habitId }),
   }),
 });

@@ -28,9 +28,9 @@ builder.objectType(Habit, {
     }),
     tooHard: t.boolean({
       resolve: async (habit) => {
-        const twoDaysAgo = subDays(genNow(), 2);
+        const threeDaysAgo = subDays(genNow(), 3);
         const habitCreatedAt = habit.data.createdAt.toDate();
-        const [before] = [twoDaysAgo, habitCreatedAt].sort(compareDesc);
+        const [before] = [threeDaysAgo, habitCreatedAt].sort(compareDesc);
 
         const habitRecords = await habit.habitRecords.ordered({
           userId: habit.data.userId,
@@ -38,7 +38,10 @@ builder.objectType(Habit, {
           before: DateFromISO(AsiaTokyoISO(before)),
         });
 
-        return habitRecords.filter((habitRecord) => habitRecord.data.status == "SUCCESS").length == 0;
+        return (
+          habitRecords.length > 3 &&
+          habitRecords.filter((habitRecord) => habitRecord.data.status == "SUCCESS").length == 0
+        );
       },
     }),
   }),
