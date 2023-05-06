@@ -16,8 +16,6 @@ export const decodeJWT = async (token: string): Promise<Auth> => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
-    console.error(e);
-
     // NOTE: frontend で token を refresh する
     if (e?.errorInfo?.code == "auth/id-token-revoked") throw new Unauthorized("Unauthorized. Token revoked");
 
