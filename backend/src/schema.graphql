@@ -13,6 +13,12 @@ input CreateHabitInput {
   description: String!
 }
 
+input UpdateHabitRecordInput {
+  habitId: String!
+  date: String!
+  status: String!
+}
+
 type User {
   id: ID!
   name: String!
@@ -25,6 +31,7 @@ type Habit {
   name: String!
   description: String!
   habitRecords: [HabitRecord!]!
+  tooHard: Boolean!
 }
 
 type HabitRecord {
@@ -42,4 +49,5 @@ type Mutation {
   updateProfile(input: UpdateProfileInput!): User!
   deleteAccount: ID!
   createHabit(input: CreateHabitInput!): Habit!
+  updateHabitRecord(input: UpdateHabitRecordInput!): HabitRecord!
 }

@@ -30,7 +30,6 @@ builder.mutationField("onboard", (t) =>
         name: args.input.name,
         iconPath: args.input.iconPath,
       });
-
       await user.save();
 
       return user;

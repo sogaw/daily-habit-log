@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import { Habit } from "@/datasource";
-import { genId, genTimestamp } from "@/lib/gen";
 import { parseAuth, parseSchema } from "@/lib/parse";
 
 import { builder } from "../builder";
@@ -30,7 +29,6 @@ builder.mutationField("createHabit", (t) =>
         description: args.input.description,
         userId: me.id,
       });
-
       await habit.save();
 
       return habit;

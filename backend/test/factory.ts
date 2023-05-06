@@ -25,7 +25,7 @@ export const UserFactory = (collection: UsersCollection, id: string | null, data
     name: "MyString",
     createdAt: now,
     updatedAt: now,
-    iconPath: null,
+    iconPath: "",
     ...data,
   });
 };

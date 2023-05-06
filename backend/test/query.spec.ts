@@ -34,15 +34,13 @@ describe("viewer", () => {
     await Promise.all([me.save(), other.save()]);
   });
 
-  describe("success", () => {
-    it("", async () => {
-      mockWithAuth({ uid: "user-1" });
-      mockGetSignedUrl("https://i.pravatar.cc?img=1");
+  it("", async () => {
+    mockWithAuth({ uid: "user-1" });
+    mockGetSignedUrl("https://i.pravatar.cc?img=1");
 
-      const res = await execute(q());
+    const res = await execute(q());
 
-      expect(res.data.viewer).toMatchObject({ id: "user-1", name: "me", iconUrl: "https://i.pravatar.cc?img=1" });
-    });
+    expect(res.data.viewer).toMatchObject({ id: "user-1", name: "me", iconUrl: "https://i.pravatar.cc?img=1" });
   });
 });
 
@@ -55,6 +53,7 @@ describe("habitRecords", () => {
             date
             status
           }
+          tooHard
         }
       }
     }
@@ -65,7 +64,7 @@ describe("habitRecords", () => {
 
   beforeEach(async () => {
     me = UserFactory(users, "user-1", {});
-    habit = HabitFactory(me.habits, null, { createdAt: TimestampFactory("2023-01-01"), userId: me.id });
+    habit = HabitFactory(me.habits, "habit-1", { createdAt: TimestampFactory("2023-01-01"), userId: me.id });
 
     await Promise.all([me.save(), habit.save()]);
   });
@@ -84,21 +83,17 @@ describe("habitRecords", () => {
       HabitRecordFactory(habit.habitRecords, null, {
         date: "2023-01-02",
         status: "SUCCESS",
-        userId: me.id,
-        habitId: habit.id,
+        userId: "user-1",
+        habitId: "habit-1",
       }).save(),
     ]);
 
-    mockGenNow(new Date("2023-01-07"));
+    mockGenNow(new Date("2023-01-03"));
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q());
 
     expect(res.data.viewer.habits[0].habitRecords).toEqual([
-      { date: "2023-01-07", status: "PENDING" },
-      { date: "2023-01-06", status: "PENDING" },
-      { date: "2023-01-05", status: "PENDING" },
-      { date: "2023-01-04", status: "PENDING" },
       { date: "2023-01-03", status: "PENDING" },
       { date: "2023-01-02", status: "SUCCESS" },
       { date: "2023-01-01", status: "PENDING" },
@@ -120,5 +115,41 @@ describe("habitRecords", () => {
       { date: "2023-01-09", status: "PENDING" },
       { date: "2023-01-08", status: "PENDING" },
     ]);
+  });
+
+  it("", async () => {
+    await Promise.all([
+      HabitRecordFactory(habit.habitRecords, null, {
+        date: "2023-01-01",
+        status: "SUCCESS",
+        userId: "user-1",
+        habitId: "habit-1",
+      }).save(),
+    ]);
+
+    mockGenNow(new Date("2023-01-03"));
+    mockWithAuth({ uid: "user-1" });
+
+    const res = await execute(q());
+
+    expect(res.data.viewer.habits[0].tooHard).toEqual(false);
+  });
+
+  it("", async () => {
+    await Promise.all([
+      HabitRecordFactory(habit.habitRecords, null, {
+        date: "2023-01-01",
+        status: "SUCCESS",
+        userId: "user-1",
+        habitId: "habit-1",
+      }).save(),
+    ]);
+
+    mockGenNow(new Date("2023-01-04"));
+    mockWithAuth({ uid: "user-1" });
+
+    const res = await execute(q());
+
+    expect(res.data.viewer.habits[0].tooHard).toEqual(true);
   });
 });

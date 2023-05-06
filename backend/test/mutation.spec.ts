@@ -1,8 +1,10 @@
+import { Habit, User } from "@/datasource";
 import { datasourceContext } from "@/resolver";
 
-import { clearFirestore, execute, mockWithAuth, nullable } from "./setup";
+import { HabitFactory, HabitRecordFactory, TimestampFactory, UserFactory } from "./factory";
+import { clearFirestore, execute, mockGenNow, mockWithAuth } from "./setup";
 
-const { users } = datasourceContext();
+const { users, habitRecords } = datasourceContext();
 
 beforeAll(async () => {
   await clearFirestore();
@@ -15,26 +17,86 @@ afterEach(async () => {
 });
 
 describe("onboard", () => {
-  const q = ({ name, iconPath }: { name: string; iconPath?: string }) => {
-    const input = `{ name: "${name}", iconPath: ${nullable(iconPath)} }`;
-    return `
-      mutation {
-        onboard (input: ${input}) {
-          id
-          name
-          iconUrl
-        }
+  const q = ({ name, iconPath }: { name: string; iconPath: string }) => `
+    mutation {
+      onboard(input: { name: "${name}", iconPath: "${iconPath}" }) {
+        id
+        name
+        iconUrl
       }
-    `;
-  };
+    }
+  `;
 
-  describe("success", () => {
-    it("", async () => {
-      mockWithAuth({ uid: "user-1" });
+  it("", async () => {
+    mockWithAuth({ uid: "user-1" });
 
-      const res = await execute(q({ name: "me" }));
+    const res = await execute(q({ name: "me", iconPath: "" }));
 
-      expect(res.data.onboard).toMatchObject({ id: "user-1", name: "me", iconUrl: null });
+    expect(res.data.onboard).toMatchObject({ id: "user-1", name: "me", iconUrl: null });
+  });
+});
+
+describe("updateHabitRecord", () => {
+  const q = ({
+    date,
+    status,
+    habitId,
+  }: {
+    date: string;
+    status: "SUCCESS" | "FAILED" | "PENDING";
+    habitId: string;
+  }) => `
+    mutation {
+      updateHabitRecord(input: { date: "${date}", status: "${status}", habitId: "${habitId}" }) {
+        id
+      }
+    }
+  `;
+
+  let me: User;
+  let habit: Habit;
+
+  beforeEach(async () => {
+    me = UserFactory(users, "user-1", {});
+    habit = HabitFactory(me.habits, "habit-1", { createdAt: TimestampFactory("2023-01-01"), userId: me.id });
+
+    await Promise.all([me.save(), habit.save()]);
+  });
+
+  it("", async () => {
+    mockGenNow(new Date("2023-01-03"));
+    mockWithAuth({ uid: "user-1" });
+
+    const res = await execute(q({ date: "2023-01-02", status: "SUCCESS", habitId: "habit-1" }));
+    const habitRecord = await habitRecords.findOne(res.data.updateHabitRecord.id);
+
+    expect(habitRecord.data).toMatchObject({
+      date: "2023-01-02",
+      status: "SUCCESS",
+      userId: "user-1",
+      habitId: "habit-1",
+    });
+  });
+
+  it("", async () => {
+    await HabitRecordFactory(habit.habitRecords, null, {
+      date: "2023-01-02",
+      status: "FAILED",
+      userId: "user-1",
+      habitId: "habit-1",
+    }).save();
+
+    mockGenNow(new Date("2023-01-03"));
+    mockWithAuth({ uid: "user-1" });
+
+    const res = await execute(q({ date: "2023-01-02", status: "SUCCESS", habitId: "habit-1" }));
+    const habitRecord = await habitRecords.findOne(res.data.updateHabitRecord.id);
+
+    expect(habitRecord.data).toMatchObject({
+      date: "2023-01-02",
+      status: "SUCCESS",
+      userId: "user-1",
+      habitId: "habit-1",
     });
   });
 });
