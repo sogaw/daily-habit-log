@@ -1,22 +1,15 @@
-import { z } from "zod";
-
 import { HabitRecord } from "@/datasource";
-import { parseAuth, parseSchema } from "@/lib/parse";
+import { parseAuth } from "@/lib/parse";
 
 import { builder } from "../builder";
+import { HabitRecordStatus } from "../enum/habit-record-status";
 
 const UpdateHabitRecordInput = builder.inputType("UpdateHabitRecordInput", {
   fields: (t) => ({
-    habitId: t.string({ required: true }),
-    date: t.string({ required: true }),
-    status: t.string({ required: true }),
+    habitId: t.string({ required: true, validate: { minLength: 1 } }),
+    date: t.string({ required: true, validate: { minLength: 1 } }),
+    status: t.field({ type: HabitRecordStatus, required: true }),
   }),
-});
-
-const UpdateHabitRecordInputSchema = z.object({
-  habitId: z.string().min(1),
-  date: z.string().min(1),
-  status: z.union([z.literal("SUCCESS"), z.literal("FAILED"), z.literal("PENDING")]),
 });
 
 builder.mutationField("updateHabitRecord", (t) =>
@@ -25,7 +18,6 @@ builder.mutationField("updateHabitRecord", (t) =>
     args: { input: t.arg({ type: UpdateHabitRecordInput, required: true }) },
     resolve: async (_root, args, { auth, datasource }) => {
       parseAuth(auth);
-      parseSchema(UpdateHabitRecordInputSchema, args.input);
 
       const me = await datasource.users.findOne(auth.uid);
       const habit = await me.habits.findOne(args.input.habitId);

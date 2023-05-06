@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@pothos/core": "^3.29.0",
+    "@pothos/plugin-validation": "^3.9.1",
     "cors": "^2.8.5",
     "dataloader": "^2.2.2",
     "date-fns": "^2.30.0",

@@ -47,7 +47,7 @@ describe("updateHabitRecord", () => {
     habitId: string;
   }) => `
     mutation {
-      updateHabitRecord(input: { date: "${date}", status: "${status}", habitId: "${habitId}" }) {
+      updateHabitRecord(input: { date: "${date}", status: ${status}, habitId: "${habitId}" }) {
         id
       }
     }

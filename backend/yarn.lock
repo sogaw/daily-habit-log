@@ -945,6 +945,11 @@
   resolved "https://registry.yarnpkg.com/@pothos/core/-/core-3.29.0.tgz#cc3fa43980280637de9bd42d653e363812aa0e91"
   integrity sha512-6LcrnZ3QRQrbWvKLfdSvfrk1nyezLaDAT8yIhQXLOhhtm3iK+knIpdGbNfKiTgxbdSDkK69IcXNV4ifcq23bIQ==
 
+"@pothos/plugin-validation@^3.9.1":
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/@pothos/plugin-validation/-/plugin-validation-3.9.1.tgz#7dac96d1e4ac8df708a70359c6b539ea0848a99d"
+  integrity sha512-CQrZ+fmNg1zVvn7PqGmaBgspLuQnIPtxx8Op87Z4Sh+95OWZO5zRB6c8PcfqI4SVbNYUsKUndEUziJ0i8lFS4w==
+
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@protobufjs/aspromise/-/aspromise-1.1.2.tgz#9b8b0cc663d669a7d8f6f5d0893a14d348f30fbf"

@@ -1,3 +1,9 @@
+enum HabitRecordStatus {
+  SUCCESS
+  FAILED
+  PENDING
+}
+
 input OnboardInput {
   name: String!
   iconPath: String!
@@ -16,7 +22,7 @@ input CreateHabitInput {
 input UpdateHabitRecordInput {
   habitId: String!
   date: String!
-  status: String!
+  status: HabitRecordStatus!
 }
 
 type User {
