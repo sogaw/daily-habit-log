@@ -1,12 +1,16 @@
+import { Habit, User } from "@/datasource";
 import { datasourceContext } from "@/resolver";
 
-import { UserFactory } from "./factory";
-import { clearFirestore, execute, mockGetSignedUrl, mockWithAuth } from "./setup";
+import { HabitFactory, TimestampFactory, UserFactory } from "./factory";
+import { clearFirestore, execute, mockGenNow, mockGetSignedUrl, mockWithAuth } from "./setup";
 
 const { users } = datasourceContext();
 
 beforeAll(async () => {
   await clearFirestore();
+});
+beforeEach(() => {
+  mockGenNow(new Date());
 });
 afterEach(async () => {
   await clearFirestore();
@@ -42,5 +46,39 @@ describe("viewer", () => {
 
       expect(res.data.viewer).toMatchObject({ id: "user-1", name: "me", iconUrl: "https://i.pravatar.cc?img=1" });
     });
+  });
+});
+
+describe("habitRecords", () => {
+  const q = () => `
+    query {
+      viewer {
+        habits {
+          habitRecords {
+            date
+            status
+          }
+        }
+      }
+    }
+  `;
+
+  let me: User;
+  let habit: Habit;
+
+  beforeEach(async () => {
+    me = UserFactory(users, "user-1", {});
+    habit = HabitFactory(me.habits, null, { createdAt: TimestampFactory("2023-01-01"), userId: me.id });
+
+    await Promise.all([me.save(), habit.save()]);
+  });
+
+  it("", async () => {
+    mockGenNow(new Date("2023-01-03"));
+    mockWithAuth({ uid: "user-1" });
+
+    const res = await execute(q());
+
+    console.log(JSON.stringify(res, null, 2));
   });
 });

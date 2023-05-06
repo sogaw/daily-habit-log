@@ -1,5 +1,7 @@
 import { CollectionGroup, CollectionReference, getFirestore, Timestamp } from "firebase-admin/firestore";
 
+import { genNow } from "@/lib/gen";
+
 import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model-package";
 
 /**
@@ -13,7 +15,7 @@ import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model
  * Util
  */
 export const genId = () => getFirestore().collection("-").doc().id;
-export const genTimestamp = () => Timestamp.now();
+export const genTimestamp = () => Timestamp.fromDate(genNow());
 
 /**
  * Document
@@ -53,7 +55,13 @@ export class Habit extends FireDocument<HabitData> {
   habitRecords = new HabitRecordsCollection(this.ref.collection("habitRecords"));
 }
 
-export class HabitRecord extends FireDocument<HabitRecordData> {}
+export class HabitRecord extends FireDocument<HabitRecordData> {
+  static createFrom(collection: HabitRecordsCollection, data: Pick<HabitRecordData, "date" | "userId" | "habitId">) {
+    const id = genId();
+    const now = genTimestamp();
+    return this.create(collection, id, { id, status: "PENDING", createdAt: now, updatedAt: now, ...data });
+  }
+}
 
 /**
  * Collection
@@ -73,6 +81,10 @@ export class HabitsCollection extends FireCollection<Habit> {
 export class HabitRecordsCollection extends FireCollection<HabitRecord> {
   constructor(ref: CollectionReference) {
     super(ref, (snap) => HabitRecord.fromSnapshot(snap));
+  }
+
+  ordered({ before }: { before: string }) {
+    return this.findManyByQuery((ref) => ref.orderBy("date", "desc").endBefore(before));
   }
 }
 

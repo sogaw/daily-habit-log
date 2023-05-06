@@ -6,6 +6,7 @@ import { isString } from "lodash";
 import request from "request";
 
 import { decodeJWT, extractJWT } from "@/lib/auth";
+import { genNow } from "@/lib/gen";
 import { deleteFile, deleteFileRecursive, getSignedUrl } from "@/lib/storage";
 import { yoga } from "@/yoga";
 
@@ -71,6 +72,13 @@ export const mockDeleteFile = () => {
 
 export const mockDeleteFileRecursive = () => {
   (deleteFileRecursive as jest.Mock).mockResolvedValue(null);
+};
+
+// Mock Date
+jest.mock("@/lib/gen");
+
+export const mockGenNow = (date: Date) => {
+  (genNow as jest.Mock).mockReturnValue(date);
 };
 
 /**
