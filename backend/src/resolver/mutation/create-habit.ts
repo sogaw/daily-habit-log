@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-import { genId, genTimestamp, Habit } from "@/datasource";
+import { Habit } from "@/datasource";
+import { genId, genTimestamp } from "@/lib/gen";
 import { parseAuth, parseSchema } from "@/lib/parse";
 
 import { builder } from "../builder";

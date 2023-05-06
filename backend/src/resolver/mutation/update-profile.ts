@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-import { genTimestamp, User } from "@/datasource";
+import { User } from "@/datasource";
+import { genTimestamp } from "@/lib/gen";
 import { parseAuth, parseSchema } from "@/lib/parse";
 import { deleteFile } from "@/lib/storage";
 

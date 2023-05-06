@@ -1,8 +1,6 @@
 import { Timestamp } from "firebase-admin/firestore";
 
 import {
-  genId,
-  genTimestamp,
   Habit,
   HabitData,
   HabitRecord,
@@ -13,6 +11,7 @@ import {
   UserData,
   UsersCollection,
 } from "@/datasource";
+import { genId, genTimestamp } from "@/lib/gen";
 
 export const TimestampFactory = (dateString: string) => {
   return Timestamp.fromDate(new Date(dateString));

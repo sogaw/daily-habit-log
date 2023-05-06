@@ -1,16 +1,13 @@
 import { Habit, User } from "@/datasource";
 import { datasourceContext } from "@/resolver";
 
-import { HabitFactory, TimestampFactory, UserFactory } from "./factory";
+import { HabitFactory, HabitRecordFactory, TimestampFactory, UserFactory } from "./factory";
 import { clearFirestore, execute, mockGenNow, mockGetSignedUrl, mockWithAuth } from "./setup";
 
 const { users } = datasourceContext();
 
 beforeAll(async () => {
   await clearFirestore();
-});
-beforeEach(() => {
-  mockGenNow(new Date());
 });
 afterEach(async () => {
   await clearFirestore();
@@ -74,11 +71,54 @@ describe("habitRecords", () => {
   });
 
   it("", async () => {
-    mockGenNow(new Date("2023-01-03"));
+    mockGenNow(new Date("2023-01-01"));
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q());
 
-    console.log(JSON.stringify(res, null, 2));
+    expect(res.data.viewer.habits[0].habitRecords).toEqual([{ date: "2023-01-01", status: "PENDING" }]);
+  });
+
+  it("", async () => {
+    await Promise.all([
+      HabitRecordFactory(habit.habitRecords, null, {
+        date: "2023-01-02",
+        status: "SUCCESS",
+        userId: me.id,
+        habitId: habit.id,
+      }).save(),
+    ]);
+
+    mockGenNow(new Date("2023-01-07"));
+    mockWithAuth({ uid: "user-1" });
+
+    const res = await execute(q());
+
+    expect(res.data.viewer.habits[0].habitRecords).toEqual([
+      { date: "2023-01-07", status: "PENDING" },
+      { date: "2023-01-06", status: "PENDING" },
+      { date: "2023-01-05", status: "PENDING" },
+      { date: "2023-01-04", status: "PENDING" },
+      { date: "2023-01-03", status: "PENDING" },
+      { date: "2023-01-02", status: "SUCCESS" },
+      { date: "2023-01-01", status: "PENDING" },
+    ]);
+  });
+
+  it("", async () => {
+    mockGenNow(new Date("2023-01-14"));
+    mockWithAuth({ uid: "user-1" });
+
+    const res = await execute(q());
+
+    expect(res.data.viewer.habits[0].habitRecords).toEqual([
+      { date: "2023-01-14", status: "PENDING" },
+      { date: "2023-01-13", status: "PENDING" },
+      { date: "2023-01-12", status: "PENDING" },
+      { date: "2023-01-11", status: "PENDING" },
+      { date: "2023-01-10", status: "PENDING" },
+      { date: "2023-01-09", status: "PENDING" },
+      { date: "2023-01-08", status: "PENDING" },
+    ]);
   });
 });

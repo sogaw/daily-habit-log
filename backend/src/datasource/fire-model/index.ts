@@ -1,6 +1,6 @@
-import { CollectionGroup, CollectionReference, getFirestore, Timestamp } from "firebase-admin/firestore";
+import { CollectionGroup, CollectionReference, Timestamp } from "firebase-admin/firestore";
 
-import { genNow } from "@/lib/gen";
+import { genId, genTimestamp } from "@/lib/gen";
 
 import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model-package";
 
@@ -10,12 +10,6 @@ import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model
  * /users/${userId}
  *
  */
-
-/**
- * Util
- */
-export const genId = () => getFirestore().collection("-").doc().id;
-export const genTimestamp = () => Timestamp.fromDate(genNow());
 
 /**
  * Document

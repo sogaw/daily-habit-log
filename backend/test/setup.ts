@@ -1,13 +1,13 @@
-import "@/lib/fire"; // initialize
+import "@/lib/fire"; // for initialize
 
 import { buildHTTPExecutor } from "@graphql-tools/executor-http";
 import { parse } from "graphql";
 import { isString } from "lodash";
 import request from "request";
 
-import { decodeJWT, extractJWT } from "@/lib/auth";
-import { genNow } from "@/lib/gen";
-import { deleteFile, deleteFileRecursive, getSignedUrl } from "@/lib/storage";
+import * as auth from "@/lib/auth";
+import * as gen from "@/lib/gen";
+import * as storage from "@/lib/storage";
 import { yoga } from "@/yoga";
 
 /**
@@ -47,38 +47,31 @@ export const nullable = (v: string | number | boolean | null | undefined) => {
  * Mock
  */
 // Mock Auth
-jest.mock("@/lib/auth");
-
 export const mockWithAuth = ({ uid }: { uid: string }) => {
-  (extractJWT as jest.Mock).mockResolvedValue("_token");
-  (decodeJWT as jest.Mock).mockResolvedValue({ uid });
+  jest.spyOn(auth, "extractJWT").mockImplementation(() => "_token");
+  jest.spyOn(auth, "decodeJWT").mockImplementation(() => Promise.resolve({ uid }));
 };
 
 export const mockWithNoAuth = () => {
-  (extractJWT as jest.Mock).mockResolvedValue(null);
-  (decodeJWT as jest.Mock).mockResolvedValue(null);
+  jest.spyOn(auth, "extractJWT").mockImplementation(() => undefined);
 };
 
 // Mock Storage
-jest.mock("@/lib/storage");
-
 export const mockGetSignedUrl = (publicUrl: string) => {
-  (getSignedUrl as jest.Mock).mockResolvedValue(publicUrl);
+  jest.spyOn(storage, "getSignedUrl").mockImplementation(() => Promise.resolve(publicUrl));
 };
 
 export const mockDeleteFile = () => {
-  (deleteFile as jest.Mock).mockResolvedValue(null);
+  jest.spyOn(storage, "deleteFile").mockImplementation(() => Promise.resolve());
 };
 
 export const mockDeleteFileRecursive = () => {
-  (deleteFileRecursive as jest.Mock).mockResolvedValue(null);
+  jest.spyOn(storage, "deleteFileRecursive").mockImplementation(() => Promise.resolve());
 };
 
 // Mock Date
-jest.mock("@/lib/gen");
-
 export const mockGenNow = (date: Date) => {
-  (genNow as jest.Mock).mockReturnValue(date);
+  jest.spyOn(gen, "genNow").mockImplementation(() => date);
 };
 
 /**
