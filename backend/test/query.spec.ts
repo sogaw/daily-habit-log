@@ -69,7 +69,7 @@ describe("habitRecords", () => {
     await Promise.all([me.save(), habit.save()]);
   });
 
-  it("", async () => {
+  it("1", async () => {
     mockGenNow(new Date("2023-01-01"));
     mockWithAuth({ uid: "user-1" });
 
@@ -78,7 +78,7 @@ describe("habitRecords", () => {
     expect(res.data.viewer.habits[0].habitRecords).toEqual([{ date: "2023-01-01", status: "PENDING" }]);
   });
 
-  it("", async () => {
+  it("2", async () => {
     await Promise.all([
       HabitRecordFactory(habit.habitRecords, null, {
         date: "2023-01-02",
@@ -100,7 +100,7 @@ describe("habitRecords", () => {
     ]);
   });
 
-  it("", async () => {
+  it("3", async () => {
     mockGenNow(new Date("2023-01-14"));
     mockWithAuth({ uid: "user-1" });
 
@@ -117,7 +117,7 @@ describe("habitRecords", () => {
     ]);
   });
 
-  it("", async () => {
+  it("4", async () => {
     await Promise.all([
       HabitRecordFactory(habit.habitRecords, null, {
         date: "2023-01-01",
@@ -135,7 +135,7 @@ describe("habitRecords", () => {
     expect(res.data.viewer.habits[0].tooHard).toEqual(false);
   });
 
-  it("", async () => {
+  it("5", async () => {
     await Promise.all([
       HabitRecordFactory(habit.habitRecords, null, {
         date: "2023-01-01",
@@ -145,7 +145,7 @@ describe("habitRecords", () => {
       }).save(),
     ]);
 
-    mockGenNow(new Date("2023-01-04"));
+    mockGenNow(new Date("2023-01-05"));
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q());

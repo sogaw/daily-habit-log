@@ -1,7 +1,6 @@
-import { eachDayOfInterval } from "date-fns";
 import { CollectionGroup, CollectionReference, Timestamp } from "firebase-admin/firestore";
 
-import { AsiaTokyoISO, DateFromISO } from "@/lib/date";
+import { AsiaTokyoISO, DateFromISO, fixedEachDayOfInterval } from "@/lib/date";
 import { genId, genNow, genTimestamp } from "@/lib/gen";
 
 import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model-package";
@@ -44,21 +43,23 @@ export class HabitRecordsCollection extends FireCollection<HabitRecord> {
     super(ref, (snap) => HabitRecord.fromSnapshot(snap));
   }
 
-  async ordered({ userId, habitId, before }: { userId: string; habitId: string; before: string }) {
-    const habitRecords = await this.findManyByQuery((ref) => ref.orderBy("date", "desc").endAt(before));
+  async ordered({ userId, habitId, before }: { userId: string; habitId: string; before: Date }) {
+    const beforeDate = DateFromISO(AsiaTokyoISO(before));
+    const habitRecords = await this.findManyByQuery((ref) => ref.orderBy("date", "desc").endAt(beforeDate));
 
-    const interval = eachDayOfInterval({ start: new Date(before), end: genNow() })
-      .reverse()
-      .map((dateTime) => {
-        const date = DateFromISO(AsiaTokyoISO(dateTime));
+    const start = new Date(AsiaTokyoISO(before) + "Z");
+    const end = new Date(AsiaTokyoISO(genNow()) + "Z");
 
-        const exists = habitRecords.find((habitRecord) => habitRecord.data.date == date);
-        if (exists) return exists;
+    const interval = fixedEachDayOfInterval({ start, end }).map((dateTime) => {
+      const date = DateFromISO(dateTime.toISOString());
 
-        return { date };
-      });
+      const exists = habitRecords.find((habitRecord) => habitRecord.data.date == date);
+      if (exists) return exists;
 
-    const filled = interval.map((habitRecord) =>
+      return { date };
+    });
+
+    const filled = interval.reverse().map((habitRecord) =>
       habitRecord instanceof HabitRecord
         ? habitRecord
         : HabitRecord.create(this, {

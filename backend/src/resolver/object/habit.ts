@@ -1,7 +1,6 @@
 import { compareDesc, subDays } from "date-fns";
 
 import { Habit, HabitRecord } from "@/datasource";
-import { AsiaTokyoISO, DateFromISO } from "@/lib/date";
 import { genNow } from "@/lib/gen";
 
 import { builder } from "../builder";
@@ -22,7 +21,7 @@ builder.objectType(Habit, {
         return habit.habitRecords.ordered({
           userId: habit.data.userId,
           habitId: habit.id,
-          before: DateFromISO(AsiaTokyoISO(before)),
+          before,
         });
       },
     }),
@@ -35,7 +34,7 @@ builder.objectType(Habit, {
         const habitRecords = await habit.habitRecords.ordered({
           userId: habit.data.userId,
           habitId: habit.id,
-          before: DateFromISO(AsiaTokyoISO(before)),
+          before,
         });
 
         return (
