@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { Layout } from "@/components/Layout";
+import { PageLoading } from "@/components/PageLoading";
 import { Habit, HabitDocument, UpdateHabitDocument } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
 import { useAppToast } from "@/hooks/use-app-toast";
@@ -38,7 +39,7 @@ const HabitEditContainer = Guard("WithOnboard", () => {
   const { data, loading } = useQuery(HabitDocument, { variables: { id: habitId as string } });
   const habit = data?.viewer?.habit;
 
-  if (loading) return null;
+  if (loading) return <PageLoading />;
   return habit ? <HabitEdit habit={habit} /> : <Navigate to="/not-found" />;
 });
 

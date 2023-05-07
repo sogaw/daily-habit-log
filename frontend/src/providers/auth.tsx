@@ -1,8 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
-import { Center, Spinner } from "@chakra-ui/react";
 import { getAuth, getIdToken, onIdTokenChanged, signOut, User as AuthUser } from "firebase/auth";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
+import { PageLoading } from "@/components/PageLoading";
 import { useFragment } from "@/generated/gql";
 import { MeDocument, MeFragment, MeFragmentDoc } from "@/generated/gql/graphql";
 import { assertIsDefined } from "@/lib/assert-is-defined";
@@ -77,12 +77,7 @@ const AuthContext = createContext<State | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const state = useAuthProvider();
-  if (state.loading)
-    return (
-      <Center h="75vh">
-        <Spinner />
-      </Center>
-    );
+  if (state.loading) return <PageLoading />;
   return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
 };
 
