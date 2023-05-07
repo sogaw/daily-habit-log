@@ -1,4 +1,3 @@
-import { eachDayOfInterval, subMinutes } from "date-fns";
 import { Timestamp } from "firebase-admin/firestore";
 
 export const FormatDate = (timestamp: Timestamp) => {
@@ -26,11 +25,4 @@ export const AsiaTokyoISO = (date: Date): string => {
 
 export const DateFromISO = (iso: string): string => {
   return iso.split("T")[0];
-};
-
-export const fixedEachDayOfInterval = ({ start, end }: { start: Date; end: Date }) => {
-  return eachDayOfInterval({ start, end }).map((dateTime) => {
-    dateTime = subMinutes(dateTime, dateTime.getTimezoneOffset());
-    return dateTime;
-  });
 };

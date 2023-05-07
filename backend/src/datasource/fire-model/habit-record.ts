@@ -1,6 +1,7 @@
+import { eachDayOfInterval, subMinutes } from "date-fns";
 import { CollectionGroup, CollectionReference, Timestamp } from "firebase-admin/firestore";
 
-import { AsiaTokyoISO, DateFromISO, fixedEachDayOfInterval } from "@/lib/date";
+import { AsiaTokyoISO, DateFromISO } from "@/lib/date";
 import { genId, genNow, genTimestamp } from "@/lib/gen";
 
 import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model-package";
@@ -50,14 +51,16 @@ export class HabitRecordsCollection extends FireCollection<HabitRecord> {
     const start = new Date(AsiaTokyoISO(before) + "Z");
     const end = new Date(AsiaTokyoISO(genNow()) + "Z");
 
-    const interval = fixedEachDayOfInterval({ start, end }).map((dateTime) => {
-      const date = DateFromISO(dateTime.toISOString());
+    const interval = eachDayOfInterval({ start, end })
+      .map((dateTime) => subMinutes(dateTime, dateTime.getTimezoneOffset())) // TimeZone の調整
+      .map((dateTime) => {
+        const date = DateFromISO(dateTime.toISOString());
 
-      const exists = habitRecords.find((habitRecord) => habitRecord.data.date == date);
-      if (exists) return exists;
+        const exists = habitRecords.find((habitRecord) => habitRecord.data.date == date);
+        if (exists) return exists;
 
-      return { date };
-    });
+        return { date };
+      });
 
     const filled = interval.reverse().map((habitRecord) =>
       habitRecord instanceof HabitRecord
