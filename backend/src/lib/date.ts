@@ -17,12 +17,6 @@ export const FormatDate = (timestamp: Timestamp) => {
   return formatted;
 };
 
-export const AsiaTokyoISO = (date: Date): string => {
-  const utc = date.getTime();
-  const offset = 9 * 60 * 60 * 1_000;
-  return new Date(utc + offset).toISOString().replace(/Z$/, "");
-};
-
 export const DateFromISO = (iso: string): string => {
   return iso.split("T")[0];
 };

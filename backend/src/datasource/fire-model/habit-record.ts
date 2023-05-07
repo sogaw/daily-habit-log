@@ -1,7 +1,7 @@
-import { eachDayOfInterval, subMinutes } from "date-fns";
+import { eachDayOfInterval, startOfDay, subMinutes } from "date-fns";
 import { CollectionGroup, CollectionReference, Timestamp } from "firebase-admin/firestore";
 
-import { AsiaTokyoISO, DateFromISO } from "@/lib/date";
+import { DateFromISO } from "@/lib/date";
 import { genId, genNow, genTimestamp } from "@/lib/gen";
 
 import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model-package";
@@ -45,11 +45,11 @@ export class HabitRecordsCollection extends FireCollection<HabitRecord> {
   }
 
   async ordered({ userId, habitId, before }: { userId: string; habitId: string; before: Date }) {
-    const beforeDate = DateFromISO(AsiaTokyoISO(before));
+    const beforeDate = DateFromISO(before.toISOString());
     const habitRecords = await this.findManyByQuery((ref) => ref.orderBy("date", "desc").endAt(beforeDate));
 
-    const start = new Date(AsiaTokyoISO(before) + "Z");
-    const end = new Date(AsiaTokyoISO(genNow()) + "Z");
+    const start = startOfDay(before);
+    const end = startOfDay(genNow());
 
     const interval = eachDayOfInterval({ start, end })
       .map((dateTime) => subMinutes(dateTime, dateTime.getTimezoneOffset())) // TimeZone の調整
