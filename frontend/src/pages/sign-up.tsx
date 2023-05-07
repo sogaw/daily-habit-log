@@ -14,7 +14,7 @@ type SignUpForm = {
   confirmation: string;
 };
 
-const SignUp = Guard("SignInUpPage", () => {
+const SignUp = Guard("BeforeAuth", () => {
   const toast = useAppToast();
   const { register, handleSubmit } = useForm<SignUpForm>();
 

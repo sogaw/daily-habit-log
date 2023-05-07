@@ -15,7 +15,7 @@ gql`
   }
 `;
 
-const SettingsAccount = Guard("WithOnboard", () => {
+const SettingsAccount = Guard("AfterOnboard", () => {
   const toast = useAppToast();
   const { authUser } = useMe();
 

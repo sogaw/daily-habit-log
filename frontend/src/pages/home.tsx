@@ -55,7 +55,7 @@ const nextStatus = { SUCCESS: "FAILED", FAILED: "PENDING", PENDING: "SUCCESS" } 
 >;
 const statusColor = { SUCCESS: "green", FAILED: "red", PENDING: "gray" } as const;
 
-const Home = Guard("WithOnboard", () => {
+const Home = Guard("AfterOnboard", () => {
   const navigate = useNavigate();
   const toast = useAppToast();
   const { me } = useMe();

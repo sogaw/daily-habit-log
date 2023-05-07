@@ -26,7 +26,7 @@ type UpdateProfileForm = {
   name: string;
 };
 
-const SettingsProfile = Guard("WithOnboard", () => {
+const SettingsProfile = Guard("AfterOnboard", () => {
   const toast = useAppToast();
   const { me } = useMe();
   const { register, handleSubmit } = useForm<UpdateProfileForm>({ defaultValues: { name: me.name } });

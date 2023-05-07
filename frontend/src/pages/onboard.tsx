@@ -26,7 +26,7 @@ type OnboardForm = {
   name: string;
 };
 
-const Onboard = Guard("OnboardPage", () => {
+const Onboard = Guard("BeforeOnboard", () => {
   const toast = useAppToast();
   const { authUser } = useAuth();
   const { register, handleSubmit } = useForm<OnboardForm>();

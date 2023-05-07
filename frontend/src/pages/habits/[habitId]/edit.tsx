@@ -33,7 +33,7 @@ gql`
   }
 `;
 
-const HabitEditContainer = Guard("WithOnboard", () => {
+const HabitEditContainer = Guard("AfterOnboard", () => {
   const { habitId } = useParams();
 
   const { data, loading } = useQuery(HabitDocument, { variables: { id: habitId as string } });

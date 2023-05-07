@@ -31,7 +31,7 @@ type HabitCreateForm = {
   description: string;
 };
 
-const HabitsNew = Guard("WithOnboard", () => {
+const HabitsNew = Guard("AfterOnboard", () => {
   const navigate = useNavigate();
   const toast = useAppToast();
   const { me } = useMe();

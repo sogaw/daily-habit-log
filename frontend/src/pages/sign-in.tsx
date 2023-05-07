@@ -13,7 +13,7 @@ type SignInForm = {
   password: string;
 };
 
-const SignIn = Guard("SignInUpPage", () => {
+const SignIn = Guard("BeforeAuth", () => {
   const toast = useAppToast();
   const { register, handleSubmit } = useForm<SignInForm>();
 

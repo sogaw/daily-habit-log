@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 import { useAuthSafely } from "@/providers/auth";
 
 export function Guard<P extends object>(
-  pattern: "SignInUpPage" | "EmailVerificationPage" | "OnboardPage" | "WithOnboard",
+  pattern: "BeforeAuth" | "BeforeEmailVerify" | "BeforeOnboard" | "AfterOnboard",
   Comp: FC<P>
 ) {
   return function WrappedWithGuard(props: P) {
@@ -12,19 +12,19 @@ export function Guard<P extends object>(
     const { authUser, me } = useAuthSafely();
 
     switch (pattern) {
-      case "SignInUpPage":
+      case "BeforeAuth":
         if (!authUser) return comp;
         break;
 
-      case "EmailVerificationPage":
+      case "BeforeEmailVerify":
         if (authUser && !authUser.emailVerified) return comp;
         break;
 
-      case "OnboardPage":
+      case "BeforeOnboard":
         if (authUser && authUser.emailVerified && !me) return comp;
         break;
 
-      case "WithOnboard":
+      case "AfterOnboard":
         if (authUser && authUser.emailVerified && me) return comp;
         break;
     }

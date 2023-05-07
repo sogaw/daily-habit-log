@@ -6,7 +6,7 @@ import { Guard } from "@/hocs/guard";
 import { useAppToast } from "@/hooks/use-app-toast";
 import { useAuth } from "@/providers/auth";
 
-const EmailVerification = Guard("EmailVerificationPage", () => {
+const EmailVerification = Guard("BeforeEmailVerify", () => {
   const toast = useAppToast();
   const { authUser } = useAuth();
 
