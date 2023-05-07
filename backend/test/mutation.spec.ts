@@ -27,7 +27,7 @@ describe("onboard", () => {
     }
   `;
 
-  it("", async () => {
+  it("オンボードできるよ", async () => {
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q({ name: "me", iconPath: "" }));
@@ -63,7 +63,7 @@ describe("updateHabitRecord", () => {
     await Promise.all([me.save(), habit.save()]);
   });
 
-  it("", async () => {
+  it("データとして存在しない場合は、記録を作成するよ", async () => {
     mockGenNow(new Date("2023-01-03"));
     mockWithAuth({ uid: "user-1" });
 
@@ -78,7 +78,7 @@ describe("updateHabitRecord", () => {
     });
   });
 
-  it("", async () => {
+  it("データとして存在する場合は、記録を更新するよ。当たり前だね", async () => {
     await HabitRecordFactory(habit.habitRecords, null, {
       date: "2023-01-02",
       status: "FAILED",

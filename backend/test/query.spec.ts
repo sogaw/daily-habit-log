@@ -34,7 +34,7 @@ describe("viewer", () => {
     await Promise.all([me.save(), other.save()]);
   });
 
-  it("", async () => {
+  it("ユーザー情報を取得する！", async () => {
     mockWithAuth({ uid: "user-1" });
     mockGetSignedUrl("https://i.pravatar.cc?img=1");
 
@@ -69,7 +69,7 @@ describe("habitRecords", () => {
     await Promise.all([me.save(), habit.save()]);
   });
 
-  it("1", async () => {
+  it("データとしては記録は存在しないけど、PENDING として取得できるよ", async () => {
     mockGenNow(new Date("2023-01-01"));
     mockWithAuth({ uid: "user-1" });
 
@@ -78,7 +78,7 @@ describe("habitRecords", () => {
     expect(res.data.viewer.habits[0].habitRecords).toEqual([{ date: "2023-01-01", status: "PENDING" }]);
   });
 
-  it("2", async () => {
+  it("存在しているデータは参照されるよ。それ以外は PENDING として返ってくるよ", async () => {
     await Promise.all([
       HabitRecordFactory(habit.habitRecords, null, {
         date: "2023-01-02",
@@ -100,7 +100,7 @@ describe("habitRecords", () => {
     ]);
   });
 
-  it("3", async () => {
+  it("最大で7日分の記録が返ってくるよ", async () => {
     mockGenNow(new Date("2023-01-14"));
     mockWithAuth({ uid: "user-1" });
 
@@ -117,7 +117,7 @@ describe("habitRecords", () => {
     ]);
   });
 
-  it("4", async () => {
+  it("4日以内に SUCCESS があれば、tooHard としないよ", async () => {
     await Promise.all([
       HabitRecordFactory(habit.habitRecords, null, {
         date: "2023-01-01",
@@ -127,7 +127,7 @@ describe("habitRecords", () => {
       }).save(),
     ]);
 
-    mockGenNow(new Date("2023-01-03"));
+    mockGenNow(new Date("2023-01-04"));
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q());
@@ -135,7 +135,7 @@ describe("habitRecords", () => {
     expect(res.data.viewer.habits[0].tooHard).toEqual(false);
   });
 
-  it("5", async () => {
+  it("5日以内に SUCCESS がないのであれば、それは tooHard だよ", async () => {
     await Promise.all([
       HabitRecordFactory(habit.habitRecords, null, {
         date: "2023-01-01",
