@@ -35,7 +35,7 @@ const Home = Guard("AfterOnboard", () => {
     <Layout>
       {!data && loading && <Loading />}
 
-      <Stack spacing="4">
+      <Stack spacing="4" pb="6">
         <Stack spacing="4">
           <Link to="/habits">
             <Box fontWeight="bold" fontSize="xl">
