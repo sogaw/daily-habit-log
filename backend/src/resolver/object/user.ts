@@ -1,4 +1,5 @@
 import { Habit, User } from "@/datasource";
+import { Sprint } from "@/datasource/fire-model/sprint";
 import { parseId } from "@/lib/parse";
 import { getSignedUrl } from "@/lib/storage";
 
@@ -30,6 +31,21 @@ builder.objectType(User, {
         parseId(args.id);
 
         return user.habits.findOne(args.id);
+      },
+    }),
+
+    sprints: t.field({
+      type: [Sprint],
+      resolve: (user) => user.sprints.ordered(),
+    }),
+
+    sprint: t.field({
+      type: Sprint,
+      args: { id: t.arg({ type: "ID", required: true }) },
+      resolve: (user, args) => {
+        parseId(args.id);
+
+        return user.sprints.findOne(args.id);
       },
     }),
   }),

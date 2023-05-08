@@ -4,6 +4,7 @@ import { genTimestamp } from "@/lib/gen";
 
 import { FireCollection, FireDocument } from "../fire-model-package";
 import { HabitsCollection } from "./habit";
+import { SprintsCollection } from "./sprint";
 
 export type UserData = {
   id: string;
@@ -15,6 +16,7 @@ export type UserData = {
 
 export class User extends FireDocument<UserData> {
   habits = new HabitsCollection(this.ref.collection("habits"));
+  sprints = new SprintsCollection(this.ref.collection("sprints"));
 
   static create(collection: UsersCollection, { id, name, iconPath }: Pick<UserData, "id" | "name" | "iconPath">) {
     const now = genTimestamp();

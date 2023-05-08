@@ -39,7 +39,7 @@ const HabitEditContainer = Guard("AfterOnboard", () => {
   const { data, loading } = useQuery(HabitDocument, { variables: { id: habitId as string } });
   const habit = data?.viewer?.habit;
 
-  if (loading) return <PageLoading />;
+  if (!data && loading) return <PageLoading />;
   return habit ? <HabitEdit habit={habit} /> : <Navigate to="/not-found" />;
 });
 
@@ -79,7 +79,7 @@ const HabitEdit = ({ habit }: { habit: Pick<Habit, "id" | "name" | "description"
     },
     onCompleted: () => {
       toast.success("Updated.");
-      navigate("/home");
+      navigate("/habits");
     },
     onError: (e) => {
       console.error(e);
@@ -88,7 +88,7 @@ const HabitEdit = ({ habit }: { habit: Pick<Habit, "id" | "name" | "description"
   });
 
   return (
-    <Layout title="New Habit" backPath="/home">
+    <Layout title="New Habit" backPath="/habits">
       <Stack as="form" onSubmit={handleSubmit((v) => createHabit({ variables: { id: habit.id, input: v } }))}>
         <FormControl>
           <FormLabel>Name</FormLabel>

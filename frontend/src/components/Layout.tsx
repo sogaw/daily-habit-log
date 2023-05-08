@@ -52,7 +52,8 @@ export const Layout = ({
           <Menu placement="bottom-end">
             <MenuButton as={IconButton} icon={<Icon as={FaBars} />} size="sm" variant="ghost" />
             <MenuList>
-              <MenuItem onClick={() => navigate("/habits/new")}>Add new habit</MenuItem>
+              <MenuItem onClick={() => navigate("/habits")}>Habits</MenuItem>
+              <MenuItem onClick={() => navigate("/sprints")}>Sprints</MenuItem>
               <MenuDivider />
               <MenuItem onClick={() => navigate("/me/profile")}>Profile</MenuItem>
               <MenuItem onClick={() => navigate("/me/account")}>Account</MenuItem>

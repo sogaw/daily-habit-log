@@ -1,27 +1,27 @@
-import { Habit } from "@/datasource";
+import { Sprint } from "@/datasource/fire-model/sprint";
 import { parseAuth, parseId } from "@/lib/parse";
 
 import { builder } from "../builder";
 
-const UpdateHabitInput = builder.inputType("UpdateHabitInput", {
+const UpdateSprintInput = builder.inputType("UpdateSprintInput", {
   fields: (t) => ({
     name: t.string({ required: true, validate: { minLength: 1 } }),
     description: t.string({ required: true }),
   }),
 });
 
-builder.mutationField("updateHabit", (t) =>
+builder.mutationField("updateSprint", (t) =>
   t.field({
-    type: Habit,
-    args: { id: t.arg({ type: "ID", required: true }), input: t.arg({ type: UpdateHabitInput, required: true }) },
+    type: Sprint,
+    args: { id: t.arg({ type: "ID", required: true }), input: t.arg({ type: UpdateSprintInput, required: true }) },
     resolve: async (_root, args, { auth, datasource }) => {
       parseAuth(auth);
       parseId(args.id);
 
       const me = await datasource.users.findOne(auth.uid);
-      const habit = await me.habits.findOne(args.id);
+      const sprint = await me.sprints.findOne(args.id);
 
-      return habit
+      return sprint
         .update({
           name: args.input.name,
           description: args.input.description,

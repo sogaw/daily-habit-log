@@ -4,6 +4,12 @@ enum HabitRecordStatus {
   PENDING
 }
 
+enum SprintStatus {
+  SUCCESS
+  FAILED
+  PENDING
+}
+
 input OnboardInput {
   name: String!
   iconPath: String!
@@ -30,12 +36,28 @@ input UpdateHabitRecordInput {
   status: HabitRecordStatus!
 }
 
+input CreateSprintInput {
+  name: String!
+  description: String!
+}
+
+input UpdateSprintInput {
+  name: String!
+  description: String!
+}
+
+input UpdateSprintStatusInput {
+  status: SprintStatus!
+}
+
 type User {
   id: ID!
   name: String!
   iconUrl: String
   habits: [Habit!]!
   habit(id: ID!): Habit!
+  sprints: [Sprint!]!
+  sprint(id: ID!): Sprint!
 }
 
 type Habit {
@@ -53,6 +75,14 @@ type HabitRecord {
   habitId: String!
 }
 
+type Sprint {
+  id: ID!
+  name: String!
+  description: String!
+  status: SprintStatus!
+  createdAt: String!
+}
+
 type Query {
   viewer: User
 }
@@ -65,4 +95,8 @@ type Mutation {
   updateHabit(id: ID!, input: UpdateHabitInput!): Habit!
   deleteHabit(id: ID!): Habit!
   updateHabitRecord(input: UpdateHabitRecordInput!): HabitRecord!
+  createSprint(input: CreateSprintInput!): Sprint!
+  updateSprint(id: ID!, input: UpdateSprintInput!): Sprint!
+  updateSprintStatus(id: ID!, input: UpdateSprintStatusInput!): Sprint!
+  deleteSprint(id: ID!): Sprint!
 }

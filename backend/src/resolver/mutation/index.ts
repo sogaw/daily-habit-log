@@ -5,3 +5,7 @@ import "./create-habit";
 import "./update-habit";
 import "./delete-habit";
 import "./update-habit-record";
+import "./create-sprint";
+import "./update-sprint";
+import "./update-sprint-status";
+import "./delete-sprint";

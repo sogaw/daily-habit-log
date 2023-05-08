@@ -4,33 +4,33 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { Layout } from "@/components/Layout";
-import { CreateHabitDocument } from "@/generated/gql/graphql";
+import { CreateSprintDocument } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
 import { useAppToast } from "@/hooks/use-app-toast";
 import { useMe } from "@/providers/auth";
 
 gql`
-  mutation createHabit($input: CreateHabitInput!) {
-    createHabit(input: $input) {
+  mutation createSprint($input: CreateSprintInput!) {
+    createSprint(input: $input) {
       id
-      ...HabitItem
+      ...SprintItem
     }
   }
 `;
 
-type HabitCreateForm = {
+type SprintCreateForm = {
   name: string;
   description: string;
 };
 
-const HabitsNew = Guard("AfterOnboard", () => {
+const SprintsNew = Guard("AfterOnboard", () => {
   const navigate = useNavigate();
   const toast = useAppToast();
   const { me } = useMe();
 
-  const { register, handleSubmit } = useForm<HabitCreateForm>();
+  const { register, handleSubmit } = useForm<SprintCreateForm>();
 
-  const [createHabit] = useMutation(CreateHabitDocument, {
+  const [createSprint] = useMutation(CreateSprintDocument, {
     update: (cache, { data }) => {
       cache.modify({
         id: cache.identify({
@@ -38,16 +38,16 @@ const HabitsNew = Guard("AfterOnboard", () => {
           id: me.id,
         }),
         fields: {
-          habits: (existing: Reference[] = [], { toReference }) => {
+          sprints: (existing: Reference[] = [], { toReference }) => {
             if (!data) return existing;
-            return [toReference(data.createHabit), ...existing];
+            return [toReference(data.createSprint), ...existing];
           },
         },
       });
     },
     onCompleted: () => {
       toast.success("Created.");
-      navigate("/habits");
+      navigate("/sprints");
     },
     onError: (e) => {
       console.error(e);
@@ -56,8 +56,8 @@ const HabitsNew = Guard("AfterOnboard", () => {
   });
 
   return (
-    <Layout title="New Habit" backPath="/habits">
-      <Stack as="form" onSubmit={handleSubmit((v) => createHabit({ variables: { input: v } }))}>
+    <Layout title="New Sprint" backPath="/sprints">
+      <Stack as="form" onSubmit={handleSubmit((v) => createSprint({ variables: { input: v } }))}>
         <FormControl>
           <FormLabel>Name</FormLabel>
           <Input required {...register("name")} />
@@ -74,4 +74,4 @@ const HabitsNew = Guard("AfterOnboard", () => {
   );
 });
 
-export default HabitsNew;
+export default SprintsNew;

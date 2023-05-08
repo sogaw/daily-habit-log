@@ -11,6 +11,7 @@ builder.objectType(Habit, {
     id: t.exposeID("id"),
     name: t.string({ resolve: (note) => note.data.name }),
     description: t.string({ resolve: (note) => note.data.description }),
+
     habitRecords: t.field({
       type: [HabitRecord],
       resolve: async (habit) => {
@@ -25,6 +26,7 @@ builder.objectType(Habit, {
         });
       },
     }),
+
     tooHard: t.boolean({
       resolve: async (habit) => {
         const threeDaysAgo = subDays(genNow(), 3);
