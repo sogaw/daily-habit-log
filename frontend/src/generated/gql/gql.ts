@@ -13,12 +13,13 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  fragment HabitItem on Habit {\n    id\n    name\n    description\n    tooHard\n    habitRecords {\n      id\n      date\n      status\n      habitId\n    }\n  }\n": types.HabitItemFragmentDoc,
-    "\n  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {\n    updateHabitRecord(input: $input) {\n      id\n      date\n      status\n      habitId\n    }\n  }\n": types.UpdateHabitRecordDocument,
+    "\n  fragment HabitItem on Habit {\n    id\n    name\n    description\n    tooHard\n    habitRecords {\n      id\n      ...HabitRecordItem\n    }\n  }\n": types.HabitItemFragmentDoc,
     "\n  mutation deleteHabit($id: ID!) {\n    deleteHabit(id: $id) {\n      id\n    }\n  }\n": types.DeleteHabitDocument,
+    "\n  fragment HabitRecordItem on HabitRecord {\n    id\n    date\n    status\n    habitId\n  }\n": types.HabitRecordItemFragmentDoc,
+    "\n  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {\n    updateHabitRecord(input: $input) {\n      id\n      ...HabitRecordItem\n    }\n  }\n": types.UpdateHabitRecordDocument,
     "\n  fragment SprintItem on Sprint {\n    id\n    name\n    status\n    description\n    active\n    createdAt\n  }\n": types.SprintItemFragmentDoc,
-    "\n  mutation updateSprintStatus($id: ID!, $input: UpdateSprintStatusInput!) {\n    updateSprintStatus(id: $id, input: $input) {\n      id\n      status\n    }\n  }\n": types.UpdateSprintStatusDocument,
     "\n  mutation deleteSprint($id: ID!) {\n    deleteSprint(id: $id) {\n      id\n    }\n  }\n": types.DeleteSprintDocument,
+    "\n  mutation updateSprintStatus($id: ID!, $input: UpdateSprintStatusInput!) {\n    updateSprintStatus(id: $id, input: $input) {\n      id\n      status\n    }\n  }\n": types.UpdateSprintStatusDocument,
     "\n  query habit($id: ID!) {\n    viewer {\n      id\n      habit(id: $id) {\n        id\n        name\n        description\n      }\n    }\n  }\n": types.HabitDocument,
     "\n  mutation updateHabit($id: ID!, $input: UpdateHabitInput!) {\n    updateHabit(id: $id, input: $input) {\n      id\n      name\n      description\n    }\n  }\n": types.UpdateHabitDocument,
     "\n  query habits {\n    viewer {\n      id\n      habits {\n        id\n        ...HabitItem\n      }\n    }\n  }\n": types.HabitsDocument,
@@ -52,11 +53,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment HabitItem on Habit {\n    id\n    name\n    description\n    tooHard\n    habitRecords {\n      id\n      date\n      status\n      habitId\n    }\n  }\n"): (typeof documents)["\n  fragment HabitItem on Habit {\n    id\n    name\n    description\n    tooHard\n    habitRecords {\n      id\n      date\n      status\n      habitId\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {\n    updateHabitRecord(input: $input) {\n      id\n      date\n      status\n      habitId\n    }\n  }\n"): (typeof documents)["\n  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {\n    updateHabitRecord(input: $input) {\n      id\n      date\n      status\n      habitId\n    }\n  }\n"];
+export function graphql(source: "\n  fragment HabitItem on Habit {\n    id\n    name\n    description\n    tooHard\n    habitRecords {\n      id\n      ...HabitRecordItem\n    }\n  }\n"): (typeof documents)["\n  fragment HabitItem on Habit {\n    id\n    name\n    description\n    tooHard\n    habitRecords {\n      id\n      ...HabitRecordItem\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -64,15 +61,23 @@ export function graphql(source: "\n  mutation deleteHabit($id: ID!) {\n    delet
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  fragment HabitRecordItem on HabitRecord {\n    id\n    date\n    status\n    habitId\n  }\n"): (typeof documents)["\n  fragment HabitRecordItem on HabitRecord {\n    id\n    date\n    status\n    habitId\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {\n    updateHabitRecord(input: $input) {\n      id\n      ...HabitRecordItem\n    }\n  }\n"): (typeof documents)["\n  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {\n    updateHabitRecord(input: $input) {\n      id\n      ...HabitRecordItem\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  fragment SprintItem on Sprint {\n    id\n    name\n    status\n    description\n    active\n    createdAt\n  }\n"): (typeof documents)["\n  fragment SprintItem on Sprint {\n    id\n    name\n    status\n    description\n    active\n    createdAt\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation updateSprintStatus($id: ID!, $input: UpdateSprintStatusInput!) {\n    updateSprintStatus(id: $id, input: $input) {\n      id\n      status\n    }\n  }\n"): (typeof documents)["\n  mutation updateSprintStatus($id: ID!, $input: UpdateSprintStatusInput!) {\n    updateSprintStatus(id: $id, input: $input) {\n      id\n      status\n    }\n  }\n"];
+export function graphql(source: "\n  mutation deleteSprint($id: ID!) {\n    deleteSprint(id: $id) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation deleteSprint($id: ID!) {\n    deleteSprint(id: $id) {\n      id\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation deleteSprint($id: ID!) {\n    deleteSprint(id: $id) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation deleteSprint($id: ID!) {\n    deleteSprint(id: $id) {\n      id\n    }\n  }\n"];
+export function graphql(source: "\n  mutation updateSprintStatus($id: ID!, $input: UpdateSprintStatusInput!) {\n    updateSprintStatus(id: $id, input: $input) {\n      id\n      status\n    }\n  }\n"): (typeof documents)["\n  mutation updateSprintStatus($id: ID!, $input: UpdateSprintStatusInput!) {\n    updateSprintStatus(id: $id, input: $input) {\n      id\n      status\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

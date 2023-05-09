@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FragmentType, useFragment } from "@/generated/gql";
 import {
   DeleteSprintDocument,
+  SprintItemFragment,
   SprintItemFragmentDoc,
   SprintStatus,
   UpdateSprintStatusDocument,
@@ -25,24 +26,12 @@ gql`
 `;
 
 gql`
-  mutation updateSprintStatus($id: ID!, $input: UpdateSprintStatusInput!) {
-    updateSprintStatus(id: $id, input: $input) {
-      id
-      status
-    }
-  }
-`;
-
-gql`
   mutation deleteSprint($id: ID!) {
     deleteSprint(id: $id) {
       id
     }
   }
 `;
-
-const nextStatus = { SUCCESS: "FAILED", FAILED: "PENDING", PENDING: "SUCCESS" } as Record<SprintStatus, SprintStatus>;
-const statusColor = { SUCCESS: "green", FAILED: "red", PENDING: "gray" } as const;
 
 export const SprintsList = (props: {
   sprints: FragmentType<typeof SprintItemFragmentDoc>[];
@@ -53,16 +42,6 @@ export const SprintsList = (props: {
   const navigate = useNavigate();
   const toast = useAppToast();
   const { me } = useMe();
-
-  const [updateSprintStatus] = useMutation(UpdateSprintStatusDocument, {
-    onCompleted: () => {
-      toast.success("Updated.");
-    },
-    onError: (e) => {
-      console.error(e);
-      toast.error();
-    },
-  });
 
   const [deleteSprint] = useMutation(DeleteSprintDocument, {
     update: (cache, { data }) => {
@@ -125,29 +104,65 @@ export const SprintsList = (props: {
               </Box>
             </Box>
 
-            <Button
-              w="12"
-              h="12"
-              rounded="full"
-              fontSize="xs"
-              colorScheme={statusColor[sprint.status]}
-              onClick={() =>
-                updateSprintStatus({
-                  variables: {
-                    id: sprint.id,
-                    input: { status: nextStatus[sprint.status] },
-                  },
-                })
-              }
-              isDisabled={!sprint.active}
-            >
-              {sprint.createdAt.split(" ").slice(0, 1).join("/")}
-            </Button>
+            <SprintStatusItem sprint={sprint} />
           </Stack>
 
           {idx != sprints.length - 1 ? <Divider /> : <Box />}
         </Stack>
       ))}
     </Stack>
+  );
+};
+
+/**
+ * SprintStatusItem
+ */
+
+gql`
+  mutation updateSprintStatus($id: ID!, $input: UpdateSprintStatusInput!) {
+    updateSprintStatus(id: $id, input: $input) {
+      id
+      status
+    }
+  }
+`;
+
+const nextStatus = { SUCCESS: "FAILED", FAILED: "PENDING", PENDING: "SUCCESS" } as Record<SprintStatus, SprintStatus>;
+const statusColor = { SUCCESS: "green", FAILED: "red", PENDING: "gray" } as const;
+
+const SprintStatusItem = ({ sprint }: { sprint: SprintItemFragment }) => {
+  const toast = useAppToast();
+
+  const [updateSprintStatus, { loading }] = useMutation(UpdateSprintStatusDocument, {
+    onCompleted: () => {
+      toast.success("Updated.");
+    },
+    onError: (e) => {
+      console.error(e);
+      toast.error();
+    },
+  });
+
+  return (
+    <Box>
+      <Button
+        w="12"
+        h="12"
+        rounded="full"
+        fontSize="xs"
+        colorScheme={statusColor[sprint.status]}
+        onClick={() =>
+          updateSprintStatus({
+            variables: {
+              id: sprint.id,
+              input: { status: nextStatus[sprint.status] },
+            },
+          })
+        }
+        isDisabled={!sprint.active || loading}
+      >
+        {sprint.createdAt.split(" ").slice(0, 1).join("/")}
+      </Button>
+    </Box>
   );
 };

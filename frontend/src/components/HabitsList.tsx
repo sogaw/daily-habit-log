@@ -7,6 +7,7 @@ import { FragmentType, useFragment } from "@/generated/gql";
 import {
   DeleteHabitDocument,
   HabitItemFragmentDoc,
+  HabitRecordItemFragmentDoc,
   HabitRecordStatus,
   UpdateHabitRecordDocument,
 } from "@/generated/gql/graphql";
@@ -21,20 +22,7 @@ gql`
     tooHard
     habitRecords {
       id
-      date
-      status
-      habitId
-    }
-  }
-`;
-
-gql`
-  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {
-    updateHabitRecord(input: $input) {
-      id
-      date
-      status
-      habitId
+      ...HabitRecordItem
     }
   }
 `;
@@ -47,28 +35,12 @@ gql`
   }
 `;
 
-const nextStatus = { SUCCESS: "FAILED", FAILED: "PENDING", PENDING: "SUCCESS" } as Record<
-  HabitRecordStatus,
-  HabitRecordStatus
->;
-const statusColor = { SUCCESS: "green", FAILED: "red", PENDING: "gray" } as const;
-
 export const HabitsList = (props: { habits: FragmentType<typeof HabitItemFragmentDoc>[]; mode: "view" | "edit" }) => {
   const habits = useFragment(HabitItemFragmentDoc, props.habits);
 
   const navigate = useNavigate();
   const toast = useAppToast();
   const { me } = useMe();
-
-  const [updateHabitRecord] = useMutation(UpdateHabitRecordDocument, {
-    onCompleted: () => {
-      toast.success("Updated.");
-    },
-    onError: (e) => {
-      console.error(e);
-      toast.error();
-    },
-  });
 
   const [deleteHabit] = useMutation(DeleteHabitDocument, {
     update: (cache, { data }) => {
@@ -130,29 +102,7 @@ export const HabitsList = (props: { habits: FragmentType<typeof HabitItemFragmen
 
             <Flex flexWrap="wrap" gap="8px 8px">
               {habit.habitRecords.map((habitRecord) => (
-                <Box key={habitRecord.id}>
-                  <Button
-                    w="12"
-                    h="12"
-                    rounded="full"
-                    fontSize="xs"
-                    colorScheme={statusColor[habitRecord.status]}
-                    onClick={() =>
-                      updateHabitRecord({
-                        variables: {
-                          input: {
-                            habitId: habit.id,
-                            date: habitRecord.date,
-                            status: nextStatus[habitRecord.status],
-                          },
-                        },
-                      })
-                    }
-                    isDisabled={habit.tooHard}
-                  >
-                    {habitRecord.date.split("-").slice(1).join("/")}
-                  </Button>
-                </Box>
+                <HabitRecordItem key={habitRecord.id} habitRecord={habitRecord} tooHard={habit.tooHard} />
               ))}
             </Flex>
           </Stack>
@@ -161,5 +111,72 @@ export const HabitsList = (props: { habits: FragmentType<typeof HabitItemFragmen
         </Stack>
       ))}
     </Stack>
+  );
+};
+
+/**
+ * HabitRecordItem
+ */
+
+gql`
+  fragment HabitRecordItem on HabitRecord {
+    id
+    date
+    status
+    habitId
+  }
+`;
+
+gql`
+  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {
+    updateHabitRecord(input: $input) {
+      id
+      ...HabitRecordItem
+    }
+  }
+`;
+
+const nextStatus = { SUCCESS: "FAILED", FAILED: "PENDING", PENDING: "SUCCESS" } as Record<
+  HabitRecordStatus,
+  HabitRecordStatus
+>;
+const statusColor = { SUCCESS: "green", FAILED: "red", PENDING: "gray" } as const;
+
+const HabitRecordItem = (props: { habitRecord: FragmentType<typeof HabitRecordItemFragmentDoc>; tooHard: boolean }) => {
+  const habitRecord = useFragment(HabitRecordItemFragmentDoc, props.habitRecord);
+
+  const toast = useAppToast();
+
+  const [updateHabitRecord, { loading }] = useMutation(UpdateHabitRecordDocument, {
+    variables: {
+      input: {
+        habitId: habitRecord.habitId,
+        date: habitRecord.date,
+        status: nextStatus[habitRecord.status],
+      },
+    },
+    onCompleted: () => {
+      toast.success("Updated.");
+    },
+    onError: (e) => {
+      console.error(e);
+      toast.error();
+    },
+  });
+
+  return (
+    <Box key={habitRecord.id}>
+      <Button
+        w="12"
+        h="12"
+        rounded="full"
+        fontSize="xs"
+        colorScheme={statusColor[habitRecord.status]}
+        onClick={() => updateHabitRecord()}
+        isDisabled={props.tooHard || loading}
+      >
+        {habitRecord.date.split("-").slice(1).join("/")}
+      </Button>
+    </Box>
   );
 };
