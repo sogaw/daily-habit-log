@@ -56,6 +56,7 @@ type User {
   iconUrl: String
   habits: [Habit!]!
   habit(id: ID!): Habit!
+  activeSprints: [Sprint!]!
   sprints: [Sprint!]!
   sprint(id: ID!): Sprint!
 }
@@ -80,6 +81,7 @@ type Sprint {
   name: String!
   description: String!
   status: SprintStatus!
+  active: Boolean!
   createdAt: String!
 }
 

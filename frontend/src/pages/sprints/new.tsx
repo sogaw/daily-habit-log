@@ -42,6 +42,10 @@ const SprintsNew = Guard("AfterOnboard", () => {
             if (!data) return existing;
             return [toReference(data.createSprint), ...existing];
           },
+          activeSprints: (existing: Reference[] = [], { toReference }) => {
+            if (!data) return existing;
+            return [toReference(data.createSprint), ...existing];
+          },
         },
       });
     },

@@ -70,8 +70,8 @@ export const mockDeleteFileRecursive = () => {
 };
 
 // Mock Date
-export const mockGenNow = (date: Date) => {
-  jest.spyOn(gen, "genNow").mockImplementation(() => date);
+export const mockGenDate = (date: Date) => {
+  jest.spyOn(gen, "genDate").mockImplementation(() => date);
 };
 
 /**

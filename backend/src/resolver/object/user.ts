@@ -21,7 +21,7 @@ builder.objectType(User, {
 
     habits: t.field({
       type: [Habit],
-      resolve: (user) => user.habits.ordered(),
+      resolve: (user) => user.habits.all(),
     }),
 
     habit: t.field({
@@ -34,9 +34,14 @@ builder.objectType(User, {
       },
     }),
 
+    activeSprints: t.field({
+      type: [Sprint],
+      resolve: (user) => user.sprints.active(),
+    }),
+
     sprints: t.field({
       type: [Sprint],
-      resolve: (user) => user.sprints.ordered(),
+      resolve: (user) => user.sprints.all(),
     }),
 
     sprint: t.field({

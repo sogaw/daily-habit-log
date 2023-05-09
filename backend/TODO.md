@@ -1,3 +1,2 @@
 - [x] script
-- [] sprint archive
-- [] sprint all, active, archive
+- [] sprint all

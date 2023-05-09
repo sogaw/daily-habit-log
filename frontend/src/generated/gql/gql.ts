@@ -16,14 +16,14 @@ const documents = {
     "\n  fragment HabitItem on Habit {\n    id\n    name\n    description\n    tooHard\n    habitRecords {\n      id\n      date\n      status\n      habitId\n    }\n  }\n": types.HabitItemFragmentDoc,
     "\n  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {\n    updateHabitRecord(input: $input) {\n      id\n      date\n      status\n      habitId\n    }\n  }\n": types.UpdateHabitRecordDocument,
     "\n  mutation deleteHabit($id: ID!) {\n    deleteHabit(id: $id) {\n      id\n    }\n  }\n": types.DeleteHabitDocument,
-    "\n  fragment SprintItem on Sprint {\n    id\n    name\n    status\n    description\n    createdAt\n  }\n": types.SprintItemFragmentDoc,
+    "\n  fragment SprintItem on Sprint {\n    id\n    name\n    status\n    description\n    active\n    createdAt\n  }\n": types.SprintItemFragmentDoc,
     "\n  mutation updateSprintStatus($id: ID!, $input: UpdateSprintStatusInput!) {\n    updateSprintStatus(id: $id, input: $input) {\n      id\n      status\n    }\n  }\n": types.UpdateSprintStatusDocument,
     "\n  mutation deleteSprint($id: ID!) {\n    deleteSprint(id: $id) {\n      id\n    }\n  }\n": types.DeleteSprintDocument,
     "\n  query habit($id: ID!) {\n    viewer {\n      id\n      habit(id: $id) {\n        id\n        name\n        description\n      }\n    }\n  }\n": types.HabitDocument,
     "\n  mutation updateHabit($id: ID!, $input: UpdateHabitInput!) {\n    updateHabit(id: $id, input: $input) {\n      id\n      name\n      description\n    }\n  }\n": types.UpdateHabitDocument,
     "\n  query habits {\n    viewer {\n      id\n      habits {\n        id\n        ...HabitItem\n      }\n    }\n  }\n": types.HabitsDocument,
     "\n  mutation createHabit($input: CreateHabitInput!) {\n    createHabit(input: $input) {\n      id\n      ...HabitItem\n    }\n  }\n": types.CreateHabitDocument,
-    "\n  query home {\n    viewer {\n      id\n      habits {\n        id\n        ...HabitItem\n      }\n      sprints {\n        id\n        ...SprintItem\n      }\n    }\n  }\n": types.HomeDocument,
+    "\n  query home {\n    viewer {\n      id\n      habits {\n        id\n        ...HabitItem\n      }\n      activeSprints {\n        id\n        ...SprintItem\n      }\n    }\n  }\n": types.HomeDocument,
     "\n  mutation deleteAccount {\n    deleteAccount\n  }\n": types.DeleteAccountDocument,
     "\n  mutation updateProfile($input: UpdateProfileInput!) {\n    updateProfile(input: $input) {\n      id\n      ...Me\n    }\n  }\n": types.UpdateProfileDocument,
     "\n  mutation onboard($input: OnboardInput!) {\n    onboard(input: $input) {\n      id\n    }\n  }\n": types.OnboardDocument,
@@ -64,7 +64,7 @@ export function graphql(source: "\n  mutation deleteHabit($id: ID!) {\n    delet
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment SprintItem on Sprint {\n    id\n    name\n    status\n    description\n    createdAt\n  }\n"): (typeof documents)["\n  fragment SprintItem on Sprint {\n    id\n    name\n    status\n    description\n    createdAt\n  }\n"];
+export function graphql(source: "\n  fragment SprintItem on Sprint {\n    id\n    name\n    status\n    description\n    active\n    createdAt\n  }\n"): (typeof documents)["\n  fragment SprintItem on Sprint {\n    id\n    name\n    status\n    description\n    active\n    createdAt\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -92,7 +92,7 @@ export function graphql(source: "\n  mutation createHabit($input: CreateHabitInp
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query home {\n    viewer {\n      id\n      habits {\n        id\n        ...HabitItem\n      }\n      sprints {\n        id\n        ...SprintItem\n      }\n    }\n  }\n"): (typeof documents)["\n  query home {\n    viewer {\n      id\n      habits {\n        id\n        ...HabitItem\n      }\n      sprints {\n        id\n        ...SprintItem\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query home {\n    viewer {\n      id\n      habits {\n        id\n        ...HabitItem\n      }\n      activeSprints {\n        id\n        ...SprintItem\n      }\n    }\n  }\n"): (typeof documents)["\n  query home {\n    viewer {\n      id\n      habits {\n        id\n        ...HabitItem\n      }\n      activeSprints {\n        id\n        ...SprintItem\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

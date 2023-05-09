@@ -2,7 +2,7 @@ import { Habit, User } from "@/datasource";
 import { datasourceContext } from "@/resolver";
 
 import { HabitFactory, HabitRecordFactory, TimestampFactory, UserFactory } from "./factory";
-import { clearFirestore, execute, mockGenNow, mockGetSignedUrl, mockWithAuth } from "./setup";
+import { clearFirestore, execute, mockGenDate, mockGetSignedUrl, mockWithAuth } from "./setup";
 
 const { users } = datasourceContext();
 
@@ -70,7 +70,7 @@ describe("habitRecords", () => {
   });
 
   it("データとしては記録は存在しないけど、PENDING として取得できるよ", async () => {
-    mockGenNow(new Date("2023-01-01"));
+    mockGenDate(new Date("2023-01-01"));
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q());
@@ -88,7 +88,7 @@ describe("habitRecords", () => {
       }).save(),
     ]);
 
-    mockGenNow(new Date("2023-01-03"));
+    mockGenDate(new Date("2023-01-03"));
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q());
@@ -101,7 +101,7 @@ describe("habitRecords", () => {
   });
 
   it("最大で7日分の記録が返ってくるよ", async () => {
-    mockGenNow(new Date("2023-01-14"));
+    mockGenDate(new Date("2023-01-14"));
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q());
@@ -127,7 +127,7 @@ describe("habitRecords", () => {
       }).save(),
     ]);
 
-    mockGenNow(new Date("2023-01-04"));
+    mockGenDate(new Date("2023-01-04"));
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q());
@@ -145,7 +145,7 @@ describe("habitRecords", () => {
       }).save(),
     ]);
 
-    mockGenNow(new Date("2023-01-05"));
+    mockGenDate(new Date("2023-01-05"));
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q());

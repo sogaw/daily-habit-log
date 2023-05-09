@@ -2,7 +2,7 @@ import { Habit, User } from "@/datasource";
 import { datasourceContext } from "@/resolver";
 
 import { HabitFactory, HabitRecordFactory, TimestampFactory, UserFactory } from "./factory";
-import { clearFirestore, execute, mockGenNow, mockWithAuth } from "./setup";
+import { clearFirestore, execute, mockGenDate, mockWithAuth } from "./setup";
 
 const { users, habitRecords } = datasourceContext();
 
@@ -64,7 +64,7 @@ describe("updateHabitRecord", () => {
   });
 
   it("データとして存在しない場合は、記録を作成するよ", async () => {
-    mockGenNow(new Date("2023-01-03"));
+    mockGenDate(new Date("2023-01-03"));
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q({ date: "2023-01-02", status: "SUCCESS", habitId: "habit-1" }));
@@ -86,7 +86,7 @@ describe("updateHabitRecord", () => {
       habitId: "habit-1",
     }).save();
 
-    mockGenNow(new Date("2023-01-03"));
+    mockGenDate(new Date("2023-01-03"));
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q({ date: "2023-01-02", status: "SUCCESS", habitId: "habit-1" }));

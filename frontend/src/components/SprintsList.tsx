@@ -19,6 +19,7 @@ gql`
     name
     status
     description
+    active
     createdAt
   }
 `;
@@ -74,6 +75,9 @@ export const SprintsList = (props: {
           sprints: (existing: Reference[] = [], { readField }) => {
             return existing.filter((habitRef) => readField("id", habitRef) != data?.deleteSprint.id);
           },
+          activeSprints: (existing: Reference[] = [], { readField }) => {
+            return existing.filter((habitRef) => readField("id", habitRef) != data?.deleteSprint.id);
+          },
         },
       });
     },
@@ -97,13 +101,17 @@ export const SprintsList = (props: {
           <Stack>
             <Box>
               <Flex justify="space-between" align="center">
-                <Box fontWeight="semibold">{sprint.name}</Box>
+                <Box fontWeight="semibold" opacity={sprint.active ? "1" : "0.6"}>
+                  {sprint.name}
+                </Box>
 
                 {props.mode == "edit" && (
                   <HStack>
-                    <Button size="xs" onClick={() => navigate(`/sprints/${sprint.id}/edit`)}>
-                      <Icon as={FaPen} />
-                    </Button>
+                    {sprint.active && (
+                      <Button size="xs" onClick={() => navigate(`/sprints/${sprint.id}/edit`)}>
+                        <Icon as={FaPen} />
+                      </Button>
+                    )}
 
                     <Button size="xs" onClick={() => onDeleteSprint(sprint.id)}>
                       <Icon as={FaTrash} />
@@ -112,7 +120,9 @@ export const SprintsList = (props: {
                 )}
               </Flex>
 
-              <Box whiteSpace="pre-wrap">{sprint.description}</Box>
+              <Box whiteSpace="pre-wrap" opacity={sprint.active ? "1" : "0.6"}>
+                {sprint.description}
+              </Box>
             </Box>
 
             <Button
@@ -129,6 +139,7 @@ export const SprintsList = (props: {
                   },
                 })
               }
+              isDisabled={!sprint.active}
             >
               {sprint.createdAt.split(" ").slice(0, 1).join("/")}
             </Button>

@@ -43,7 +43,7 @@ export class HabitsCollection extends FireCollection<Habit> {
     super(ref, (snap) => Habit.fromSnapshot(snap));
   }
 
-  ordered() {
+  all() {
     return this.findManyByQuery((ref) => ref.orderBy("updatedAt", "desc"));
   }
 }

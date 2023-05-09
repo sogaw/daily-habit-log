@@ -17,7 +17,7 @@ gql`
         id
         ...HabitItem
       }
-      sprints {
+      activeSprints {
         id
         ...SprintItem
       }
@@ -29,7 +29,7 @@ const Home = Guard("AfterOnboard", () => {
   const { data, loading } = useQuery(HomeDocument);
 
   const habits = data?.viewer?.habits;
-  const sprints = data?.viewer?.sprints;
+  const sprints = data?.viewer?.activeSprints;
 
   return (
     <Layout>

@@ -1,7 +1,7 @@
 import { startOfDay } from "date-fns";
 import { CollectionGroup, CollectionReference, Timestamp } from "firebase-admin/firestore";
 
-import { genId, genNow, genTimestamp } from "@/lib/gen";
+import { genId, genDate, genTimestamp } from "@/lib/gen";
 
 import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model-package";
 
@@ -47,9 +47,13 @@ export class SprintsCollection extends FireCollection<Sprint> {
     super(ref, (snap) => Sprint.fromSnapshot(snap));
   }
 
-  ordered() {
-    const endAt = startOfDay(genNow());
+  active() {
+    const endAt = startOfDay(genDate());
     return this.findManyByQuery((ref) => ref.orderBy("createdAt", "desc").endAt(endAt));
+  }
+
+  all() {
+    return this.findManyByQuery((ref) => ref.orderBy("createdAt", "desc"));
   }
 }
 

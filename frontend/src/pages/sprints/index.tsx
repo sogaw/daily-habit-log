@@ -39,7 +39,7 @@ const SprintsIndex = Guard("AfterOnboard", () => {
       )}
 
       {sprints && sprints.length > 0 && (
-        <Stack spacing="4">
+        <Stack spacing="4" pb="6">
           <Button alignSelf="end" size="sm" colorScheme="green" onClick={() => navigate("/sprints/new")}>
             New
           </Button>
