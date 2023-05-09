@@ -23,7 +23,9 @@
     "fire:emu:dev": "firebase emulators:start --import=./fire-emu-data --export-on-exit",
     "fire:emu:test": "firebase emulators:start",
     "fire:emu:kill": "kill-port --port 4000,5000,9099,8080,9199",
-    "dev:all": "concurrently -n \"dev,fir\" \"yarn dev\" \"yarn fire:emu:dev\""
+    "dev:all": "concurrently -n \"dev,fir\" \"yarn dev\" \"yarn fire:emu:dev\"",
+    "script:run:dev": "dotenv -e .env.development -- ts-node --project ./script/tsconfig.json -r tsconfig-paths/register -r ./script/setup.ts",
+    "script:run:prod": "dotenv -e .env.production -- ts-node --project ./script/tsconfig.json -r tsconfig-paths/register -r ./script/setup.ts"
   },
   "_moduleAliases": {
     "@": "dist"

@@ -3,4 +3,5 @@
 /.firebase
 /fire-emu-data
 /firebase-export-*
+/cred
 *.log

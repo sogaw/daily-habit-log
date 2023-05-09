@@ -1,5 +1,3 @@
-- [] script
-- [] habit archive
+- [x] script
 - [] sprint archive
-- [] habit all, active, archive
 - [] sprint all, active, archive
