@@ -1,7 +1,7 @@
 import { startOfDay } from "date-fns";
 import { CollectionGroup, CollectionReference, Timestamp } from "firebase-admin/firestore";
 
-import { genId, genDate, genTimestamp } from "@/lib/gen";
+import { genDate, genId, genTimestamp } from "@/lib/gen";
 
 import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model-package";
 
