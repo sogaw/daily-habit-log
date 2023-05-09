@@ -31,6 +31,7 @@ export class FireCollection<TTransformed extends { data: DocumentData }> {
   }
 
   findOne(id: string, { cache } = { cache: true }) {
+    console.debug(`[Fire] read 1 doc from ${this.constructor.name} collection.`);
     return cache ? this.loader.load(id).then(this.transformer) : this.loader.clear(id).load(id).then(this.transformer);
   }
 
@@ -40,6 +41,7 @@ export class FireCollection<TTransformed extends { data: DocumentData }> {
 
   async findManyByQuery(queryFn: (ref: CollectionReference) => Query, { prime } = { prime: false }) {
     const snaps = await queryFn(this.ref).get();
+    console.debug(`[Fire] read ${snaps.size} docs from ${this.constructor.name} collection.`);
     if (prime) snaps.forEach((snap) => this.loader.prime(snap.id, snap));
     return snaps.docs.map(this.transformer);
   }
@@ -82,6 +84,7 @@ export class FireCollectionGroup<TTransformed extends { data: DocumentData }> {
   }
 
   findOne(id: string, { cache } = { cache: true }) {
+    console.debug(`[Fire] read 1 doc from ${this.constructor.name} collection.`);
     return cache ? this.loader.load(id).then(this.transformer) : this.loader.clear(id).load(id).then(this.transformer);
   }
 
@@ -91,6 +94,7 @@ export class FireCollectionGroup<TTransformed extends { data: DocumentData }> {
 
   async findManyByQuery(queryFn: (ref: CollectionGroup) => Query, { prime } = { prime: false }) {
     const snaps = await queryFn(this.ref).get();
+    console.debug(`[Fire] read ${snaps.size} docs from ${this.constructor.name} collection.`);
     if (prime) snaps.forEach((snap) => this.loader.prime(snap.id, snap));
     return snaps.docs.map(this.transformer);
   }

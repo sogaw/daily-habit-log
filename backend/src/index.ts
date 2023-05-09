@@ -10,6 +10,12 @@ const app = express();
 
 app.use(json());
 app.use(cors());
+app.use((req, _res, next) => {
+  if (req.path === "/graphql" && req.is("application/json")) {
+    console.debug(`[GraphQL]\n${req.body.query}`);
+  }
+  next();
+});
 app.use("/graphql", yoga);
 
 app.listen(port, () => {
