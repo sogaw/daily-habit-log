@@ -24,7 +24,8 @@ const SignIn = Guard("BeforeAuth", () => {
     {
       onCompleted: () => toast.success("Signed in."),
       onError: (e) => {
-        console.error(e), toast.error();
+        console.error(e);
+        toast.error();
       },
     }
   );

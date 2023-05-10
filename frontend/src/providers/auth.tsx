@@ -33,7 +33,18 @@ type State = {
 const useAuthProvider = (): State => {
   const [authUser, setAuthUser] = useState<AuthUser>();
   const [authUserLoading, setAuthUserLoading] = useState(true);
-  const { data, loading: viewerLoading, error, refetch } = useQuery(MeDocument, { skip: !authUser });
+  const {
+    data,
+    loading: viewerLoading,
+    refetch,
+  } = useQuery(MeDocument, {
+    skip: !authUser,
+    onError: (e) => {
+      console.error(e);
+      signOut(getAuth());
+      location.href = "/";
+    },
+  });
 
   useEffect(() => {
     const unsub = onIdTokenChanged(getAuth(), async (authUser) => {
@@ -57,15 +68,6 @@ const useAuthProvider = (): State => {
   useEffect(() => {
     if (authUser) refetch();
   }, [refetch, authUser]);
-
-  useEffect(() => {
-    if (error) {
-      console.error(error);
-
-      signOut(getAuth());
-      location.href = "/";
-    }
-  }, [error]);
 
   const me = useFragment(MeFragmentDoc, data?.viewer) || undefined;
   const loading = authUserLoading || viewerLoading;
