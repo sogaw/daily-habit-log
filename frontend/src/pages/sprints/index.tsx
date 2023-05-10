@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 import { Fallback } from "@/components/Fallback";
 import { Layout } from "@/components/Layout";
-import { Loading } from "@/components/Loading";
 import { SprintsList } from "@/components/SprintsList";
 import { SprintsDocument } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
