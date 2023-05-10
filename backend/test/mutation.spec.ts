@@ -1,10 +1,10 @@
 import { Habit, User } from "@/datasource";
-import { datasourceContext } from "@/resolver";
+import { createDatasourceContext } from "@/resolver";
 
 import { HabitFactory, HabitRecordFactory, TimestampFactory, UserFactory } from "./factory";
 import { clearFirestore, execute, mockGenDate, mockWithAuth } from "./setup";
 
-const { users, habitRecords } = datasourceContext();
+const { users, habitRecords } = createDatasourceContext();
 
 beforeAll(async () => {
   await clearFirestore();

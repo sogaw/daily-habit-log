@@ -1,9 +1,9 @@
 import { auth } from "script/setup";
 
 import { User } from "@/datasource";
-import { datasourceContext } from "@/resolver";
+import { createDatasourceContext } from "@/resolver";
 
-const datasource = datasourceContext();
+const datasource = createDatasourceContext();
 
 (async () => {
   const userOne = await auth.getUserByEmail("user-1@example.com").catch(() => undefined);

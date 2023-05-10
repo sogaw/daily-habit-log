@@ -37,9 +37,9 @@ const SprintsIndex = Guard("AfterOnboard", () => {
   const sprints = data?.viewer?.sprints.edges.map((edge) => edge.node);
   const pageInfo = data?.viewer?.sprints.pageInfo;
 
-  const onFetchMore = (endCursor: string | null | undefined) => {
+  const onFetchMore = () => {
     fetchMore({
-      variables: { after: endCursor },
+      variables: { after: pageInfo?.endCursor },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
 
@@ -76,13 +76,8 @@ const SprintsIndex = Guard("AfterOnboard", () => {
             </Button>
             <Stack>
               <SprintsList sprints={sprints} mode="edit" />
-              {pageInfo?.hasNextPage && pageInfo.endCursor && (
-                <Button
-                  alignSelf="center"
-                  variant="ghost"
-                  onClick={() => onFetchMore(pageInfo.endCursor)}
-                  isDisabled={loading}
-                >
+              {pageInfo?.hasNextPage && (
+                <Button alignSelf="center" variant="ghost" onClick={() => onFetchMore()} isDisabled={loading}>
                   more
                 </Button>
               )}
