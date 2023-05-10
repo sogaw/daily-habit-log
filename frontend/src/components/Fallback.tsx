@@ -15,7 +15,13 @@ export const Fallback = ({ loading, error, children }: { loading: boolean; error
         <Box fontWeight="bold" fontSize="xl">
           Error happened
         </Box>
-        <Link onClick={() => (location.href = "/")}>reload</Link>
+        <Link
+          onClick={() => {
+            location.href = "/";
+          }}
+        >
+          reload
+        </Link>
         <Box whiteSpace="pre-wrap">{JSON.stringify(error, null, 2)}</Box>
       </VStack>
     );

@@ -12,7 +12,14 @@ app.use(json());
 app.use(cors());
 app.use((req, _res, next) => {
   if (req.path === "/graphql" && req.is("application/json")) {
-    console.debug(`[GraphQL]\n${req.body.query}`);
+    console.debug(
+      `[GraphQL]
+req.body.query
+${req.body.query}
+
+req.body.variables
+${JSON.stringify(req.body.variables, null, 2)}`
+    );
   }
   next();
 });

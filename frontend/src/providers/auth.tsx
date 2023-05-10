@@ -1,8 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
+import { Box, Center, Link, Spinner, VStack } from "@chakra-ui/react";
 import { getAuth, getIdToken, onIdTokenChanged, signOut, User as AuthUser } from "firebase/auth";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
-import { PageLoading } from "@/components/PageLoading";
 import { useFragment } from "@/generated/gql";
 import { MeDocument, MeFragment, MeFragmentDoc } from "@/generated/gql/graphql";
 import { assertIsDefined } from "@/lib/assert-is-defined";
@@ -28,23 +28,13 @@ type State = {
   authUser: AuthUser | undefined;
   me: MeFragment | undefined;
   loading: boolean;
+  error: unknown;
 };
 
 const useAuthProvider = (): State => {
   const [authUser, setAuthUser] = useState<AuthUser>();
   const [authUserLoading, setAuthUserLoading] = useState(true);
-  const {
-    data,
-    loading: viewerLoading,
-    refetch,
-  } = useQuery(MeDocument, {
-    skip: !authUser,
-    onError: (e) => {
-      console.error(e);
-      signOut(getAuth());
-      location.href = "/";
-    },
-  });
+  const { data, loading: viewerLoading, error, refetch } = useQuery(MeDocument, { skip: !authUser });
 
   useEffect(() => {
     const unsub = onIdTokenChanged(getAuth(), async (authUser) => {
@@ -67,19 +57,45 @@ const useAuthProvider = (): State => {
 
   useEffect(() => {
     if (authUser) refetch();
-  }, [refetch, authUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUser]);
 
   const me = useFragment(MeFragmentDoc, data?.viewer) || undefined;
   const loading = authUserLoading || viewerLoading;
 
-  return { authUser, me, loading };
+  return { authUser, me, loading, error };
 };
 
 const AuthContext = createContext<State | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const state = useAuthProvider();
-  if (state.loading) return <PageLoading />;
+
+  if (state.loading)
+    return (
+      <Center py="4">
+        <Spinner />
+      </Center>
+    );
+
+  if (state.error)
+    return (
+      <VStack py="4">
+        <Box fontWeight="bold" fontSize="xl">
+          Error happened
+        </Box>
+        <Link
+          onClick={() => {
+            signOut(getAuth());
+            location.href = "/";
+          }}
+        >
+          reload
+        </Link>
+        <Box whiteSpace="pre-wrap">{JSON.stringify(state.error, null, 2)}</Box>
+      </VStack>
+    );
+
   return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
 };
 
