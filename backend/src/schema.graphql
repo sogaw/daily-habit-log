@@ -50,6 +50,21 @@ input UpdateSprintStatusInput {
   status: SprintStatus!
 }
 
+type PageInfo {
+  hasNextPage: Boolean!
+  endCursor: String
+}
+
+type SprintEdge {
+  cursor: String!
+  node: Sprint!
+}
+
+type SprintConnection {
+  edges: [SprintEdge!]!
+  pageInfo: PageInfo!
+}
+
 type User {
   id: ID!
   name: String!
@@ -57,7 +72,7 @@ type User {
   habits: [Habit!]!
   habit(id: ID!): Habit!
   activeSprints: [Sprint!]!
-  sprints: [Sprint!]!
+  sprints(first: Int, after: String): SprintConnection!
   sprint(id: ID!): Sprint!
 }
 

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { Layout } from "@/components/Layout";
-import { CreateSprintDocument } from "@/generated/gql/graphql";
+import { CreateSprintDocument, SprintConnection } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
 import { useAppToast } from "@/hooks/use-app-toast";
 import { useMe } from "@/providers/auth";
@@ -38,9 +38,16 @@ const SprintsNew = Guard("AfterOnboard", () => {
           id: me.id,
         }),
         fields: {
-          sprints: (existing: Reference[] = [], { toReference }) => {
+          sprints: (existing: SprintConnection, { toReference }) => {
             if (!data) return existing;
-            return [toReference(data.createSprint), ...existing];
+
+            const edge = {
+              cursor: new Date().toISOString(),
+              node: toReference(data.createSprint),
+            };
+            const edges = [edge, ...existing.edges];
+
+            return { ...existing, edges };
           },
           activeSprints: (existing: Reference[] = [], { toReference }) => {
             if (!data) return existing;

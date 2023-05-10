@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { FragmentType, useFragment } from "@/generated/gql";
 import {
   DeleteSprintDocument,
+  SprintConnection,
+  SprintEdge,
   SprintItemFragment,
   SprintItemFragmentDoc,
   SprintStatus,
@@ -51,8 +53,11 @@ export const SprintsList = (props: {
           id: me.id,
         }),
         fields: {
-          sprints: (existing: Reference[] = [], { readField }) => {
-            return existing.filter((habitRef) => readField("id", habitRef) != data?.deleteSprint.id);
+          sprints: (existing: SprintConnection, { readField }) => {
+            const edges = existing.edges.filter(
+              (edge: SprintEdge) => readField("id", edge.node) != data?.deleteSprint.id
+            );
+            return { ...existing, edges };
           },
           activeSprints: (existing: Reference[] = [], { readField }) => {
             return existing.filter((habitRef) => readField("id", habitRef) != data?.deleteSprint.id);

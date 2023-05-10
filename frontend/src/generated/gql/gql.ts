@@ -30,7 +30,7 @@ const documents = {
     "\n  mutation onboard($input: OnboardInput!) {\n    onboard(input: $input) {\n      id\n    }\n  }\n": types.OnboardDocument,
     "\n  query sprint($id: ID!) {\n    viewer {\n      id\n      sprint(id: $id) {\n        id\n        name\n        description\n      }\n    }\n  }\n": types.SprintDocument,
     "\n  mutation updateSprint($id: ID!, $input: UpdateSprintInput!) {\n    updateSprint(id: $id, input: $input) {\n      id\n      name\n      description\n    }\n  }\n": types.UpdateSprintDocument,
-    "\n  query sprints {\n    viewer {\n      id\n      sprints {\n        id\n        ...SprintItem\n      }\n    }\n  }\n": types.SprintsDocument,
+    "\n  query sprints($first: Int, $after: String) {\n    viewer {\n      id\n      sprints(first: $first, after: $after) {\n        edges {\n          cursor\n          node {\n            id\n            ...SprintItem\n          }\n        }\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n      }\n    }\n  }\n": types.SprintsDocument,
     "\n  mutation createSprint($input: CreateSprintInput!) {\n    createSprint(input: $input) {\n      id\n      ...SprintItem\n    }\n  }\n": types.CreateSprintDocument,
     "\n  fragment Me on User {\n    id\n    name\n    iconUrl\n  }\n": types.MeFragmentDoc,
     "\n  query me {\n    viewer {\n      id\n      ...Me\n    }\n  }\n": types.MeDocument,
@@ -121,7 +121,7 @@ export function graphql(source: "\n  mutation updateSprint($id: ID!, $input: Upd
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query sprints {\n    viewer {\n      id\n      sprints {\n        id\n        ...SprintItem\n      }\n    }\n  }\n"): (typeof documents)["\n  query sprints {\n    viewer {\n      id\n      sprints {\n        id\n        ...SprintItem\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query sprints($first: Int, $after: String) {\n    viewer {\n      id\n      sprints(first: $first, after: $after) {\n        edges {\n          cursor\n          node {\n            id\n            ...SprintItem\n          }\n        }\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query sprints($first: Int, $after: String) {\n    viewer {\n      id\n      sprints(first: $first, after: $after) {\n        edges {\n          cursor\n          node {\n            id\n            ...SprintItem\n          }\n        }\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

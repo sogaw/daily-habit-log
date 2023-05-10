@@ -1,9 +1,11 @@
 import { Habit, User } from "@/datasource";
 import { Sprint } from "@/datasource/fire-model/sprint";
+import { genDate } from "@/lib/gen";
 import { parseId } from "@/lib/parse";
 import { getSignedUrl } from "@/lib/storage";
 
 import { builder } from "../builder";
+import { SprintConnection } from "./sprint-connection";
 
 builder.objectType(User, {
   name: "User",
@@ -40,8 +42,17 @@ builder.objectType(User, {
     }),
 
     sprints: t.field({
-      type: [Sprint],
-      resolve: (user) => user.sprints.all(),
+      type: SprintConnection,
+      args: {
+        first: t.arg({ type: "Int" }),
+        after: t.arg({ type: "String" }),
+      },
+      resolve: (user, args) => {
+        return user.sprints.paginate({
+          first: args.first || 10,
+          after: args.after || genDate().toISOString(),
+        });
+      },
     }),
 
     sprint: t.field({

@@ -7,14 +7,24 @@ import { Layout } from "@/components/Layout";
 import { SprintsList } from "@/components/SprintsList";
 import { SprintsDocument } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
+import { assertIsDefined } from "@/lib/assert-is-defined";
 
 gql`
-  query sprints {
+  query sprints($first: Int, $after: String) {
     viewer {
       id
-      sprints {
-        id
-        ...SprintItem
+      sprints(first: $first, after: $after) {
+        edges {
+          cursor
+          node {
+            id
+            ...SprintItem
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
     }
   }
@@ -23,8 +33,30 @@ gql`
 const SprintsIndex = Guard("AfterOnboard", () => {
   const navigate = useNavigate();
 
-  const { data, loading, error } = useQuery(SprintsDocument);
-  const sprints = data?.viewer?.sprints;
+  const { data, loading, error, fetchMore } = useQuery(SprintsDocument);
+  const sprints = data?.viewer?.sprints.edges.map((edge) => edge.node);
+  const pageInfo = data?.viewer?.sprints.pageInfo;
+
+  const onFetchMore = (endCursor: string | null | undefined) => {
+    fetchMore({
+      variables: { after: endCursor },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
+
+        assertIsDefined(prev.viewer);
+        assertIsDefined(fetchMoreResult.viewer);
+        return {
+          viewer: {
+            ...prev.viewer,
+            sprints: {
+              ...fetchMoreResult.viewer?.sprints,
+              edges: [...prev.viewer.sprints.edges, ...fetchMoreResult.viewer.sprints.edges],
+            },
+          },
+        };
+      },
+    });
+  };
 
   return (
     <Layout title="Sprints" backPath="/home">
@@ -42,7 +74,19 @@ const SprintsIndex = Guard("AfterOnboard", () => {
             <Button alignSelf="end" size="sm" colorScheme="green" onClick={() => navigate("/sprints/new")}>
               New
             </Button>
-            <SprintsList sprints={sprints} mode="edit" />
+            <Stack>
+              <SprintsList sprints={sprints} mode="edit" />
+              {pageInfo?.hasNextPage && pageInfo.endCursor && (
+                <Button
+                  alignSelf="center"
+                  variant="ghost"
+                  onClick={() => onFetchMore(pageInfo.endCursor)}
+                  isDisabled={loading}
+                >
+                  more
+                </Button>
+              )}
+            </Stack>
           </Stack>
         )}
       </Fallback>
