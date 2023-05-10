@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   if (state.loading)
     return (
-      <Center py="4">
+      <Center h="75vh">
         <Spinner />
       </Center>
     );
