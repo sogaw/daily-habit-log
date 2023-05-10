@@ -8,6 +8,7 @@ import MeAccount from "../pages/me/account";
 import MeProfile from "../pages/me/profile";
 import NotFound from "../pages/not-found";
 import Onboard from "../pages/onboard";
+import PasswordReset from "../pages/password-reset";
 import SignIn from "../pages/sign-in";
 import SignUp from "../pages/sign-up";
 import SprintsSprintIdEdit from "../pages/sprints/[sprintId]/edit";
@@ -24,6 +25,7 @@ const routes = [
   { path: "/me/profile", element: <MeProfile /> },
   { path: "/not-found", element: <NotFound /> },
   { path: "/onboard", element: <Onboard /> },
+  { path: "/password-reset", element: <PasswordReset /> },
   { path: "/sign-in", element: <SignIn /> },
   { path: "/sign-up", element: <SignUp /> },
   { path: "/sprints/:sprintId/edit", element: <SprintsSprintIdEdit /> },
