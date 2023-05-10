@@ -3,8 +3,8 @@ import { Button, FormControl, FormLabel, Input, Stack, Textarea } from "@chakra-
 import { useForm } from "react-hook-form";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
+import { Fallback } from "@/components/Fallback";
 import { Layout } from "@/components/Layout";
-import { PageLoading } from "@/components/PageLoading";
 import { Habit, HabitDocument, UpdateHabitDocument } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
 import { useAppToast } from "@/hooks/use-app-toast";
@@ -23,6 +23,23 @@ gql`
   }
 `;
 
+const HabitEditContainer = Guard("AfterOnboard", () => {
+  const { habitId } = useParams();
+
+  const { data, loading, error } = useQuery(HabitDocument, { variables: { id: habitId as string } });
+  const habit = data?.viewer?.habit;
+
+  return (
+    <Layout title="Edit Habit" backPath="/habits">
+      <Fallback loading={loading} error={error}>
+        {habit ? <HabitEdit habit={habit} /> : <Navigate to="/not-found" />}
+      </Fallback>
+    </Layout>
+  );
+});
+
+export default HabitEditContainer;
+
 gql`
   mutation updateHabit($id: ID!, $input: UpdateHabitInput!) {
     updateHabit(id: $id, input: $input) {
@@ -32,18 +49,6 @@ gql`
     }
   }
 `;
-
-const HabitEditContainer = Guard("AfterOnboard", () => {
-  const { habitId } = useParams();
-
-  const { data, loading } = useQuery(HabitDocument, { variables: { id: habitId as string } });
-  const habit = data?.viewer?.habit;
-
-  if (!data && loading) return <PageLoading />;
-  return habit ? <HabitEdit habit={habit} /> : <Navigate to="/not-found" />;
-});
-
-export default HabitEditContainer;
 
 type HabitUpdateForm = {
   name: string;
@@ -88,20 +93,18 @@ const HabitEdit = ({ habit }: { habit: Pick<Habit, "id" | "name" | "description"
   });
 
   return (
-    <Layout title="New Habit" backPath="/habits">
-      <Stack as="form" onSubmit={handleSubmit((v) => createHabit({ variables: { id: habit.id, input: v } }))}>
-        <FormControl>
-          <FormLabel>Name</FormLabel>
-          <Input required {...register("name")} />
-        </FormControl>
+    <Stack as="form" onSubmit={handleSubmit((v) => createHabit({ variables: { id: habit.id, input: v } }))}>
+      <FormControl>
+        <FormLabel>Name</FormLabel>
+        <Input required {...register("name")} />
+      </FormControl>
 
-        <FormControl>
-          <FormLabel>Description</FormLabel>
-          <Textarea rows={10} {...register("description")} />
-        </FormControl>
+      <FormControl>
+        <FormLabel>Description</FormLabel>
+        <Textarea rows={10} {...register("description")} />
+      </FormControl>
 
-        <Button type="submit">Post</Button>
-      </Stack>
-    </Layout>
+      <Button type="submit">Post</Button>
+    </Stack>
   );
 };

@@ -34,7 +34,7 @@ describe("viewer", () => {
     await Promise.all([me.save(), other.save()]);
   });
 
-  it("ユーザー情報を取得する！", async () => {
+  it("ユーザー情報を取得するよ", async () => {
     mockWithAuth({ uid: "user-1" });
     mockGetSignedUrl("https://i.pravatar.cc?img=1");
 
@@ -117,7 +117,25 @@ describe("habitRecords", () => {
     ]);
   });
 
-  it("4日以内に SUCCESS があれば、tooHard としないよ", async () => {
+  it("作成後3日以内は、tooHard としないよ", async () => {
+    mockGenDate(new Date("2023-01-03"));
+    mockWithAuth({ uid: "user-1" });
+
+    const res = await execute(q());
+
+    expect(res.data.viewer.habits[0].tooHard).toEqual(false);
+  });
+
+  it("作成後4日以降は直近3日以内に SUCCESS が1つもなければ、tooHard とするよ", async () => {
+    mockGenDate(new Date("2023-01-04"));
+    mockWithAuth({ uid: "user-1" });
+
+    const res = await execute(q());
+
+    expect(res.data.viewer.habits[0].tooHard).toEqual(true);
+  });
+
+  it("作成後4日以降は直近3日以内に SUCCESS が1つもなければ、tooHard とするよ。つまり、4日前に SUCCESS があっても、tooHard だよ", async () => {
     await Promise.all([
       HabitRecordFactory(habit.habitRecords, null, {
         date: "2023-01-01",
@@ -132,24 +150,24 @@ describe("habitRecords", () => {
 
     const res = await execute(q());
 
-    expect(res.data.viewer.habits[0].tooHard).toEqual(false);
+    expect(res.data.viewer.habits[0].tooHard).toEqual(true);
   });
 
-  it("5日以内に SUCCESS がないのであれば、それは tooHard だよ", async () => {
+  it("作成後4日以降で直近3日以内に SUCCESS が1つあれば、tooHard としないよ", async () => {
     await Promise.all([
       HabitRecordFactory(habit.habitRecords, null, {
-        date: "2023-01-01",
+        date: "2023-01-02",
         status: "SUCCESS",
         userId: "user-1",
         habitId: "habit-1",
       }).save(),
     ]);
 
-    mockGenDate(new Date("2023-01-05"));
+    mockGenDate(new Date("2023-01-04"));
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q());
 
-    expect(res.data.viewer.habits[0].tooHard).toEqual(true);
+    expect(res.data.viewer.habits[0].tooHard).toEqual(false);
   });
 });

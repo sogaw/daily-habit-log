@@ -76,6 +76,19 @@ export class HabitRecordsCollection extends FireCollection<HabitRecord> {
     return filled;
   }
 
+  async success({ before }: { before: Date }) {
+    const beforeDate = DateFromISO(before.toISOString());
+    const success = await this.ref
+      .where("status", "==", "SUCCESS")
+      .orderBy("date", "desc")
+      .endBefore(beforeDate)
+      .count()
+      .get()
+      .then((snap) => snap.data());
+    console.debug(`[Fire] read 1 aggregate from ${this.constructor.name} collection.`);
+    return success;
+  }
+
   findByDate(date: string) {
     return this.findManyByQuery((ref) => ref.where("date", "==", date)).then((res) => res.at(0));
   }

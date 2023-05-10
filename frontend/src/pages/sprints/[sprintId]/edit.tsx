@@ -3,8 +3,8 @@ import { Button, FormControl, FormLabel, Input, Stack, Textarea } from "@chakra-
 import { useForm } from "react-hook-form";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
+import { Fallback } from "@/components/Fallback";
 import { Layout } from "@/components/Layout";
-import { PageLoading } from "@/components/PageLoading";
 import { Sprint, SprintDocument, UpdateSprintDocument } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
 import { useAppToast } from "@/hooks/use-app-toast";
@@ -35,11 +35,16 @@ gql`
 const SprintEditContainer = Guard("AfterOnboard", () => {
   const { sprintId } = useParams();
 
-  const { data, loading } = useQuery(SprintDocument, { variables: { id: sprintId as string } });
+  const { data, loading, error } = useQuery(SprintDocument, { variables: { id: sprintId as string } });
   const sprint = data?.viewer?.sprint;
 
-  if (!data && loading) return <PageLoading />;
-  return sprint ? <SprintEdit sprint={sprint} /> : <Navigate to="/not-found" />;
+  return (
+    <Layout title="Edit Sprint" backPath="/sprints">
+      <Fallback loading={loading} error={error}>
+        {sprint ? <SprintEdit sprint={sprint} /> : <Navigate to="/not-found" />}
+      </Fallback>
+    </Layout>
+  );
 });
 
 export default SprintEditContainer;
@@ -69,20 +74,18 @@ const SprintEdit = ({ sprint }: { sprint: Pick<Sprint, "id" | "name" | "descript
   });
 
   return (
-    <Layout title="Edit Sprint" backPath="/sprints">
-      <Stack as="form" onSubmit={handleSubmit((v) => createSprint({ variables: { id: sprint.id, input: v } }))}>
-        <FormControl>
-          <FormLabel>Name</FormLabel>
-          <Input required {...register("name")} />
-        </FormControl>
+    <Stack as="form" onSubmit={handleSubmit((v) => createSprint({ variables: { id: sprint.id, input: v } }))}>
+      <FormControl>
+        <FormLabel>Name</FormLabel>
+        <Input required {...register("name")} />
+      </FormControl>
 
-        <FormControl>
-          <FormLabel>Description</FormLabel>
-          <Textarea rows={10} {...register("description")} />
-        </FormControl>
+      <FormControl>
+        <FormLabel>Description</FormLabel>
+        <Textarea rows={10} {...register("description")} />
+      </FormControl>
 
-        <Button type="submit">Post</Button>
-      </Stack>
-    </Layout>
+      <Button type="submit">Post</Button>
+    </Stack>
   );
 };

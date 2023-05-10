@@ -8,7 +8,7 @@
     "build": "tsc",
     "start": "node -r module-alias/register .",
     "dev": "dotenv -e .env.development -- nodemon -r tsconfig-paths/register src/index.ts",
-    "test": "dotenv -e .env.test -- jest --maxWorkers 1",
+    "test": "dotenv -e .env.test -- jest --maxWorkers 1 --verbose",
     "lint": "eslint \"./src/**/*.{js,ts}\"",
     "lint:fix": "yarn lint --fix",
     "format": "prettier -l \"./src/**/*.{js,ts,json}\"",
