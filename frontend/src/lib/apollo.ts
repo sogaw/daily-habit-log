@@ -6,7 +6,7 @@ const uri = [import.meta.env.VITE_APP_BACKEND_URL, "graphql"].join("/");
 const httpLink = createHttpLink({ uri });
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("daily-habit-log.token");
   return { headers: { ...headers, authorization: token ? `Bearer ${token}` : "" } };
 });
 

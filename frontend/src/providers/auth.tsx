@@ -42,10 +42,10 @@ const useAuthProvider = (): State => {
         const token = await getIdToken(authUser);
 
         setAuthUser(authUser);
-        localStorage.setItem("token", token);
+        localStorage.setItem("daily-habit-log.token", token);
       } else {
         setAuthUser(undefined);
-        localStorage.removeItem("token");
+        localStorage.removeItem("daily-habit-log.token");
       }
 
       if (authUserLoading) setAuthUserLoading(false);

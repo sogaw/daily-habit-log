@@ -1,14 +1,14 @@
-import { gql, Reference, useMutation, useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { Button, FormControl, FormLabel, Input, Stack, Textarea } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
 import { Fallback } from "@/components/Fallback";
 import { Layout } from "@/components/Layout";
-import { Habit, HabitDocument, UpdateHabitDocument } from "@/generated/gql/graphql";
+import { Habit } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
-import { useAppToast } from "@/hooks/use-app-toast";
-import { useMe } from "@/providers/auth";
+import { useHabit } from "@/hooks/habit/use-habit";
+import { useUpdateHabit } from "@/hooks/habit/use-update-habit";
 
 gql`
   query habit($id: ID!) {
@@ -25,12 +25,10 @@ gql`
 
 const HabitEditContainer = Guard("AfterOnboard", () => {
   const { habitId } = useParams();
-
-  const { data, loading, error } = useQuery(HabitDocument, { variables: { id: habitId as string } });
-  const habit = data?.viewer?.habit;
+  const { habit, loading, error } = useHabit({ id: habitId as string });
 
   return (
-    <Layout title="Edit Habit" backPath="/habits">
+    <Layout title="Edit Habit" backPath="/home">
       <Fallback loading={loading} error={error}>
         {habit ? <HabitEdit habit={habit} /> : <Navigate to="/not-found" />}
       </Fallback>
@@ -40,60 +38,22 @@ const HabitEditContainer = Guard("AfterOnboard", () => {
 
 export default HabitEditContainer;
 
-gql`
-  mutation updateHabit($id: ID!, $input: UpdateHabitInput!) {
-    updateHabit(id: $id, input: $input) {
-      id
-      name
-      description
-    }
-  }
-`;
-
 type HabitUpdateForm = {
   name: string;
   description: string;
 };
 
 const HabitEdit = ({ habit }: { habit: Pick<Habit, "id" | "name" | "description"> }) => {
-  const navigate = useNavigate();
-  const toast = useAppToast();
-  const { me } = useMe();
+  const { updateHabit } = useUpdateHabit();
 
   const { register, handleSubmit } = useForm<HabitUpdateForm>({
     defaultValues: { name: habit.name, description: habit.description },
   });
 
-  const [createHabit] = useMutation(UpdateHabitDocument, {
-    update: (cache, { data }) => {
-      cache.modify({
-        id: cache.identify({
-          __typename: "User",
-          id: me.id,
-        }),
-        fields: {
-          habits: (existing: Reference[] = [], { toReference, readField }) => {
-            if (!data) return existing;
-            return [
-              toReference(data.updateHabit),
-              ...existing.filter((habitRef) => readField("id", habitRef) != data.updateHabit.id),
-            ];
-          },
-        },
-      });
-    },
-    onCompleted: () => {
-      toast.success("Updated.");
-      navigate("/habits");
-    },
-    onError: (e) => {
-      console.error(e);
-      toast.error();
-    },
-  });
+  const onSubmit = (v: HabitUpdateForm) => updateHabit({ variables: { id: habit.id, input: v } });
 
   return (
-    <Stack as="form" onSubmit={handleSubmit((v) => createHabit({ variables: { id: habit.id, input: v } }))}>
+    <Stack as="form" onSubmit={handleSubmit(onSubmit)}>
       <FormControl>
         <FormLabel>Name</FormLabel>
         <Input required {...register("name")} />

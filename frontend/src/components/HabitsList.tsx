@@ -1,18 +1,12 @@
-import { gql, Reference, useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { Box, Button, Divider, Flex, HStack, Icon, Stack } from "@chakra-ui/react";
 import { FaPen, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 import { FragmentType, useFragment } from "@/generated/gql";
-import {
-  DeleteHabitDocument,
-  HabitItemFragmentDoc,
-  HabitRecordItemFragmentDoc,
-  HabitRecordStatus,
-  UpdateHabitRecordDocument,
-} from "@/generated/gql/graphql";
-import { useAppToast } from "@/hooks/use-app-toast";
-import { useMe } from "@/providers/auth";
+import { HabitItemFragmentDoc, HabitRecordItemFragmentDoc, HabitRecordStatus } from "@/generated/gql/graphql";
+import { useDeleteHabit } from "@/hooks/habit/use-delete-habit";
+import { useUpdateHabitRecord } from "@/hooks/habit/use-update-habit-record";
 
 gql`
   fragment HabitItem on Habit {
@@ -27,43 +21,12 @@ gql`
   }
 `;
 
-gql`
-  mutation deleteHabit($id: ID!) {
-    deleteHabit(id: $id) {
-      id
-    }
-  }
-`;
-
 export const HabitsList = (props: { habits: FragmentType<typeof HabitItemFragmentDoc>[]; mode: "view" | "edit" }) => {
+  const navigate = useNavigate();
+
   const habits = useFragment(HabitItemFragmentDoc, props.habits);
 
-  const navigate = useNavigate();
-  const toast = useAppToast();
-  const { me } = useMe();
-
-  const [deleteHabit] = useMutation(DeleteHabitDocument, {
-    update: (cache, { data }) => {
-      cache.modify({
-        id: cache.identify({
-          __typename: "User",
-          id: me.id,
-        }),
-        fields: {
-          habits: (existing: Reference[] = [], { readField }) => {
-            return existing.filter((habitRef) => readField("id", habitRef) != data?.deleteHabit.id);
-          },
-        },
-      });
-    },
-    onCompleted: () => {
-      toast.success("Deleted.");
-    },
-    onError: (e) => {
-      console.error(e);
-      toast.error();
-    },
-  });
+  const { deleteHabit } = useDeleteHabit();
 
   const onDeleteHabit = async (id: string) => {
     if (confirm("Are you sure?")) await deleteHabit({ variables: { id } });
@@ -127,15 +90,6 @@ gql`
   }
 `;
 
-gql`
-  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {
-    updateHabitRecord(input: $input) {
-      id
-      ...HabitRecordItem
-    }
-  }
-`;
-
 const nextStatus = { SUCCESS: "FAILED", FAILED: "PENDING", PENDING: "SUCCESS" } as Record<
   HabitRecordStatus,
   HabitRecordStatus
@@ -145,24 +99,18 @@ const statusColor = { SUCCESS: "green", FAILED: "red", PENDING: "gray" } as cons
 const HabitRecordItem = (props: { habitRecord: FragmentType<typeof HabitRecordItemFragmentDoc>; tooHard: boolean }) => {
   const habitRecord = useFragment(HabitRecordItemFragmentDoc, props.habitRecord);
 
-  const toast = useAppToast();
+  const { updateHabitRecord, loading } = useUpdateHabitRecord();
 
-  const [updateHabitRecord, { loading }] = useMutation(UpdateHabitRecordDocument, {
-    variables: {
-      input: {
-        habitId: habitRecord.habitId,
-        date: habitRecord.date,
-        status: nextStatus[habitRecord.status],
+  const onUpdateHabitRecord = () =>
+    updateHabitRecord({
+      variables: {
+        input: {
+          habitId: habitRecord.habitId,
+          date: habitRecord.date,
+          status: nextStatus[habitRecord.status],
+        },
       },
-    },
-    onCompleted: () => {
-      toast.success("Updated.");
-    },
-    onError: (e) => {
-      console.error(e);
-      toast.error();
-    },
-  });
+    });
 
   return (
     <Box key={habitRecord.id}>
@@ -172,7 +120,7 @@ const HabitRecordItem = (props: { habitRecord: FragmentType<typeof HabitRecordIt
         rounded="full"
         fontSize="xs"
         colorScheme={statusColor[habitRecord.status]}
-        onClick={() => updateHabitRecord()}
+        onClick={onUpdateHabitRecord}
         isDisabled={props.tooHard || loading}
       >
         {habitRecord.date.split("-").slice(1).join("/")}

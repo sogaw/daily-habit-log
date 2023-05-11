@@ -58,7 +58,7 @@ const SprintsNew = Guard("AfterOnboard", () => {
     },
     onCompleted: () => {
       toast.success("Created.");
-      navigate("/sprints");
+      navigate("/home");
     },
     onError: (e) => {
       console.error(e);
@@ -67,7 +67,7 @@ const SprintsNew = Guard("AfterOnboard", () => {
   });
 
   return (
-    <Layout title="New Sprint" backPath="/sprints">
+    <Layout title="New Sprint" backPath="/home">
       <Stack as="form" onSubmit={handleSubmit((v) => createSprint({ variables: { input: v } }))}>
         <FormControl>
           <FormLabel>Name</FormLabel>

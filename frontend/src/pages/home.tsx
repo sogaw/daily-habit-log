@@ -1,61 +1,77 @@
-import { gql, useQuery } from "@apollo/client";
-import { Box, Stack } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Button, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { useLocalStorage } from "react-use";
 
 import { Fallback } from "@/components/Fallback";
 import { HabitsList } from "@/components/HabitsList";
 import { Layout } from "@/components/Layout";
 import { SprintsList } from "@/components/SprintsList";
-import { HomeDocument } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
-
-gql`
-  query home {
-    viewer {
-      id
-      habits {
-        id
-        ...HabitItem
-      }
-      activeSprints {
-        id
-        ...SprintItem
-      }
-    }
-  }
-`;
+import { useHabits } from "@/hooks/habit/use-habits";
+import { useSprints } from "@/hooks/sprint/use-sprints";
 
 const Home = Guard("AfterOnboard", () => {
-  const { data, loading, error } = useQuery(HomeDocument);
+  const navigate = useNavigate();
 
-  const habits = data?.viewer?.habits;
-  const sprints = data?.viewer?.activeSprints;
+  const [tabIndex, setTabIndex] = useLocalStorage("daily-habit-log.home.tab", 0);
+
+  const { habits, loading: habitsLoading, error: habitsError } = useHabits({ skip: tabIndex != 0 });
+  const {
+    sprints,
+    pageInfo: sprintsPageInfo,
+    loading: sprintsLoading,
+    error: sprintsError,
+    fetchMore: sprintsFetchMore,
+  } = useSprints({ skip: tabIndex != 1 });
 
   return (
     <Layout>
-      <Fallback loading={loading} error={error}>
-        <Stack spacing="4" pb="6">
-          <Stack spacing="4">
-            <Link to="/habits">
-              <Box fontWeight="bold" fontSize="xl">
-                Habits
-              </Box>
-            </Link>
-            {habits && habits.length == 0 && <Link to="/habits">to habits</Link>}
-            {habits && habits.length > 0 && <HabitsList habits={habits} mode="view" />}
-          </Stack>
+      <Tabs defaultIndex={tabIndex} onChange={setTabIndex}>
+        <TabList>
+          <Tab fontWeight="semibold">Habits</Tab>
+          <Tab fontWeight="semibold">Sprints</Tab>
+        </TabList>
 
-          <Stack spacing="4">
-            <Link to="/sprints">
-              <Box fontWeight="bold" fontSize="xl">
-                Sprints
-              </Box>
-            </Link>
-            {sprints && sprints.length == 0 && <Link to="/sprints">to sprints</Link>}
-            {sprints && sprints.length > 0 && <SprintsList sprints={sprints} mode="view" />}
-          </Stack>
-        </Stack>
-      </Fallback>
+        <TabPanels>
+          <TabPanel px="2">
+            <Fallback loading={habitsLoading} error={habitsError}>
+              {habits && (
+                <Stack spacing="4" pb="6">
+                  <Button alignSelf="end" size="sm" colorScheme="green" onClick={() => navigate("/habits/new")}>
+                    New habit
+                  </Button>
+                  <HabitsList habits={habits} mode="edit" />
+                </Stack>
+              )}
+            </Fallback>
+          </TabPanel>
+
+          <TabPanel px="2">
+            <Fallback loading={sprintsLoading} error={sprintsError}>
+              {sprints && (
+                <Stack spacing="4" pb="6">
+                  <Button alignSelf="end" size="sm" colorScheme="green" onClick={() => navigate("/sprints/new")}>
+                    New sprint
+                  </Button>
+                  <Stack>
+                    <SprintsList sprints={sprints} mode="edit" />
+                    {sprintsPageInfo?.hasNextPage && (
+                      <Button
+                        alignSelf="center"
+                        variant="ghost"
+                        onClick={() => sprintsFetchMore()}
+                        isDisabled={sprintsLoading}
+                      >
+                        more
+                      </Button>
+                    )}
+                  </Stack>
+                </Stack>
+              )}
+            </Fallback>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Layout>
   );
 });

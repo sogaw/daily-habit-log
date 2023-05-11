@@ -39,7 +39,7 @@ const SprintEditContainer = Guard("AfterOnboard", () => {
   const sprint = data?.viewer?.sprint;
 
   return (
-    <Layout title="Edit Sprint" backPath="/sprints">
+    <Layout title="Edit Sprint" backPath="/home">
       <Fallback loading={loading} error={error}>
         {sprint ? <SprintEdit sprint={sprint} /> : <Navigate to="/not-found" />}
       </Fallback>
@@ -65,7 +65,7 @@ const SprintEdit = ({ sprint }: { sprint: Pick<Sprint, "id" | "name" | "descript
   const [createSprint] = useMutation(UpdateSprintDocument, {
     onCompleted: () => {
       toast.success("Updated.");
-      navigate("/sprints");
+      navigate("/home");
     },
     onError: (e) => {
       console.error(e);
