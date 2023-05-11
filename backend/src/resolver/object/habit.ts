@@ -34,7 +34,8 @@ builder.objectType(Habit, {
 
         if (isBefore(threeDaysAgo, habitCreatedAt)) return false;
 
-        const success = await habit.habitRecords.success({ before: threeDaysAgo });
+        const fourDaysAgo = startOfDay(subDays(genDate(), 3));
+        const success = await habit.habitRecords.success({ before: fourDaysAgo });
         return success.count == 0;
       },
     }),

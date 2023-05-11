@@ -126,7 +126,7 @@ describe("habitRecords", () => {
     expect(res.data.viewer.habits[0].tooHard).toEqual(false);
   });
 
-  it("作成後4日以降は直近3日以内に SUCCESS が1つもなければ、tooHard とするよ", async () => {
+  it("作成後4日以降は直近4日以内に SUCCESS が1つもなければ、tooHard とするよ", async () => {
     mockGenDate(new Date("2023-01-04"));
     mockWithAuth({ uid: "user-1" });
 
@@ -135,7 +135,7 @@ describe("habitRecords", () => {
     expect(res.data.viewer.habits[0].tooHard).toEqual(true);
   });
 
-  it("作成後4日以降は直近3日以内に SUCCESS が1つもなければ、tooHard とするよ。つまり、4日前に SUCCESS があっても、tooHard だよ", async () => {
+  it("作成後4日以降は直近4日以内に SUCCESS が1つもなければ、tooHard とするよ。つまり、5日前に SUCCESS があっても、tooHard だよ", async () => {
     await Promise.all([
       HabitRecordFactory(habit.habitRecords, null, {
         date: "2023-01-01",
@@ -145,7 +145,7 @@ describe("habitRecords", () => {
       }).save(),
     ]);
 
-    mockGenDate(new Date("2023-01-04"));
+    mockGenDate(new Date("2023-01-05"));
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q());
@@ -153,10 +153,10 @@ describe("habitRecords", () => {
     expect(res.data.viewer.habits[0].tooHard).toEqual(true);
   });
 
-  it("作成後4日以降で直近3日以内に SUCCESS が1つあれば、tooHard としないよ", async () => {
+  it("作成後4日以降で直近4日以内に SUCCESS が1つあれば、tooHard としないよ", async () => {
     await Promise.all([
       HabitRecordFactory(habit.habitRecords, null, {
-        date: "2023-01-02",
+        date: "2023-01-01",
         status: "SUCCESS",
         userId: "user-1",
         habitId: "habit-1",
