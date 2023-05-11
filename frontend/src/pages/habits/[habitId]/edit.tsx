@@ -1,4 +1,3 @@
-import { gql } from "@apollo/client";
 import { Button, FormControl, FormLabel, Input, Stack, Textarea } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { Navigate, useParams } from "react-router-dom";
@@ -10,21 +9,9 @@ import { Guard } from "@/hocs/guard";
 import { useHabit } from "@/hooks/habit/use-habit";
 import { useUpdateHabit } from "@/hooks/habit/use-update-habit";
 
-gql`
-  query habit($id: ID!) {
-    viewer {
-      id
-      habit(id: $id) {
-        id
-        name
-        description
-      }
-    }
-  }
-`;
-
 const HabitEditContainer = Guard("AfterOnboard", () => {
   const { habitId } = useParams();
+
   const { habit, loading, error } = useHabit({ id: habitId as string });
 
   return (

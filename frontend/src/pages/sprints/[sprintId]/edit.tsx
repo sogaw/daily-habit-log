@@ -1,42 +1,18 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
 import { Button, FormControl, FormLabel, Input, Stack, Textarea } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
 import { Fallback } from "@/components/Fallback";
 import { Layout } from "@/components/Layout";
-import { Sprint, SprintDocument, UpdateSprintDocument } from "@/generated/gql/graphql";
+import { Sprint } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
-import { useAppToast } from "@/hooks/use-app-toast";
-
-gql`
-  query sprint($id: ID!) {
-    viewer {
-      id
-      sprint(id: $id) {
-        id
-        name
-        description
-      }
-    }
-  }
-`;
-
-gql`
-  mutation updateSprint($id: ID!, $input: UpdateSprintInput!) {
-    updateSprint(id: $id, input: $input) {
-      id
-      name
-      description
-    }
-  }
-`;
+import { useSprint } from "@/hooks/sprint/use-sprint";
+import { useUpdateSprint } from "@/hooks/sprint/use-update-sprint";
 
 const SprintEditContainer = Guard("AfterOnboard", () => {
   const { sprintId } = useParams();
 
-  const { data, loading, error } = useQuery(SprintDocument, { variables: { id: sprintId as string } });
-  const sprint = data?.viewer?.sprint;
+  const { sprint, loading, error } = useSprint({ id: sprintId as string });
 
   return (
     <Layout title="Edit Sprint" backPath="/home">
@@ -55,26 +31,16 @@ type SprintUpdateForm = {
 };
 
 const SprintEdit = ({ sprint }: { sprint: Pick<Sprint, "id" | "name" | "description"> }) => {
-  const navigate = useNavigate();
-  const toast = useAppToast();
+  const { updateSprint, loading } = useUpdateSprint();
 
   const { register, handleSubmit } = useForm<SprintUpdateForm>({
     defaultValues: { name: sprint.name, description: sprint.description },
   });
 
-  const [createSprint] = useMutation(UpdateSprintDocument, {
-    onCompleted: () => {
-      toast.success("Updated.");
-      navigate("/home");
-    },
-    onError: (e) => {
-      console.error(e);
-      toast.error();
-    },
-  });
+  const onSubmit = (v: SprintUpdateForm) => updateSprint({ variables: { id: sprint.id, input: v } });
 
   return (
-    <Stack as="form" onSubmit={handleSubmit((v) => createSprint({ variables: { id: sprint.id, input: v } }))}>
+    <Stack as="form" onSubmit={handleSubmit(onSubmit)}>
       <FormControl>
         <FormLabel>Name</FormLabel>
         <Input required {...register("name")} />
@@ -85,7 +51,9 @@ const SprintEdit = ({ sprint }: { sprint: Pick<Sprint, "id" | "name" | "descript
         <Textarea rows={10} {...register("description")} />
       </FormControl>
 
-      <Button type="submit">Post</Button>
+      <Button type="submit" isDisabled={loading}>
+        Post
+      </Button>
     </Stack>
   );
 };

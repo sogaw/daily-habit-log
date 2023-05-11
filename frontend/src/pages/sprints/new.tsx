@@ -1,22 +1,9 @@
-import { gql, Reference, useMutation } from "@apollo/client";
 import { Button, FormControl, FormLabel, Input, Stack, Textarea } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 
 import { Layout } from "@/components/Layout";
-import { CreateSprintDocument, SprintConnection } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
-import { useAppToast } from "@/hooks/use-app-toast";
-import { useMe } from "@/providers/auth";
-
-gql`
-  mutation createSprint($input: CreateSprintInput!) {
-    createSprint(input: $input) {
-      id
-      ...SprintItem
-    }
-  }
-`;
+import { useCreateSprint } from "@/hooks/sprint/use-create-sprint";
 
 type SprintCreateForm = {
   name: string;
@@ -24,51 +11,15 @@ type SprintCreateForm = {
 };
 
 const SprintsNew = Guard("AfterOnboard", () => {
-  const navigate = useNavigate();
-  const toast = useAppToast();
-  const { me } = useMe();
+  const { createSprint, loading } = useCreateSprint();
 
   const { register, handleSubmit } = useForm<SprintCreateForm>();
 
-  const [createSprint] = useMutation(CreateSprintDocument, {
-    update: (cache, { data }) => {
-      cache.modify({
-        id: cache.identify({
-          __typename: "User",
-          id: me.id,
-        }),
-        fields: {
-          sprints: (existing: SprintConnection, { toReference }) => {
-            if (!data) return existing;
-
-            const edge = {
-              cursor: new Date().toISOString(),
-              node: toReference(data.createSprint),
-            };
-            const edges = [edge, ...existing.edges];
-
-            return { ...existing, edges };
-          },
-          activeSprints: (existing: Reference[] = [], { toReference }) => {
-            if (!data) return existing;
-            return [toReference(data.createSprint), ...existing];
-          },
-        },
-      });
-    },
-    onCompleted: () => {
-      toast.success("Created.");
-      navigate("/home");
-    },
-    onError: (e) => {
-      console.error(e);
-      toast.error();
-    },
-  });
+  const onSubmit = (v: SprintCreateForm) => createSprint({ variables: { input: v } });
 
   return (
     <Layout title="New Sprint" backPath="/home">
-      <Stack as="form" onSubmit={handleSubmit((v) => createSprint({ variables: { input: v } }))}>
+      <Stack as="form" onSubmit={handleSubmit(onSubmit)}>
         <FormControl>
           <FormLabel>Name</FormLabel>
           <Input required {...register("name")} />
@@ -79,7 +30,9 @@ const SprintsNew = Guard("AfterOnboard", () => {
           <Textarea rows={10} {...register("description")} />
         </FormControl>
 
-        <Button type="submit">Post</Button>
+        <Button type="submit" isLoading={loading}>
+          Post
+        </Button>
       </Stack>
     </Layout>
   );
