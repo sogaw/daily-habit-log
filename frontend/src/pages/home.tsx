@@ -1,4 +1,4 @@
-import { Button, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { Button, Flex, Select, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 
@@ -37,9 +37,16 @@ const Home = Guard("AfterOnboard", () => {
             <Fallback loading={habitsLoading} error={habitsError}>
               {habits && (
                 <Stack spacing="4" pb="6">
-                  <Button alignSelf="end" size="sm" colorScheme="green" onClick={() => navigate("/habits/new")}>
-                    New habit
-                  </Button>
+                  <Flex justify="space-between" align="center">
+                    <Select size="xs" w="32" rounded="md">
+                      <option value="active">Active</option>
+                      <option value="all">All</option>
+                    </Select>
+                    <Button alignSelf="end" size="sm" colorScheme="green" onClick={() => navigate("/habits/new")}>
+                      New habit
+                    </Button>
+                  </Flex>
+
                   <HabitsList habits={habits} mode="edit" />
                 </Stack>
               )}
@@ -50,9 +57,16 @@ const Home = Guard("AfterOnboard", () => {
             <Fallback loading={sprintsLoading} error={sprintsError}>
               {sprints && (
                 <Stack spacing="4" pb="6">
-                  <Button alignSelf="end" size="sm" colorScheme="green" onClick={() => navigate("/sprints/new")}>
-                    New sprint
-                  </Button>
+                  <Flex justify="space-between" align="center">
+                    <Select size="xs" w="32" rounded="md">
+                      <option value="active">Active</option>
+                      <option value="all">All</option>
+                    </Select>
+                    <Button alignSelf="end" size="sm" colorScheme="green" onClick={() => navigate("/sprints/new")}>
+                      New sprint
+                    </Button>
+                  </Flex>
+
                   <Stack>
                     <SprintsList sprints={sprints} mode="edit" />
                     {sprintsPageInfo?.hasNextPage && (
