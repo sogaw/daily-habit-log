@@ -11,7 +11,7 @@ type HabitCreateForm = {
 };
 
 const HabitsNew = Guard("AfterOnboard", () => {
-  const { createHabit } = useCreateHabit();
+  const { createHabit, loading } = useCreateHabit();
 
   const { register, handleSubmit } = useForm<HabitCreateForm>();
 
@@ -30,7 +30,9 @@ const HabitsNew = Guard("AfterOnboard", () => {
           <Textarea rows={10} {...register("description")} />
         </FormControl>
 
-        <Button type="submit">Post</Button>
+        <Button type="submit" isDisabled={loading}>
+          Post
+        </Button>
       </Stack>
     </Layout>
   );

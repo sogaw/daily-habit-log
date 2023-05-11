@@ -44,7 +44,7 @@ type HabitUpdateForm = {
 };
 
 const HabitEdit = ({ habit }: { habit: Pick<Habit, "id" | "name" | "description"> }) => {
-  const { updateHabit } = useUpdateHabit();
+  const { updateHabit, loading } = useUpdateHabit();
 
   const { register, handleSubmit } = useForm<HabitUpdateForm>({
     defaultValues: { name: habit.name, description: habit.description },
@@ -64,7 +64,9 @@ const HabitEdit = ({ habit }: { habit: Pick<Habit, "id" | "name" | "description"
         <Textarea rows={10} {...register("description")} />
       </FormControl>
 
-      <Button type="submit">Post</Button>
+      <Button type="submit" isDisabled={loading}>
+        Post
+      </Button>
     </Stack>
   );
 };

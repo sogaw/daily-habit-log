@@ -4,7 +4,12 @@ import { FaPen, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 import { FragmentType, useFragment } from "@/generated/gql";
-import { HabitItemFragmentDoc, HabitRecordItemFragmentDoc, HabitRecordStatus } from "@/generated/gql/graphql";
+import {
+  HabitItemFragment,
+  HabitItemFragmentDoc,
+  HabitRecordItemFragmentDoc,
+  HabitRecordStatus,
+} from "@/generated/gql/graphql";
 import { useDeleteHabit } from "@/hooks/habit/use-delete-habit";
 import { useUpdateHabitRecord } from "@/hooks/habit/use-update-habit-record";
 
@@ -22,57 +27,66 @@ gql`
 `;
 
 export const HabitsList = (props: { habits: FragmentType<typeof HabitItemFragmentDoc>[]; mode: "view" | "edit" }) => {
-  const navigate = useNavigate();
-
   const habits = useFragment(HabitItemFragmentDoc, props.habits);
-
-  const { deleteHabit } = useDeleteHabit();
-
-  const onDeleteHabit = async (id: string) => {
-    if (confirm("Are you sure?")) await deleteHabit({ variables: { id } });
-  };
 
   return (
     <Stack spacing="4">
       {habits.map((habit, idx) => (
         <Stack key={habit.id} spacing="4">
-          <Stack>
-            <Box>
-              <Flex justify="space-between" align="center">
-                <Box fontWeight="semibold" opacity={habit.tooHard ? "0.6" : "1"}>
-                  {habit.name}
-                </Box>
-
-                {props.mode == "edit" && (
-                  <HStack>
-                    {!habit.tooHard && (
-                      <Button size="xs" onClick={() => navigate(`/habits/${habit.id}/edit`)}>
-                        <Icon as={FaPen} />
-                      </Button>
-                    )}
-
-                    <Button size="xs" onClick={() => onDeleteHabit(habit.id)}>
-                      <Icon as={FaTrash} />
-                    </Button>
-                  </HStack>
-                )}
-              </Flex>
-
-              <Box whiteSpace="pre-wrap" opacity={habit.tooHard ? "0.6" : "1"}>
-                {habit.description}
-              </Box>
-            </Box>
-
-            <Flex flexWrap="wrap" gap="8px 8px">
-              {habit.habitRecords.map((habitRecord) => (
-                <HabitRecordItem key={habitRecord.id} habitRecord={habitRecord} tooHard={habit.tooHard} />
-              ))}
-            </Flex>
-          </Stack>
-
+          <HabitItem habit={habit} mode="edit" />
           {idx != habits.length - 1 ? <Divider /> : <Box />}
         </Stack>
       ))}
+    </Stack>
+  );
+};
+
+/**
+ * HabitItem
+ */
+
+const HabitItem = ({ habit, mode }: { habit: HabitItemFragment; mode: "edit" | "view" }) => {
+  const navigate = useNavigate();
+
+  const { deleteHabit, loading } = useDeleteHabit();
+
+  const onDeleteHabit = async () => {
+    if (confirm("Are you sure?")) await deleteHabit({ variables: { id: habit.id } });
+  };
+
+  return (
+    <Stack>
+      <Box>
+        <Flex justify="space-between" align="center">
+          <Box fontWeight="semibold" opacity={habit.tooHard ? "0.6" : "1"}>
+            {habit.name}
+          </Box>
+
+          {mode == "edit" && (
+            <HStack>
+              {!habit.tooHard && (
+                <Button size="xs" onClick={() => navigate(`/habits/${habit.id}/edit`)}>
+                  <Icon as={FaPen} />
+                </Button>
+              )}
+
+              <Button size="xs" onClick={onDeleteHabit} isDisabled={loading}>
+                <Icon as={FaTrash} />
+              </Button>
+            </HStack>
+          )}
+        </Flex>
+
+        <Box whiteSpace="pre-wrap" opacity={habit.tooHard ? "0.6" : "1"}>
+          {habit.description}
+        </Box>
+      </Box>
+
+      <Flex flexWrap="wrap" gap="8px 8px">
+        {habit.habitRecords.map((habitRecord) => (
+          <HabitRecordItem key={habitRecord.id} habitRecord={habitRecord} tooHard={habit.tooHard} />
+        ))}
+      </Flex>
     </Stack>
   );
 };

@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 
 import { Fallback } from "@/components/Fallback";
-import { HabitsList } from "@/components/HabitsList";
+import { HabitsList } from "@/components/habit/HabitsList";
 import { Layout } from "@/components/Layout";
-import { SprintsList } from "@/components/SprintsList";
+import { SprintsList } from "@/components/sprint/SprintsList";
 import { Guard } from "@/hocs/guard";
 import { useHabits } from "@/hooks/habit/use-habits";
 import { useSprints } from "@/hooks/sprint/use-sprints";
