@@ -1,4 +1,5 @@
-import { Button, Flex, Select, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { Box, Button, Flex, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { Select } from "chakra-react-select";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 
@@ -10,12 +11,24 @@ import { Guard } from "@/hocs/guard";
 import { useHabits } from "@/hooks/habit/use-habits";
 import { useSprints } from "@/hooks/sprint/use-sprints";
 
+const queryOptions = [
+  {
+    label: "Active",
+    value: "active",
+  },
+  {
+    label: "All",
+    value: "all",
+  },
+];
+
 const Home = Guard("AfterOnboard", () => {
   const navigate = useNavigate();
 
   const [tabIndex, setTabIndex] = useLocalStorage("daily-habit-log.home.tab", 0);
 
   const { habits, loading: habitsLoading, error: habitsError } = useHabits({ skip: tabIndex != 0 });
+
   const {
     sprints,
     pageInfo: sprintsPageInfo,
@@ -38,10 +51,10 @@ const Home = Guard("AfterOnboard", () => {
               {habits && (
                 <Stack spacing="4" pb="6">
                   <Flex justify="space-between" align="center">
-                    <Select size="xs" w="32" rounded="md">
-                      <option value="active">Active</option>
-                      <option value="all">All</option>
-                    </Select>
+                    <Box w="32">
+                      <Select size="sm" defaultValue={queryOptions[0]} options={queryOptions} />
+                    </Box>
+
                     <Button alignSelf="end" size="sm" colorScheme="green" onClick={() => navigate("/habits/new")}>
                       New habit
                     </Button>
@@ -58,10 +71,10 @@ const Home = Guard("AfterOnboard", () => {
               {sprints && (
                 <Stack spacing="4" pb="6">
                   <Flex justify="space-between" align="center">
-                    <Select size="xs" w="32" rounded="md">
-                      <option value="active">Active</option>
-                      <option value="all">All</option>
-                    </Select>
+                    <Box w="32">
+                      <Select size="sm" defaultValue={queryOptions[0]} options={queryOptions} />
+                    </Box>
+
                     <Button alignSelf="end" size="sm" colorScheme="green" onClick={() => navigate("/sprints/new")}>
                       New sprint
                     </Button>
