@@ -61,11 +61,7 @@ export const Layout = ({
         </Box>
       </Container>
 
-      <Box flex="1" position="relative">
-        <Box position="absolute" inset="0" overflowY="auto">
-          <Container h="full">{children}</Container>
-        </Box>
-      </Box>
+      <Container h="full">{children}</Container>
     </Flex>
   );
 };

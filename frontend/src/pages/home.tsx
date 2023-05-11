@@ -49,7 +49,7 @@ const Home = Guard("AfterOnboard", () => {
           <TabPanel px="2">
             <Fallback loading={habitsLoading} error={habitsError}>
               {habits && (
-                <Stack spacing="4" pb="6">
+                <Stack spacing="4">
                   <Flex justify="space-between" align="center">
                     <Box w="32">
                       <Select size="sm" defaultValue={queryOptions[0]} options={queryOptions} />
@@ -69,7 +69,7 @@ const Home = Guard("AfterOnboard", () => {
           <TabPanel px="2">
             <Fallback loading={sprintsLoading} error={sprintsError}>
               {sprints && (
-                <Stack spacing="4" pb="6">
+                <Stack spacing="4">
                   <Flex justify="space-between" align="center">
                     <Box w="32">
                       <Select size="sm" defaultValue={queryOptions[0]} options={queryOptions} />
