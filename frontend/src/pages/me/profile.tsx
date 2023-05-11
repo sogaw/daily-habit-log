@@ -1,7 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
 import { Button, Container, FormControl, FormLabel, HStack, Input, Link, Stack } from "@chakra-ui/react";
 import imageCompression from "browser-image-compression";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { uploadBytes } from "firebase/storage";
 import { useForm } from "react-hook-form";
 
 import { AppAvatar } from "@/components/AppAvatar";
@@ -11,6 +11,7 @@ import { Guard } from "@/hocs/guard";
 import { useAppToast } from "@/hooks/use-app-toast";
 import { useImageInput } from "@/hooks/use-image-input";
 import { useTryFn } from "@/hooks/use-try-fn";
+import { userIconPath, userIconRef } from "@/lib/fire-storage";
 import { useMe } from "@/providers/auth";
 
 gql`
@@ -38,12 +39,12 @@ const SettingsProfile = Guard("AfterOnboard", () => {
     async (v: UpdateProfileForm) => {
       if (iconInput.file) {
         const compressed = await imageCompression(iconInput.file, { maxSizeMB: 1 });
-        const file = await uploadBytes(ref(getStorage(), `users/${me.id}/icon`), compressed);
-        await updateProfile({ variables: { input: { name: v.name, iconPath: file.ref.fullPath } } });
+        await uploadBytes(userIconRef(me.id), compressed);
+        await updateProfile({ variables: { input: { name: v.name, iconPath: userIconPath(me.id) } } });
         return;
       }
 
-      const iconPath = iconInput.imageUrl ? `users/${me.id}/icon` : "";
+      const iconPath = iconInput.imageUrl ? userIconPath(me.id) : "";
       await updateProfile({ variables: { input: { name: v.name, iconPath } } });
     },
     {

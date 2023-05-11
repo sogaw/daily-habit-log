@@ -2,7 +2,7 @@ import { gql, useMutation } from "@apollo/client";
 import { Box, Button, Flex, FormControl, FormLabel, HStack, Input, Link, Stack } from "@chakra-ui/react";
 import imageCompression from "browser-image-compression";
 import { getAuth, signOut } from "firebase/auth";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { uploadBytes } from "firebase/storage";
 import { useForm } from "react-hook-form";
 
 import { AppAvatar } from "@/components/AppAvatar";
@@ -12,6 +12,7 @@ import { Guard } from "@/hocs/guard";
 import { useAppToast } from "@/hooks/use-app-toast";
 import { useImageInput } from "@/hooks/use-image-input";
 import { useTryFn } from "@/hooks/use-try-fn";
+import { userIconPath, userIconRef } from "@/lib/fire-storage";
 import { useAuth } from "@/providers/auth";
 
 gql`
@@ -40,8 +41,8 @@ const Onboard = Guard("BeforeOnboard", () => {
     async (v: OnboardForm) => {
       if (iconInput.file) {
         const compressed = await imageCompression(iconInput.file, { maxSizeMB: 1 });
-        const file = await uploadBytes(ref(getStorage(), `users/${authUser.uid}/icon`), compressed);
-        await onboard({ variables: { input: { name: v.name, iconPath: file.ref.fullPath } } });
+        await uploadBytes(userIconRef(authUser.uid), compressed);
+        await onboard({ variables: { input: { name: v.name, iconPath: userIconPath(authUser.uid) } } });
         return;
       }
 
