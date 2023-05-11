@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
@@ -38,66 +38,79 @@ const Home = Guard("AfterOnboard", () => {
   } = useSprints({ skip: tabIndex != 1 });
 
   return (
-    <Layout>
-      <Tabs defaultIndex={tabIndex} onChange={setTabIndex}>
-        <TabList>
-          <Tab fontWeight="semibold">Habits</Tab>
-          <Tab fontWeight="semibold">Sprints</Tab>
-        </TabList>
+    <Layout width="full">
+      <Tabs h="full" display="flex" flexDirection="column" defaultIndex={tabIndex} onChange={setTabIndex}>
+        <Container>
+          <TabList>
+            <Tab fontWeight="semibold">Habits</Tab>
+            <Tab fontWeight="semibold">Sprints</Tab>
+          </TabList>
+        </Container>
 
-        <TabPanels>
-          <TabPanel px="2">
-            <Fallback loading={habitsLoading} error={habitsError}>
-              {habits && (
-                <Stack spacing="4">
-                  <Flex justify="space-between" align="center">
-                    <Box w="32">
-                      <Select size="sm" defaultValue={queryOptions[0]} options={queryOptions} />
-                    </Box>
+        <Box flex="1" position="relative">
+          <Box position="absolute" inset="0" overflowY="auto">
+            <Container>
+              <TabPanels>
+                <TabPanel px="2">
+                  <Fallback loading={habitsLoading} error={habitsError}>
+                    {habits && (
+                      <Stack spacing="4">
+                        <Flex justify="space-between" align="center">
+                          <Box w="32">
+                            <Select size="sm" defaultValue={queryOptions[0]} options={queryOptions} />
+                          </Box>
 
-                    <Button alignSelf="end" size="sm" colorScheme="green" onClick={() => navigate("/habits/new")}>
-                      New habit
-                    </Button>
-                  </Flex>
+                          <Button alignSelf="end" size="sm" colorScheme="green" onClick={() => navigate("/habits/new")}>
+                            New habit
+                          </Button>
+                        </Flex>
 
-                  <HabitsList habits={habits} mode="edit" />
-                </Stack>
-              )}
-            </Fallback>
-          </TabPanel>
-
-          <TabPanel px="2">
-            <Fallback loading={sprintsLoading} error={sprintsError}>
-              {sprints && (
-                <Stack spacing="4">
-                  <Flex justify="space-between" align="center">
-                    <Box w="32">
-                      <Select size="sm" defaultValue={queryOptions[0]} options={queryOptions} />
-                    </Box>
-
-                    <Button alignSelf="end" size="sm" colorScheme="green" onClick={() => navigate("/sprints/new")}>
-                      New sprint
-                    </Button>
-                  </Flex>
-
-                  <Stack>
-                    <SprintsList sprints={sprints} mode="edit" />
-                    {sprintsPageInfo?.hasNextPage && (
-                      <Button
-                        alignSelf="center"
-                        variant="ghost"
-                        onClick={() => sprintsFetchMore()}
-                        isDisabled={sprintsLoading}
-                      >
-                        more
-                      </Button>
+                        <HabitsList habits={habits} mode="edit" />
+                      </Stack>
                     )}
-                  </Stack>
-                </Stack>
-              )}
-            </Fallback>
-          </TabPanel>
-        </TabPanels>
+                  </Fallback>
+                </TabPanel>
+
+                <TabPanel px="2">
+                  <Fallback loading={sprintsLoading} error={sprintsError}>
+                    {sprints && (
+                      <Stack spacing="4">
+                        <Flex justify="space-between" align="center">
+                          <Box w="32">
+                            <Select size="sm" defaultValue={queryOptions[0]} options={queryOptions} />
+                          </Box>
+
+                          <Button
+                            alignSelf="end"
+                            size="sm"
+                            colorScheme="green"
+                            onClick={() => navigate("/sprints/new")}
+                          >
+                            New sprint
+                          </Button>
+                        </Flex>
+
+                        <Stack>
+                          <SprintsList sprints={sprints} mode="edit" />
+                          {sprintsPageInfo?.hasNextPage && (
+                            <Button
+                              alignSelf="center"
+                              variant="ghost"
+                              onClick={() => sprintsFetchMore()}
+                              isDisabled={sprintsLoading}
+                            >
+                              more
+                            </Button>
+                          )}
+                        </Stack>
+                      </Stack>
+                    )}
+                  </Fallback>
+                </TabPanel>
+              </TabPanels>
+            </Container>
+          </Box>
+        </Box>
       </Tabs>
     </Layout>
   );

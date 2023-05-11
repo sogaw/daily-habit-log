@@ -18,10 +18,12 @@ import { useNavigate } from "react-router-dom";
 export const Layout = ({
   title = "Daily Habit Log",
   backPath,
+  width = "container",
   children,
 }: {
   title?: string;
   backPath?: string;
+  width?: "container" | "full";
   children: ReactNode;
 }) => {
   const navigate = useNavigate();
@@ -61,7 +63,12 @@ export const Layout = ({
         </Box>
       </Container>
 
-      <Container h="full">{children}</Container>
+      <Box flex="1" position="relative">
+        <Box position="absolute" inset="0" overflowY="auto">
+          {width == "container" && <Container h="full">{children}</Container>}
+          {width == "full" && <Box h="full">{children}</Box>}
+        </Box>
+      </Box>
     </Flex>
   );
 };
