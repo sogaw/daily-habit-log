@@ -1,69 +1,39 @@
-import { gql, useQuery } from "@apollo/client";
-import { Box, Center, Link, Spinner, VStack } from "@chakra-ui/react";
-import { getAuth, getIdToken, onIdTokenChanged, signOut, User as AuthUser } from "firebase/auth";
+import { getAuth, onIdTokenChanged, User as AuthUser } from "firebase/auth";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
-import { useFragment } from "@/generated/gql";
-import { MeDocument, MeFragment, MeFragmentDoc } from "@/generated/gql/graphql";
+import { AuthFallback } from "@/components/AuthFallback";
 import { assertIsDefined } from "@/lib/assert-is-defined";
-
-gql`
-  fragment Me on User {
-    id
-    name
-    iconUrl
-  }
-`;
-
-gql`
-  query me {
-    viewer {
-      id
-      ...Me
-    }
-  }
-`;
 
 type State = {
   authUser: AuthUser | undefined;
-  me: MeFragment | undefined;
   loading: boolean;
   error: unknown;
 };
 
 const useAuthProvider = (): State => {
   const [authUser, setAuthUser] = useState<AuthUser>();
-  const [authUserLoading, setAuthUserLoading] = useState(true);
-  const { data, loading: viewerLoading, error, refetch } = useQuery(MeDocument, { skip: !authUser });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<unknown>();
 
   useEffect(() => {
-    const unsub = onIdTokenChanged(getAuth(), async (authUser) => {
-      if (authUser) {
-        const token = await getIdToken(authUser);
-
-        setAuthUser(authUser);
-        localStorage.setItem("daily-habit-log.token", token);
-      } else {
+    const unsub = onIdTokenChanged(
+      getAuth(),
+      (authUser) => {
+        setAuthUser(authUser || undefined);
+        setError(undefined);
+        if (loading) setLoading(false);
+      },
+      (e) => {
         setAuthUser(undefined);
-        localStorage.removeItem("daily-habit-log.token");
+        setError(e);
       }
-
-      if (authUserLoading) setAuthUserLoading(false);
-    });
+    );
 
     return unsub;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (authUser) refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authUser]);
-
-  const me = useFragment(MeFragmentDoc, data?.viewer) || undefined;
-  const loading = authUserLoading || viewerLoading;
-
-  return { authUser, me, loading, error };
+  return { authUser, loading, error };
 };
 
 const AuthContext = createContext<State | undefined>(undefined);
@@ -71,32 +41,11 @@ const AuthContext = createContext<State | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const state = useAuthProvider();
 
-  if (state.loading)
-    return (
-      <Center h="75vh">
-        <Spinner />
-      </Center>
-    );
-
-  if (state.error)
-    return (
-      <VStack py="4">
-        <Box fontWeight="bold" fontSize="xl">
-          Error happened
-        </Box>
-        <Link
-          onClick={() => {
-            signOut(getAuth());
-            location.href = "/";
-          }}
-        >
-          reload
-        </Link>
-        <Box whiteSpace="pre-wrap">{JSON.stringify(state.error, null, 2)}</Box>
-      </VStack>
-    );
-
-  return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
+  return (
+    <AuthFallback loading={state.loading} error={state.error}>
+      <AuthContext.Provider value={state}>{children}</AuthContext.Provider>
+    </AuthFallback>
+  );
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -114,18 +63,5 @@ export const useAuth = () => {
   return {
     ...state,
     authUser: state.authUser,
-  };
-};
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const useMe = () => {
-  const state = useContext(AuthContext);
-  assertIsDefined(state);
-  assertIsDefined(state.authUser);
-  assertIsDefined(state.me);
-  return {
-    ...state,
-    authUser: state.authUser,
-    me: state.me,
   };
 };

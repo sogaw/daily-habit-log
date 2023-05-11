@@ -12,7 +12,7 @@ import { useAppToast } from "@/hooks/use-app-toast";
 import { useImageInput } from "@/hooks/use-image-input";
 import { useTryFn } from "@/hooks/use-try-fn";
 import { userIconPath, userIconRef } from "@/lib/fire-storage";
-import { useMe } from "@/providers/auth";
+import { useMe } from "@/providers/me";
 
 gql`
   mutation updateProfile($input: UpdateProfileInput!) {

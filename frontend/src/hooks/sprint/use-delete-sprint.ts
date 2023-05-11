@@ -1,7 +1,7 @@
 import { gql, Reference, useMutation } from "@apollo/client";
 
 import { DeleteSprintDocument, SprintConnection, SprintEdge } from "@/generated/gql/graphql";
-import { useMe } from "@/providers/auth";
+import { useMe } from "@/providers/me";
 
 import { useAppToast } from "../use-app-toast";
 

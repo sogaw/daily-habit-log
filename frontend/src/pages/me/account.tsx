@@ -7,7 +7,7 @@ import { DeleteAccountDocument } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
 import { useAppToast } from "@/hooks/use-app-toast";
 import { assertIsDefined } from "@/lib/assert-is-defined";
-import { useMe } from "@/providers/auth";
+import { useAuth } from "@/providers/auth";
 
 gql`
   mutation deleteAccount {
@@ -17,7 +17,7 @@ gql`
 
 const SettingsAccount = Guard("AfterOnboard", () => {
   const toast = useAppToast();
-  const { authUser } = useMe();
+  const { authUser } = useAuth();
 
   const onResetPassword = async () => {
     assertIsDefined(authUser.email);

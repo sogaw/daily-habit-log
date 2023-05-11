@@ -1,12 +1,13 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { getAuth } from "firebase/auth";
 
 const uri = [import.meta.env.VITE_APP_BACKEND_URL, "graphql"].join("/");
 
 const httpLink = createHttpLink({ uri });
 
-const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("daily-habit-log.token");
+const authLink = setContext(async (_, { headers }) => {
+  const token = await getAuth().currentUser?.getIdToken(true);
   return { headers: { ...headers, authorization: token ? `Bearer ${token}` : "" } };
 });
 
