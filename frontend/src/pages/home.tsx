@@ -55,7 +55,7 @@ const Home = Guard("AfterOnboard", () => {
                   <Flex justify="space-between" align="center">
                     <Box w="32">
                       <Select size="sm" rounded="md">
-                        <option value="active">Active</option>
+                        <option value="today">Today</option>
                         <option value="all">All</option>
                       </Select>
                     </Box>
