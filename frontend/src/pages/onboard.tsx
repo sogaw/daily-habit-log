@@ -1,4 +1,3 @@
-import { gql, useMutation } from "@apollo/client";
 import { Box, Button, Flex, FormControl, FormLabel, HStack, Input, Link, Stack } from "@chakra-ui/react";
 import imageCompression from "browser-image-compression";
 import { getAuth, signOut } from "firebase/auth";
@@ -7,21 +6,13 @@ import { useForm } from "react-hook-form";
 
 import { AppAvatar } from "@/components/AppAvatar";
 import { AuthLayout } from "@/components/AuthLayout";
-import { MeDocument, OnboardDocument } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
+import { useOnboard } from "@/hooks/auth/use-onboard";
 import { useAppToast } from "@/hooks/use-app-toast";
 import { useImageInput } from "@/hooks/use-image-input";
 import { useTryFn } from "@/hooks/use-try-fn";
 import { userIconPath, userIconRef } from "@/lib/fire-storage";
 import { useAuth } from "@/providers/auth";
-
-gql`
-  mutation onboard($input: OnboardInput!) {
-    onboard(input: $input) {
-      id
-    }
-  }
-`;
 
 type OnboardForm = {
   name: string;
@@ -33,9 +24,7 @@ const Onboard = Guard("BeforeOnboard", () => {
   const { register, handleSubmit } = useForm<OnboardForm>();
   const iconInput = useImageInput();
 
-  const [onboard] = useMutation(OnboardDocument, {
-    refetchQueries: [{ query: MeDocument }],
-  });
+  const { onboard } = useOnboard();
 
   const [onSubmit, { loading }] = useTryFn(
     async (v: OnboardForm) => {
