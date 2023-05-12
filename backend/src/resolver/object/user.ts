@@ -1,4 +1,4 @@
-import { Habit, Sprint, Tweet, User } from "@/datasource";
+import { Habit, Sprint, User } from "@/datasource";
 import { genDate } from "@/lib/gen";
 import { parseId } from "@/lib/parse";
 import { getSignedUrl } from "@/lib/storage";

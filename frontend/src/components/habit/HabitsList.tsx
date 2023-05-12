@@ -13,19 +13,6 @@ import {
 import { useDeleteHabit } from "@/hooks/habit/use-delete-habit";
 import { useUpdateHabitRecord } from "@/hooks/habit/use-update-habit-record";
 
-gql`
-  fragment HabitItem on Habit {
-    id
-    name
-    description
-    tooHard
-    habitRecords {
-      id
-      ...HabitRecordItem
-    }
-  }
-`;
-
 export const HabitsList = (props: { habits: FragmentType<typeof HabitItemFragmentDoc>[]; mode: "view" | "edit" }) => {
   const habits = useFragment(HabitItemFragmentDoc, props.habits);
 
@@ -45,6 +32,19 @@ export const HabitsList = (props: { habits: FragmentType<typeof HabitItemFragmen
  * HabitItem
  */
 
+gql`
+  fragment HabitItem on Habit {
+    id
+    name
+    description
+    tooHard
+    habitRecords {
+      id
+      ...HabitRecordItem
+    }
+  }
+`;
+
 const HabitItem = ({ habit, mode }: { habit: HabitItemFragment; mode: "edit" | "view" }) => {
   const navigate = useNavigate();
 
@@ -63,15 +63,15 @@ const HabitItem = ({ habit, mode }: { habit: HabitItemFragment; mode: "edit" | "
           </Box>
 
           {mode == "edit" && (
-            <HStack>
+            <HStack spacing="1">
               {!habit.tooHard && (
-                <Button size="xs" onClick={() => navigate(`/habits/${habit.id}/edit`)}>
-                  <Icon as={FaPen} />
+                <Button size="xs" variant="ghost" onClick={() => navigate(`/habits/${habit.id}/edit`)}>
+                  <Icon as={FaPen} color="gray.500" />
                 </Button>
               )}
 
-              <Button size="xs" onClick={onDeleteHabit} isDisabled={loading}>
-                <Icon as={FaTrash} />
+              <Button size="xs" variant="ghost" onClick={onDeleteHabit} isDisabled={loading}>
+                <Icon as={FaTrash} color="gray.500" />
               </Button>
             </HStack>
           )}

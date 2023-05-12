@@ -10,18 +10,6 @@ import { useDeleteSprint } from "@/hooks/sprint/use-delete-sprint";
 import { useUpdateSprintStatus } from "@/hooks/sprint/use-update-sprint-status";
 import { isToday } from "@/lib/date";
 
-gql`
-  fragment SprintItem on Sprint {
-    id
-    name
-    status
-    description
-    active
-    createdAt
-    createdOn
-  }
-`;
-
 export const SprintsList = (props: {
   sprints: FragmentType<typeof SprintItemFragmentDoc>[];
   mode: "view" | "edit";
@@ -69,6 +57,18 @@ export const SprintsList = (props: {
  * SprintItem
  */
 
+gql`
+  fragment SprintItem on Sprint {
+    id
+    name
+    status
+    description
+    active
+    createdAt
+    createdOn
+  }
+`;
+
 const SprintItem = ({ sprint, mode }: { sprint: SprintItemFragment; mode: "edit" }) => {
   const navigate = useNavigate();
 
@@ -87,15 +87,15 @@ const SprintItem = ({ sprint, mode }: { sprint: SprintItemFragment; mode: "edit"
           </Box>
 
           {mode == "edit" && (
-            <HStack>
+            <HStack spacing="1">
               {sprint.active && (
-                <Button size="xs" onClick={() => navigate(`/sprints/${sprint.id}/edit`)}>
-                  <Icon as={FaPen} />
+                <Button size="xs" variant="ghost" onClick={() => navigate(`/sprints/${sprint.id}/edit`)}>
+                  <Icon as={FaPen} color="gray.500" />
                 </Button>
               )}
 
-              <Button size="xs" onClick={onDeleteSprint} isDisabled={loading}>
-                <Icon as={FaTrash} />
+              <Button size="xs" variant="ghost" onClick={onDeleteSprint} isDisabled={loading}>
+                <Icon as={FaTrash} color="gray.500" />
               </Button>
             </HStack>
           )}

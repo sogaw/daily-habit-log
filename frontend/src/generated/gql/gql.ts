@@ -16,6 +16,7 @@ const documents = {
     "\n  fragment HabitItem on Habit {\n    id\n    name\n    description\n    tooHard\n    habitRecords {\n      id\n      ...HabitRecordItem\n    }\n  }\n": types.HabitItemFragmentDoc,
     "\n  fragment HabitRecordItem on HabitRecord {\n    id\n    date\n    status\n    habitId\n  }\n": types.HabitRecordItemFragmentDoc,
     "\n  fragment SprintItem on Sprint {\n    id\n    name\n    status\n    description\n    active\n    createdAt\n    createdOn\n  }\n": types.SprintItemFragmentDoc,
+    "\n  fragment TweetItem on Tweet {\n    id\n    content\n    createdAt\n    formattedCreatedAt\n  }\n": types.TweetItemFragmentDoc,
     "\n  mutation deleteAccount {\n    deleteAccount\n  }\n": types.DeleteAccountDocument,
     "\n  mutation onboard($input: OnboardInput!) {\n    onboard(input: $input) {\n      id\n    }\n  }\n": types.OnboardDocument,
     "\n  mutation createHabit($input: CreateHabitInput!) {\n    createHabit(input: $input) {\n      id\n      ...HabitItem\n    }\n  }\n": types.CreateHabitDocument,
@@ -31,6 +32,9 @@ const documents = {
     "\n  query sprints($first: Int, $after: String, $filter: SprintsFilter) {\n    viewer {\n      id\n      sprints(first: $first, after: $after, filter: $filter) {\n        edges {\n          cursor\n          node {\n            id\n            ...SprintItem\n          }\n        }\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n      }\n    }\n  }\n": types.SprintsDocument,
     "\n  mutation updateSprintStatus($id: ID!, $input: UpdateSprintStatusInput!) {\n    updateSprintStatus(id: $id, input: $input) {\n      id\n      status\n    }\n  }\n": types.UpdateSprintStatusDocument,
     "\n  mutation updateSprint($id: ID!, $input: UpdateSprintInput!) {\n    updateSprint(id: $id, input: $input) {\n      id\n      name\n      description\n    }\n  }\n": types.UpdateSprintDocument,
+    "\n  mutation createTweet($input: CreateTweetInput!) {\n    createTweet(input: $input) {\n      id\n      ...TweetItem\n    }\n  }\n": types.CreateTweetDocument,
+    "\n  mutation deleteTweet($id: ID!) {\n    deleteTweet(id: $id) {\n      id\n    }\n  }\n": types.DeleteTweetDocument,
+    "\n  query tweets($first: Int, $after: String) {\n    viewer {\n      id\n      tweets(first: $first, after: $after) {\n        edges {\n          cursor\n          node {\n            id\n            ...TweetItem\n          }\n        }\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n      }\n    }\n  }\n": types.TweetsDocument,
     "\n  mutation updateProfile($input: UpdateProfileInput!) {\n    updateProfile(input: $input) {\n      id\n      ...Me\n    }\n  }\n": types.UpdateProfileDocument,
     "\n  fragment Me on User {\n    id\n    name\n    iconUrl\n  }\n": types.MeFragmentDoc,
     "\n  query me {\n    viewer {\n      id\n      ...Me\n    }\n  }\n": types.MeDocument,
@@ -62,6 +66,10 @@ export function graphql(source: "\n  fragment HabitRecordItem on HabitRecord {\n
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  fragment SprintItem on Sprint {\n    id\n    name\n    status\n    description\n    active\n    createdAt\n    createdOn\n  }\n"): (typeof documents)["\n  fragment SprintItem on Sprint {\n    id\n    name\n    status\n    description\n    active\n    createdAt\n    createdOn\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment TweetItem on Tweet {\n    id\n    content\n    createdAt\n    formattedCreatedAt\n  }\n"): (typeof documents)["\n  fragment TweetItem on Tweet {\n    id\n    content\n    createdAt\n    formattedCreatedAt\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -122,6 +130,18 @@ export function graphql(source: "\n  mutation updateSprintStatus($id: ID!, $inpu
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation updateSprint($id: ID!, $input: UpdateSprintInput!) {\n    updateSprint(id: $id, input: $input) {\n      id\n      name\n      description\n    }\n  }\n"): (typeof documents)["\n  mutation updateSprint($id: ID!, $input: UpdateSprintInput!) {\n    updateSprint(id: $id, input: $input) {\n      id\n      name\n      description\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation createTweet($input: CreateTweetInput!) {\n    createTweet(input: $input) {\n      id\n      ...TweetItem\n    }\n  }\n"): (typeof documents)["\n  mutation createTweet($input: CreateTweetInput!) {\n    createTweet(input: $input) {\n      id\n      ...TweetItem\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation deleteTweet($id: ID!) {\n    deleteTweet(id: $id) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation deleteTweet($id: ID!) {\n    deleteTweet(id: $id) {\n      id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query tweets($first: Int, $after: String) {\n    viewer {\n      id\n      tweets(first: $first, after: $after) {\n        edges {\n          cursor\n          node {\n            id\n            ...TweetItem\n          }\n        }\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query tweets($first: Int, $after: String) {\n    viewer {\n      id\n      tweets(first: $first, after: $after) {\n        edges {\n          cursor\n          node {\n            id\n            ...TweetItem\n          }\n        }\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

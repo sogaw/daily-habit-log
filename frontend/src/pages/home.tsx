@@ -13,6 +13,7 @@ import { SprintsFilter } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
 import { useHabits } from "@/hooks/habit/use-habits";
 import { useSprints } from "@/hooks/sprint/use-sprints";
+import { useTweets } from "@/hooks/tweet/use-tweets";
 
 const Home = Guard("AfterOnboard", () => {
   const navigate = useNavigate();
@@ -29,6 +30,14 @@ const Home = Guard("AfterOnboard", () => {
     error: sprintsError,
     fetchMore: sprintsFetchMore,
   } = useSprints({ skip: tabIndex != 1, filter: sprintsFilter });
+
+  const {
+    tweets,
+    pageInfo: tweetsPageInfo,
+    loading: tweetsLoading,
+    error: tweetsError,
+    fetchMore: tweetsFetchMore,
+  } = useTweets({ skip: tabIndex != 2 });
 
   return (
     <Layout pt="0">
@@ -94,7 +103,20 @@ const Home = Guard("AfterOnboard", () => {
           <TabPanel px="2">
             <Stack spacing="4">
               <TweetCreateForm />
-              <TweetsList />
+              <Fallback loading={tweetsLoading} error={tweetsError}>
+                {tweets && <TweetsList tweets={tweets} />}
+                {tweetsPageInfo?.hasNextPage && (
+                  <Button
+                    alignSelf="center"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => tweetsFetchMore()}
+                    isDisabled={tweetsLoading}
+                  >
+                    More
+                  </Button>
+                )}
+              </Fallback>
             </Stack>
           </TabPanel>
         </TabPanels>

@@ -124,6 +124,7 @@ type User {
   habit(id: ID!): Habit!
   sprints(first: Int, after: String, filter: SprintsFilter): SprintConnection!
   sprint(id: ID!): Sprint!
+  tweets(first: Int, after: String): TweetConnection!
 }
 
 type Query {
