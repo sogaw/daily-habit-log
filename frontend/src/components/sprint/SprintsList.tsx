@@ -39,30 +39,28 @@ export const SprintsList = (props: {
 
   return (
     <Stack spacing="4">
-      <>
-        {todaySprints.map((sprint, idx) => (
-          <Stack key={sprint.id} spacing="4">
-            <SprintItem sprint={sprint} mode="edit" />
-            {idx != sprints.length - 1 ? <Divider /> : <Box />}
-          </Stack>
-        ))}
+      {todaySprints.map((sprint, idx) => (
+        <Stack key={sprint.id} spacing="4">
+          <SprintItem sprint={sprint} mode="edit" />
+          {idx != sprints.length - 1 ? <Divider /> : <Box />}
+        </Stack>
+      ))}
 
-        {pastSprints.length > 0 && (
-          <Stack spacing="4">
-            <Button alignSelf="center" variant="ghost" size="sm" onClick={onDeleteALlPastSprints} isDisabled={loading}>
-              Delete all past
-            </Button>
-            <Divider />
-          </Stack>
-        )}
+      {pastSprints.length > 0 && (
+        <Stack spacing="4">
+          <Button alignSelf="center" variant="ghost" size="sm" onClick={onDeleteALlPastSprints} isDisabled={loading}>
+            Delete all past
+          </Button>
+          <Divider />
+        </Stack>
+      )}
 
-        {pastSprints.map((sprint, idx) => (
-          <Stack key={sprint.id} spacing="4">
-            <SprintItem sprint={sprint} mode="edit" />
-            {idx != sprints.length - 1 ? <Divider /> : <Box />}
-          </Stack>
-        ))}
-      </>
+      {pastSprints.map((sprint, idx) => (
+        <Stack key={sprint.id} spacing="4">
+          <SprintItem sprint={sprint} mode="edit" />
+          {idx != sprints.length - 1 ? <Divider /> : <Box />}
+        </Stack>
+      ))}
     </Stack>
   );
 };

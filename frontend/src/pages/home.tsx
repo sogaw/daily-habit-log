@@ -7,6 +7,8 @@ import { Fallback } from "@/components/Fallback";
 import { HabitsList } from "@/components/habit/HabitsList";
 import { Layout } from "@/components/Layout";
 import { SprintsList } from "@/components/sprint/SprintsList";
+import { TweetCreateForm } from "@/components/tweet/TweetCreateForm";
+import { TweetsList } from "@/components/tweet/TweetsList";
 import { SprintsFilter } from "@/generated/gql/graphql";
 import { Guard } from "@/hocs/guard";
 import { useHabits } from "@/hooks/habit/use-habits";
@@ -34,6 +36,7 @@ const Home = Guard("AfterOnboard", () => {
         <TabList position="sticky" top="14" zIndex="1" bg="white">
           <Tab fontWeight="semibold">Habits</Tab>
           <Tab fontWeight="semibold">Sprints</Tab>
+          <Tab fontWeight="semibold">Tweets</Tab>
         </TabList>
 
         <TabPanels>
@@ -85,6 +88,13 @@ const Home = Guard("AfterOnboard", () => {
                   )}
                 </Fallback>
               </Stack>
+            </Stack>
+          </TabPanel>
+
+          <TabPanel px="2">
+            <Stack spacing="4">
+              <TweetCreateForm />
+              <TweetsList />
             </Stack>
           </TabPanel>
         </TabPanels>

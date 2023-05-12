@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase-admin/firestore";
 
-export const FormatDate = (timestamp: Timestamp) => {
+export const formatDateTime = (timestamp: Timestamp) => {
   const d = timestamp.toDate();
 
   const formatted = new Intl.DateTimeFormat(undefined, {

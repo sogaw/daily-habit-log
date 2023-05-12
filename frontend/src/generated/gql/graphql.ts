@@ -24,6 +24,10 @@ export type CreateSprintInput = {
   name: Scalars['String'];
 };
 
+export type CreateTweetInput = {
+  content: Scalars['String'];
+};
+
 export type Habit = {
   __typename?: 'Habit';
   description: Scalars['String'];
@@ -50,10 +54,12 @@ export type Mutation = {
   __typename?: 'Mutation';
   createHabit: Habit;
   createSprint: Sprint;
+  createTweet: Tweet;
   deleteAccount: Scalars['ID'];
   deleteAllPastSprints: User;
   deleteHabit: Habit;
   deleteSprint: Sprint;
+  deleteTweet: Tweet;
   onboard: User;
   updateHabit: Habit;
   updateHabitRecord: HabitRecord;
@@ -73,12 +79,22 @@ export type MutationCreateSprintArgs = {
 };
 
 
+export type MutationCreateTweetArgs = {
+  input: CreateTweetInput;
+};
+
+
 export type MutationDeleteHabitArgs = {
   id: Scalars['ID'];
 };
 
 
 export type MutationDeleteSprintArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeleteTweetArgs = {
   id: Scalars['ID'];
 };
 
@@ -162,6 +178,26 @@ export type SprintStatus =
 export type SprintsFilter =
   | 'ALL'
   | 'TODAY';
+
+export type Tweet = {
+  __typename?: 'Tweet';
+  content: Scalars['String'];
+  createdAt: Scalars['String'];
+  formattedCreatedAt: Scalars['String'];
+  id: Scalars['ID'];
+};
+
+export type TweetConnection = {
+  __typename?: 'TweetConnection';
+  edges: Array<TweetEdge>;
+  pageInfo: PageInfo;
+};
+
+export type TweetEdge = {
+  __typename?: 'TweetEdge';
+  cursor: Scalars['String'];
+  node: Tweet;
+};
 
 export type UpdateHabitInput = {
   description: Scalars['String'];

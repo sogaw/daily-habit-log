@@ -1,5 +1,4 @@
-import { Habit, User } from "@/datasource";
-import { Sprint } from "@/datasource/fire-model/sprint";
+import { Habit, Sprint, Tweet, User } from "@/datasource";
 import { genDate } from "@/lib/gen";
 import { parseId } from "@/lib/parse";
 import { getSignedUrl } from "@/lib/storage";
@@ -7,6 +6,7 @@ import { getSignedUrl } from "@/lib/storage";
 import { builder } from "../builder";
 import { SprintsFilter } from "../enum/sprints-filter";
 import { SprintConnection } from "./sprint-connection";
+import { TweetConnection } from "./tweet-connection";
 
 builder.objectType(User, {
   name: "User",
@@ -60,6 +60,20 @@ builder.objectType(User, {
         parseId(args.id);
 
         return user.sprints.findOne(args.id);
+      },
+    }),
+
+    tweets: t.field({
+      type: TweetConnection,
+      args: {
+        first: t.arg({ type: "Int" }),
+        after: t.arg({ type: "String" }),
+      },
+      resolve: (user, args) => {
+        return user.tweets.paginate({
+          first: args.first || 10,
+          after: args.after || genDate().toISOString(),
+        });
       },
     }),
   }),

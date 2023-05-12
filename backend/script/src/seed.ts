@@ -2,8 +2,7 @@ import { subDays } from "date-fns";
 import { Timestamp } from "firebase-admin/firestore";
 import { auth } from "script/setup";
 
-import { Habit, User } from "@/datasource";
-import { Sprint } from "@/datasource/fire-model/sprint";
+import { Habit, Sprint, User } from "@/datasource";
 import { createDatasourceContext } from "@/resolver";
 
 const datasource = createDatasourceContext();

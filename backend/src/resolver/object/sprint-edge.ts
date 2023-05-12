@@ -1,4 +1,4 @@
-import { Sprint } from "@/datasource/fire-model/sprint";
+import { Sprint } from "@/datasource";
 
 import { builder } from "../builder";
 

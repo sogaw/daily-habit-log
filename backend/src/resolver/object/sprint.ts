@@ -1,6 +1,6 @@
 import { startOfDay } from "date-fns";
 
-import { Sprint } from "@/datasource/fire-model/sprint";
+import { Sprint } from "@/datasource";
 import { DateFromISO } from "@/lib/date";
 import { genDate } from "@/lib/gen";
 

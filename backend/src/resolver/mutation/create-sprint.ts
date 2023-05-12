@@ -1,4 +1,4 @@
-import { Sprint } from "@/datasource/fire-model/sprint";
+import { Sprint } from "@/datasource";
 import { parseAuth } from "@/lib/parse";
 
 import { builder } from "../builder";

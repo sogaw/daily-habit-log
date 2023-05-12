@@ -15,24 +15,23 @@ enum SprintsFilter {
   ALL
 }
 
-input OnboardInput {
-  name: String!
-  iconPath: String!
-}
-
-input UpdateProfileInput {
-  name: String!
-  iconPath: String!
-}
-
 input CreateHabitInput {
   name: String!
   description: String!
 }
 
-input UpdateHabitInput {
+input CreateSprintInput {
   name: String!
   description: String!
+}
+
+input CreateTweetInput {
+  content: String!
+}
+
+input OnboardInput {
+  name: String!
+  iconPath: String!
 }
 
 input UpdateHabitRecordInput {
@@ -41,18 +40,23 @@ input UpdateHabitRecordInput {
   status: HabitRecordStatus!
 }
 
-input CreateSprintInput {
+input UpdateHabitInput {
   name: String!
   description: String!
+}
+
+input UpdateProfileInput {
+  name: String!
+  iconPath: String!
+}
+
+input UpdateSprintStatusInput {
+  status: SprintStatus!
 }
 
 input UpdateSprintInput {
   name: String!
   description: String!
-}
-
-input UpdateSprintStatusInput {
-  status: SprintStatus!
 }
 
 type PageInfo {
@@ -70,14 +74,21 @@ type SprintConnection {
   pageInfo: PageInfo!
 }
 
-type User {
+type TweetEdge {
+  cursor: String!
+  node: Tweet!
+}
+
+type TweetConnection {
+  edges: [TweetEdge!]!
+  pageInfo: PageInfo!
+}
+
+type HabitRecord {
   id: ID!
-  name: String!
-  iconUrl: String
-  habits: [Habit!]!
-  habit(id: ID!): Habit!
-  sprints(first: Int, after: String, filter: SprintsFilter): SprintConnection!
-  sprint(id: ID!): Sprint!
+  date: String!
+  status: HabitRecordStatus!
+  habitId: String!
 }
 
 type Habit {
@@ -86,13 +97,6 @@ type Habit {
   description: String!
   habitRecords: [HabitRecord!]!
   tooHard: Boolean!
-}
-
-type HabitRecord {
-  id: ID!
-  date: String!
-  status: HabitRecordStatus!
-  habitId: String!
 }
 
 type Sprint {
@@ -105,21 +109,40 @@ type Sprint {
   createdOn: String!
 }
 
+type Tweet {
+  id: ID!
+  content: String!
+  createdAt: String!
+  formattedCreatedAt: String!
+}
+
+type User {
+  id: ID!
+  name: String!
+  iconUrl: String
+  habits: [Habit!]!
+  habit(id: ID!): Habit!
+  sprints(first: Int, after: String, filter: SprintsFilter): SprintConnection!
+  sprint(id: ID!): Sprint!
+}
+
 type Query {
   viewer: User
 }
 
 type Mutation {
-  onboard(input: OnboardInput!): User!
-  updateProfile(input: UpdateProfileInput!): User!
-  deleteAccount: ID!
   createHabit(input: CreateHabitInput!): Habit!
-  updateHabit(id: ID!, input: UpdateHabitInput!): Habit!
-  deleteHabit(id: ID!): Habit!
-  updateHabitRecord(input: UpdateHabitRecordInput!): HabitRecord!
   createSprint(input: CreateSprintInput!): Sprint!
-  updateSprint(id: ID!, input: UpdateSprintInput!): Sprint!
-  updateSprintStatus(id: ID!, input: UpdateSprintStatusInput!): Sprint!
-  deleteSprint(id: ID!): Sprint!
+  createTweet(input: CreateTweetInput!): Tweet!
+  deleteAccount: ID!
   deleteAllPastSprints: User!
+  deleteHabit(id: ID!): Habit!
+  deleteSprint(id: ID!): Sprint!
+  deleteTweet(id: ID!): Tweet!
+  onboard(input: OnboardInput!): User!
+  updateHabitRecord(input: UpdateHabitRecordInput!): HabitRecord!
+  updateHabit(id: ID!, input: UpdateHabitInput!): Habit!
+  updateProfile(input: UpdateProfileInput!): User!
+  updateSprintStatus(id: ID!, input: UpdateSprintStatusInput!): Sprint!
+  updateSprint(id: ID!, input: UpdateSprintInput!): Sprint!
 }

@@ -2,6 +2,7 @@ import { CollectionReference, Timestamp } from "firebase-admin/firestore";
 
 import { genTimestamp } from "@/lib/gen";
 
+import { TweetsCollection } from "..";
 import { FireCollection, FireDocument } from "../fire-model-package";
 import { HabitsCollection } from "./habit";
 import { SprintsCollection } from "./sprint";
@@ -17,6 +18,7 @@ export type UserData = {
 export class User extends FireDocument<UserData> {
   habits = new HabitsCollection(this.ref.collection("habits"));
   sprints = new SprintsCollection(this.ref.collection("sprints"));
+  tweets = new TweetsCollection(this.ref.collection("tweets"));
 
   static create(collection: UsersCollection, { id, name, iconPath }: Pick<UserData, "id" | "name" | "iconPath">) {
     const now = genTimestamp();
