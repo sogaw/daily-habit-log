@@ -3,6 +3,7 @@ import { CollectionGroup, CollectionReference, Timestamp } from "firebase-admin/
 
 import { DateFromISO } from "@/lib/date";
 import { genDate, genId, genTimestamp } from "@/lib/gen";
+import { logger } from "@/lib/logger";
 
 import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model-package";
 
@@ -85,7 +86,7 @@ export class HabitRecordsCollection extends FireCollection<HabitRecord> {
       .count()
       .get()
       .then((snap) => snap.data());
-    console.debug(`[Fire] read 1 aggregate from ${this.constructor.name} collection.`);
+    logger.debug(`[Fire] read 1 aggregate from ${this.constructor.name} collection`);
     return success;
   }
 

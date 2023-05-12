@@ -13,9 +13,9 @@ export const yoga = createYoga({
   context: async ({ request }): Promise<Context> => {
     const auth = await createAuthContext({ request });
     const datasource = createDatasourceContext();
-
     return { auth, datasource };
   },
+  logging: process.env.NODE_ENV == "development" ? "debug" : "info",
 });
 
 export const createSchema = () => {

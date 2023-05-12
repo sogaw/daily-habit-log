@@ -13,8 +13,6 @@ import { yoga } from "@/yoga";
 /**
  * Misc
  */
-console.debug = () => undefined; // disable console.debug
-
 export const sleep = (ms = 0) =>
   new Promise((resolve) =>
     setTimeout(() => {
