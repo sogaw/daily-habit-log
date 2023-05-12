@@ -55,13 +55,21 @@ export class SprintsCollection extends FireCollection<Sprint> {
     return this.findManyByQuery((ref) => ref.orderBy("createdAt", "desc").endAt(endAt));
   }
 
-  async paginate({ first, after }: { first: number; after: string }) {
+  async paginate({ first, after, filter }: { first: number; after: string; filter: "TODAY" | "ALL" }) {
     const afterDateTime = new Date(after);
-    const sprints = await this.findManyByQuery((ref) =>
-      ref.orderBy("createdAt", "desc").startAfter(afterDateTime).limit(first)
-    );
+
+    const sprints = await this.findManyByQuery((ref) => {
+      let res = ref.orderBy("createdAt", "desc").startAfter(afterDateTime);
+      if (filter == "TODAY") {
+        const today = startOfDay(genDate());
+        res = res.endAt(today);
+      }
+      return res.limit(first);
+    });
+
     const edges = sprints.map((sprint) => new SprintEdge(sprint.data.createdAt.toDate().toISOString(), sprint));
-    const pageInfo = new PageInfo(edges.length > 0, edges.at(-1)?.cursor);
+    const pageInfo = new PageInfo(edges.length == first, edges.at(-1)?.cursor);
+
     return new SprintConnection(edges, pageInfo);
   }
 }

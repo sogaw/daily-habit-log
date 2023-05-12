@@ -5,6 +5,7 @@ import { parseId } from "@/lib/parse";
 import { getSignedUrl } from "@/lib/storage";
 
 import { builder } from "../builder";
+import { SprintsFilter } from "../enum/sprints-filter";
 import { SprintConnection } from "./sprint-connection";
 
 builder.objectType(User, {
@@ -36,21 +37,18 @@ builder.objectType(User, {
       },
     }),
 
-    activeSprints: t.field({
-      type: [Sprint],
-      resolve: (user) => user.sprints.active(),
-    }),
-
     sprints: t.field({
       type: SprintConnection,
       args: {
         first: t.arg({ type: "Int" }),
         after: t.arg({ type: "String" }),
+        filter: t.arg({ type: SprintsFilter }),
       },
       resolve: (user, args) => {
         return user.sprints.paginate({
           first: args.first || 10,
           after: args.after || genDate().toISOString(),
+          filter: args.filter || "ALL",
         });
       },
     }),

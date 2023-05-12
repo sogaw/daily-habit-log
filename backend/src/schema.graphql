@@ -10,6 +10,11 @@ enum SprintStatus {
   PENDING
 }
 
+enum SprintsFilter {
+  TODAY
+  ALL
+}
+
 input OnboardInput {
   name: String!
   iconPath: String!
@@ -71,8 +76,7 @@ type User {
   iconUrl: String
   habits: [Habit!]!
   habit(id: ID!): Habit!
-  activeSprints: [Sprint!]!
-  sprints(first: Int, after: String): SprintConnection!
+  sprints(first: Int, after: String, filter: SprintsFilter): SprintConnection!
   sprint(id: ID!): Sprint!
 }
 

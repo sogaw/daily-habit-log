@@ -1,13 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 
-import { SprintsDocument } from "@/generated/gql/graphql";
+import { SprintsDocument, SprintsFilter } from "@/generated/gql/graphql";
 import { assertIsDefined } from "@/lib/assert-is-defined";
 
 gql`
-  query sprints($first: Int, $after: String) {
+  query sprints($first: Int, $after: String, $filter: SprintsFilter) {
     viewer {
       id
-      sprints(first: $first, after: $after) {
+      sprints(first: $first, after: $after, filter: $filter) {
         edges {
           cursor
           node {
@@ -24,15 +24,15 @@ gql`
   }
 `;
 
-export const useSprints = ({ skip }: { skip: boolean }) => {
-  const { data, loading, error, fetchMore } = useQuery(SprintsDocument, { skip });
+export const useSprints = ({ skip, filter }: { skip: boolean; filter: SprintsFilter }) => {
+  const { data, loading, error, fetchMore } = useQuery(SprintsDocument, { skip, variables: { filter } });
 
   const sprints = data?.viewer?.sprints.edges.map((edge) => edge.node);
   const pageInfo = data?.viewer?.sprints.pageInfo;
 
   const onFetchMore = () => {
     fetchMore({
-      variables: { after: pageInfo?.endCursor },
+      variables: { after: pageInfo?.endCursor, filter },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
 
