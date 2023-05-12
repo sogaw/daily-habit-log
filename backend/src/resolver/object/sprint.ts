@@ -1,7 +1,7 @@
 import { startOfDay } from "date-fns";
 
 import { Sprint } from "@/datasource/fire-model/sprint";
-import { FormatDate } from "@/lib/date";
+import { DateFromISO } from "@/lib/date";
 import { genDate } from "@/lib/gen";
 
 import { builder } from "../builder";
@@ -15,6 +15,7 @@ builder.objectType(Sprint, {
     description: t.string({ resolve: (sprint) => sprint.data.description }),
     status: t.field({ type: SprintStatus, resolve: (sprint) => sprint.data.status }),
     active: t.boolean({ resolve: (sprint) => sprint.data.createdAt.toDate() > startOfDay(genDate()) }),
-    createdAt: t.string({ resolve: (sprint) => FormatDate(sprint.data.createdAt) }),
+    createdAt: t.string({ resolve: (sprint) => sprint.data.createdAt.toDate().toISOString() }),
+    createdOn: t.string({ resolve: (sprint) => DateFromISO(sprint.data.createdAt.toDate().toISOString()) }),
   }),
 });

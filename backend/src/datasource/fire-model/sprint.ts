@@ -50,11 +50,6 @@ export class SprintsCollection extends FireCollection<Sprint> {
     super(ref, (snap) => Sprint.fromSnapshot(snap));
   }
 
-  active() {
-    const endAt = startOfDay(genDate());
-    return this.findManyByQuery((ref) => ref.orderBy("createdAt", "desc").endAt(endAt));
-  }
-
   async paginate({ first, after, filter }: { first: number; after: string; filter: "TODAY" | "ALL" }) {
     const afterDateTime = new Date(after);
 
@@ -71,6 +66,14 @@ export class SprintsCollection extends FireCollection<Sprint> {
     const pageInfo = new PageInfo(edges.length == first, edges.at(-1)?.cursor);
 
     return new SprintConnection(edges, pageInfo);
+  }
+
+  async past() {
+    const today = startOfDay(genDate());
+
+    const pastSprints = await this.findManyByQuery((ref) => ref.orderBy("createdAt", "desc").startAt(today));
+
+    return pastSprints;
   }
 }
 

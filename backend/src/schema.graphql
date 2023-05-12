@@ -102,6 +102,7 @@ type Sprint {
   status: SprintStatus!
   active: Boolean!
   createdAt: String!
+  createdOn: String!
 }
 
 type Query {
@@ -120,4 +121,5 @@ type Mutation {
   updateSprint(id: ID!, input: UpdateSprintInput!): Sprint!
   updateSprintStatus(id: ID!, input: UpdateSprintStatusInput!): Sprint!
   deleteSprint(id: ID!): Sprint!
+  deleteAllPastSprints: User!
 }

@@ -1,4 +1,4 @@
-import { gql, Reference, useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 
 import { DeleteSprintDocument, SprintConnection, SprintEdge } from "@/generated/gql/graphql";
 import { useMe } from "@/providers/me";
@@ -30,9 +30,6 @@ export const useDeleteSprint = () => {
               (edge: SprintEdge) => readField("id", edge.node) != data?.deleteSprint.id
             );
             return { ...existing, edges };
-          },
-          activeSprints: (existing: Reference[] = [], { readField }) => {
-            return existing.filter((habitRef) => readField("id", habitRef) != data?.deleteSprint.id);
           },
         },
       });

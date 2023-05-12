@@ -5,8 +5,10 @@ import { useNavigate } from "react-router-dom";
 
 import { FragmentType, useFragment } from "@/generated/gql";
 import { SprintItemFragment, SprintItemFragmentDoc, SprintStatus } from "@/generated/gql/graphql";
+import { useDeleteAllPastSprints } from "@/hooks/sprint/use-delete-all-past-sprints";
 import { useDeleteSprint } from "@/hooks/sprint/use-delete-sprint";
 import { useUpdateSprintStatus } from "@/hooks/sprint/use-update-sprint-status";
+import { isToday } from "@/lib/date";
 
 gql`
   fragment SprintItem on Sprint {
@@ -16,6 +18,7 @@ gql`
     description
     active
     createdAt
+    createdOn
   }
 `;
 
@@ -25,14 +28,41 @@ export const SprintsList = (props: {
 }) => {
   const sprints = useFragment(SprintItemFragmentDoc, props.sprints);
 
+  const todaySprints = sprints.filter((sprint) => isToday(sprint.createdAt));
+  const pastSprints = sprints.filter((sprint) => !isToday(sprint.createdAt));
+
+  const { deleteAllPastSprints, loading } = useDeleteAllPastSprints();
+
+  const onDeleteALlPastSprints = async () => {
+    if (confirm("Are you sure?")) await deleteAllPastSprints();
+  };
+
   return (
     <Stack spacing="4">
-      {sprints.map((sprint, idx) => (
-        <Stack key={sprint.id} spacing="4">
-          <SprintItem sprint={sprint} mode="edit" />
-          {idx != sprints.length - 1 ? <Divider /> : <Box />}
-        </Stack>
-      ))}
+      <>
+        {todaySprints.map((sprint, idx) => (
+          <Stack key={sprint.id} spacing="4">
+            <SprintItem sprint={sprint} mode="edit" />
+            {idx != sprints.length - 1 ? <Divider /> : <Box />}
+          </Stack>
+        ))}
+
+        {pastSprints.length > 0 && (
+          <Stack spacing="4">
+            <Button alignSelf="center" variant="ghost" size="sm" onClick={onDeleteALlPastSprints} isDisabled={loading}>
+              Delete all past
+            </Button>
+            <Divider />
+          </Stack>
+        )}
+
+        {pastSprints.map((sprint, idx) => (
+          <Stack key={sprint.id} spacing="4">
+            <SprintItem sprint={sprint} mode="edit" />
+            {idx != sprints.length - 1 ? <Divider /> : <Box />}
+          </Stack>
+        ))}
+      </>
     </Stack>
   );
 };
@@ -112,7 +142,7 @@ const SprintStatusItem = ({ sprint }: { sprint: SprintItemFragment }) => {
         onClick={onUpdateSprintStatus}
         isDisabled={!sprint.active || loading}
       >
-        {sprint.createdAt.split(" ").slice(0, 1).join("/")}
+        {sprint.createdOn.split("-").slice(1).join("/")}
       </Button>
     </Box>
   );

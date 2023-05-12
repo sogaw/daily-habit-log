@@ -1,4 +1,4 @@
-import { gql, Reference, useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
 import { CreateSprintDocument, SprintConnection } from "@/generated/gql/graphql";
@@ -38,10 +38,6 @@ export const useCreateSprint = () => {
             const edges = [edge, ...existing.edges];
 
             return { ...existing, edges };
-          },
-          activeSprints: (existing: Reference[] = [], { toReference }) => {
-            if (!data) return existing;
-            return [toReference(data.createSprint), ...existing];
           },
         },
       });

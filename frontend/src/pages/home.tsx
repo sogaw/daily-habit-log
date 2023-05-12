@@ -76,10 +76,11 @@ const Home = Guard("AfterOnboard", () => {
                     <Button
                       alignSelf="center"
                       variant="ghost"
+                      size="sm"
                       onClick={() => sprintsFetchMore()}
                       isDisabled={sprintsLoading}
                     >
-                      more
+                      More
                     </Button>
                   )}
                 </Fallback>

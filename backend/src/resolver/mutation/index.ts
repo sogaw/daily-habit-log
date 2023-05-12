@@ -9,3 +9,4 @@ import "./create-sprint";
 import "./update-sprint";
 import "./update-sprint-status";
 import "./delete-sprint";
+import "./delete-all-past-sprints";
