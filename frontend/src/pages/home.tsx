@@ -56,6 +56,11 @@ const Home = Guard("AfterOnboard", () => {
               </Button>
 
               <Fallback loading={habitsLoading} error={habitsError}>
+                {habits?.length == 0 && (
+                  <Box alignSelf="center" fontWeight="semibold" fontSize="sm" color="gray.500">
+                    No Habits
+                  </Box>
+                )}
                 {habits && <HabitsList habits={habits} mode="edit" />}
               </Fallback>
             </Stack>
@@ -83,6 +88,11 @@ const Home = Guard("AfterOnboard", () => {
 
               <Stack>
                 <Fallback loading={sprintsLoading} error={sprintsError}>
+                  {sprints?.length == 0 && (
+                    <Box alignSelf="center" fontWeight="semibold" fontSize="sm" color="gray.500">
+                      No Sprints
+                    </Box>
+                  )}
                   {sprints && <SprintsList sprints={sprints} mode="edit" />}
                   {sprintsPageInfo?.hasNextPage && (
                     <Button
@@ -104,6 +114,11 @@ const Home = Guard("AfterOnboard", () => {
             <Stack spacing="4">
               <TweetCreateForm />
               <Fallback loading={tweetsLoading} error={tweetsError}>
+                {tweets?.length == 0 && (
+                  <Box alignSelf="center" fontWeight="semibold" fontSize="sm" color="gray.500">
+                    No Tweets
+                  </Box>
+                )}
                 {tweets && <TweetsList tweets={tweets} />}
                 {tweetsPageInfo?.hasNextPage && (
                   <Button

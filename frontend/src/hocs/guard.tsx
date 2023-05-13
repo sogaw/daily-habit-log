@@ -10,6 +10,7 @@ export function Guard<P extends object>(
 ) {
   return function WrappedWithGuard(props: P) {
     const comp = <Comp {...props} />;
+
     const { authUser } = useAuthSafely();
     const { me } = useMeSafely();
 
