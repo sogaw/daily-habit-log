@@ -1,5 +1,4 @@
 import { Box, Button, Flex, Select, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 
@@ -19,7 +18,10 @@ const Home = Guard("AfterOnboard", () => {
   const navigate = useNavigate();
 
   const [tabIndex, setTabIndex] = useLocalStorage("daily-habit-log.home.tab", 0);
-  const [sprintsFilter, setSprintsFilter] = useState<SprintsFilter>("TODAY");
+  const [sprintsFilter, setSprintsFilter] = useLocalStorage<SprintsFilter>(
+    "daily-habit-log.home.sprints-filter",
+    "TODAY"
+  );
 
   const { habits, loading: habitsLoading, error: habitsError } = useHabits({ skip: tabIndex != 0 });
 
@@ -29,7 +31,7 @@ const Home = Guard("AfterOnboard", () => {
     loading: sprintsLoading,
     error: sprintsError,
     fetchMore: sprintsFetchMore,
-  } = useSprints({ skip: tabIndex != 1, filter: sprintsFilter });
+  } = useSprints({ skip: tabIndex != 1, filter: sprintsFilter as SprintsFilter });
 
   const {
     tweets,
