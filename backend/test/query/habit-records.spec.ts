@@ -1,8 +1,8 @@
 import { Habit, User } from "@/datasource";
 import { createDatasourceContext } from "@/resolver";
 
-import { HabitFactory, HabitRecordFactory, TimestampFactory, UserFactory } from "./factory";
-import { clearFirestore, execute, mockGenDate, mockGetSignedUrl, mockWithAuth } from "./setup";
+import { HabitFactory, HabitRecordFactory, TimestampFactory, UserFactory } from "../factory";
+import { clearFirestore, execute, mockGenDate, mockWithAuth } from "../util";
 
 const { users } = createDatasourceContext();
 
@@ -14,34 +14,6 @@ afterEach(async () => {
   users.loader.clearAll();
 
   jest.clearAllMocks();
-});
-
-describe("viewer", () => {
-  const q = () => `
-    query {
-      viewer {
-        id
-        name
-        iconUrl
-      }
-    }
-  `;
-
-  beforeEach(async () => {
-    const me = UserFactory(users, "user-1", { name: "me", iconPath: "users/user-1/icon" });
-    const other = UserFactory(users, "user-2", { name: "other" });
-
-    await Promise.all([me.save(), other.save()]);
-  });
-
-  it("ユーザー情報を取得するよ", async () => {
-    mockWithAuth({ uid: "user-1" });
-    mockGetSignedUrl("https://i.pravatar.cc?img=1");
-
-    const res = await execute(q());
-
-    expect(res.data.viewer).toMatchObject({ id: "user-1", name: "me", iconUrl: "https://i.pravatar.cc?img=1" });
-  });
 });
 
 describe("habitRecords", () => {

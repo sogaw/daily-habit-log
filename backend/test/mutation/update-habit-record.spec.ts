@@ -1,8 +1,8 @@
 import { Habit, User } from "@/datasource";
 import { createDatasourceContext } from "@/resolver";
 
-import { HabitFactory, HabitRecordFactory, TimestampFactory, UserFactory } from "./factory";
-import { clearFirestore, execute, mockGenDate, mockWithAuth } from "./setup";
+import { HabitFactory, HabitRecordFactory, TimestampFactory, UserFactory } from "../factory";
+import { clearFirestore, execute, mockGenDate, mockWithAuth } from "../util";
 
 const { users, habitRecords } = createDatasourceContext();
 
@@ -12,28 +12,9 @@ beforeAll(async () => {
 afterEach(async () => {
   await clearFirestore();
   users.loader.clearAll();
+  habitRecords.loader.clearAll();
 
   jest.clearAllMocks();
-});
-
-describe("onboard", () => {
-  const q = ({ name, iconPath }: { name: string; iconPath: string }) => `
-    mutation {
-      onboard(input: { name: "${name}", iconPath: "${iconPath}" }) {
-        id
-        name
-        iconUrl
-      }
-    }
-  `;
-
-  it("オンボードできるよ", async () => {
-    mockWithAuth({ uid: "user-1" });
-
-    const res = await execute(q({ name: "me", iconPath: "" }));
-
-    expect(res.data.onboard).toMatchObject({ id: "user-1", name: "me", iconUrl: null });
-  });
 });
 
 describe("updateHabitRecord", () => {
