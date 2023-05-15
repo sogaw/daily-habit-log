@@ -7,7 +7,7 @@
   - yarn fire:emu:test
   - yarn test
 - GraphQL スキーマ生成
-  - yarn gen:gql
+  - yarn gen:schema
 - デプロイ
   - yarn gcp:deploy
   - yarn fire:deploy
