@@ -57,7 +57,9 @@ const HabitItem = ({ habit, mode }: { habit: HabitItemFragment; mode: "edit" | "
   return (
     <Stack>
       <Flex justify="space-between" align="center">
-        <Box opacity={habit.tooHard ? "0.6" : "1"}>{habit.name}</Box>
+        <Box fontWeight="semibold" opacity={habit.tooHard ? "0.6" : "1"}>
+          {habit.name}
+        </Box>
 
         {mode == "edit" && (
           <HStack spacing="1">

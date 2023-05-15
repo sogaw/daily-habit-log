@@ -81,7 +81,9 @@ const SprintItem = ({ sprint, mode }: { sprint: SprintItemFragment; mode: "edit"
   return (
     <Stack>
       <Flex justify="space-between" align="center">
-        <Box opacity={sprint.active ? "1" : "0.6"}>{sprint.name}</Box>
+        <Box fontWeight="semibold" opacity={sprint.active ? "1" : "0.6"}>
+          {sprint.name}
+        </Box>
 
         {mode == "edit" && (
           <HStack spacing="1">

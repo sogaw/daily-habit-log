@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 export const AuthLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <Container maxW="md">
+    <Container maxW="lg">
       <Box fontWeight="bold" fontSize="xl" textAlign="center" py="3">
         Daily Habit Log
       </Box>

@@ -35,7 +35,7 @@ export const Layout = ({
   return (
     <Box>
       <Box position="sticky" top="0" bg="white" boxShadow="sm" zIndex="10">
-        <Container display="flex" justifyContent="space-between" alignItems="center" py="3">
+        <Container display="flex" justifyContent="space-between" alignItems="center" maxW="xl" py="3">
           <Box w="8">
             {backPath && (
               <IconButton
@@ -64,7 +64,7 @@ export const Layout = ({
         </Container>
       </Box>
 
-      <Container py="4" {...props}>
+      <Container maxW="xl" py="4" {...props}>
         {children}
       </Container>
     </Box>
