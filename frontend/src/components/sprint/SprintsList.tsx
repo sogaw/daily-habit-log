@@ -80,31 +80,29 @@ const SprintItem = ({ sprint, mode }: { sprint: SprintItemFragment; mode: "edit"
 
   return (
     <Stack>
-      <Box>
-        <Flex justify="space-between" align="center">
-          <Box fontWeight="semibold" opacity={sprint.active ? "1" : "0.6"}>
-            {sprint.name}
-          </Box>
+      <Flex justify="space-between" align="center">
+        <Box opacity={sprint.active ? "1" : "0.6"}>{sprint.name}</Box>
 
-          {mode == "edit" && (
-            <HStack spacing="1">
-              {sprint.active && (
-                <Button size="xs" variant="ghost" onClick={() => navigate(`/sprints/${sprint.id}/edit`)}>
-                  <Icon as={FaPen} color="gray.500" />
-                </Button>
-              )}
-
-              <Button size="xs" variant="ghost" onClick={onDeleteSprint} isDisabled={loading}>
-                <Icon as={FaTrash} color="gray.500" />
+        {mode == "edit" && (
+          <HStack spacing="1">
+            {sprint.active && (
+              <Button size="xs" variant="ghost" onClick={() => navigate(`/sprints/${sprint.id}/edit`)}>
+                <Icon as={FaPen} color="gray.500" />
               </Button>
-            </HStack>
-          )}
-        </Flex>
+            )}
 
+            <Button size="xs" variant="ghost" onClick={onDeleteSprint} isDisabled={loading}>
+              <Icon as={FaTrash} color="gray.500" />
+            </Button>
+          </HStack>
+        )}
+      </Flex>
+
+      {sprint.description && (
         <Box whiteSpace="pre-wrap" opacity={sprint.active ? "1" : "0.6"}>
           {sprint.description}
         </Box>
-      </Box>
+      )}
 
       <SprintStatusItem sprint={sprint} />
     </Stack>

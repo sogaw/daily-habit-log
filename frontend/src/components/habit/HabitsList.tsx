@@ -56,31 +56,29 @@ const HabitItem = ({ habit, mode }: { habit: HabitItemFragment; mode: "edit" | "
 
   return (
     <Stack>
-      <Box>
-        <Flex justify="space-between" align="center">
-          <Box fontWeight="semibold" opacity={habit.tooHard ? "0.6" : "1"}>
-            {habit.name}
-          </Box>
+      <Flex justify="space-between" align="center">
+        <Box opacity={habit.tooHard ? "0.6" : "1"}>{habit.name}</Box>
 
-          {mode == "edit" && (
-            <HStack spacing="1">
-              {!habit.tooHard && (
-                <Button size="xs" variant="ghost" onClick={() => navigate(`/habits/${habit.id}/edit`)}>
-                  <Icon as={FaPen} color="gray.500" />
-                </Button>
-              )}
-
-              <Button size="xs" variant="ghost" onClick={onDeleteHabit} isDisabled={loading}>
-                <Icon as={FaTrash} color="gray.500" />
+        {mode == "edit" && (
+          <HStack spacing="1">
+            {!habit.tooHard && (
+              <Button size="xs" variant="ghost" onClick={() => navigate(`/habits/${habit.id}/edit`)}>
+                <Icon as={FaPen} color="gray.500" />
               </Button>
-            </HStack>
-          )}
-        </Flex>
+            )}
 
+            <Button size="xs" variant="ghost" onClick={onDeleteHabit} isDisabled={loading}>
+              <Icon as={FaTrash} color="gray.500" />
+            </Button>
+          </HStack>
+        )}
+      </Flex>
+
+      {habit.description && (
         <Box whiteSpace="pre-wrap" opacity={habit.tooHard ? "0.6" : "1"}>
           {habit.description}
         </Box>
-      </Box>
+      )}
 
       <Flex flexWrap="wrap" gap="8px 8px">
         {habit.habitRecords.map((habitRecord) => (
