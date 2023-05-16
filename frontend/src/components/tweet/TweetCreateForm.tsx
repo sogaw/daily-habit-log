@@ -10,7 +10,11 @@ type TweetCreateFormType = {
 export const TweetCreateForm = () => {
   const { createTweet, loading } = useCreateTweet();
 
-  const { register, handleSubmit, reset } = useForm<TweetCreateFormType>();
+  const { register, handleSubmit, reset, watch } = useForm<TweetCreateFormType>();
+
+  const content = watch("content", "");
+  const contentLength = content.split("\n").length;
+  const contentRows = Math.max(3, contentLength);
 
   const onSubmit = async (v: TweetCreateFormType) => {
     await createTweet({ variables: { input: v } });
@@ -19,7 +23,7 @@ export const TweetCreateForm = () => {
 
   return (
     <Stack as="form" onSubmit={handleSubmit(onSubmit)}>
-      <Textarea rows={3} required {...register("content")} />
+      <Textarea rows={contentRows} required {...register("content")} />
       <Button type="submit" alignSelf="end" size="sm" colorScheme="green" isDisabled={loading}>
         Post
       </Button>
