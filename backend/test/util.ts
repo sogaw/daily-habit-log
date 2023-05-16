@@ -1,7 +1,6 @@
 import { buildHTTPExecutor } from "@graphql-tools/executor-http";
 import { parse } from "graphql";
 import { isString } from "lodash";
-import request from "request";
 
 import * as auth from "@/lib/auth";
 import * as gen from "@/lib/gen";
@@ -75,9 +74,9 @@ export const mockGenDate = (date: Date) => {
  * Emulator
  */
 export const clearFirestore = async () => {
-  await request({
-    url: `http://${process.env.FIRESTORE_EMULATOR_HOST}/emulator/v1/projects/${process.env.GCLOUD_PROJECT}/databases/(default)/documents`,
-    method: "DELETE",
-  });
+  await fetch(
+    `http://${process.env.FIRESTORE_EMULATOR_HOST}/emulator/v1/projects/${process.env.GCLOUD_PROJECT}/databases/(default)/documents`,
+    { method: "DELETE" }
+  );
   await sleep(100); // need to wait to clear
 };
