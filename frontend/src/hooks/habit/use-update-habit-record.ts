@@ -9,6 +9,10 @@ gql`
     updateHabitRecord(input: $input) {
       id
       ...HabitRecordItem
+      habit {
+        id
+        tooHard
+      }
     }
   }
 `;

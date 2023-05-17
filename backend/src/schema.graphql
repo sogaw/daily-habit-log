@@ -89,6 +89,7 @@ type HabitRecord {
   date: String!
   status: HabitRecordStatus!
   habitId: String!
+  habit: Habit!
 }
 
 type Habit {

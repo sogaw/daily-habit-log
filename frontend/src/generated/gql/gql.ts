@@ -23,7 +23,7 @@ const documents = {
     "\n  mutation deleteHabit($id: ID!) {\n    deleteHabit(id: $id) {\n      id\n    }\n  }\n": types.DeleteHabitDocument,
     "\n  query habit($id: ID!) {\n    viewer {\n      id\n      habit(id: $id) {\n        id\n        name\n        description\n      }\n    }\n  }\n": types.HabitDocument,
     "\n  query habits {\n    viewer {\n      id\n      habits {\n        id\n        ...HabitItem\n      }\n    }\n  }\n": types.HabitsDocument,
-    "\n  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {\n    updateHabitRecord(input: $input) {\n      id\n      ...HabitRecordItem\n    }\n  }\n": types.UpdateHabitRecordDocument,
+    "\n  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {\n    updateHabitRecord(input: $input) {\n      id\n      ...HabitRecordItem\n      habit {\n        id\n        tooHard\n      }\n    }\n  }\n": types.UpdateHabitRecordDocument,
     "\n  mutation updateHabit($id: ID!, $input: UpdateHabitInput!) {\n    updateHabit(id: $id, input: $input) {\n      id\n      name\n      description\n    }\n  }\n": types.UpdateHabitDocument,
     "\n  mutation createSprint($input: CreateSprintInput!) {\n    createSprint(input: $input) {\n      id\n      ...SprintItem\n    }\n  }\n": types.CreateSprintDocument,
     "\n  mutation deleteAllPastSprints {\n    deleteAllPastSprints {\n      id\n    }\n  }\n": types.DeleteAllPastSprintsDocument,
@@ -97,7 +97,7 @@ export function graphql(source: "\n  query habits {\n    viewer {\n      id\n   
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {\n    updateHabitRecord(input: $input) {\n      id\n      ...HabitRecordItem\n    }\n  }\n"): (typeof documents)["\n  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {\n    updateHabitRecord(input: $input) {\n      id\n      ...HabitRecordItem\n    }\n  }\n"];
+export function graphql(source: "\n  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {\n    updateHabitRecord(input: $input) {\n      id\n      ...HabitRecordItem\n      habit {\n        id\n        tooHard\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation updateHabitRecord($input: UpdateHabitRecordInput!) {\n    updateHabitRecord(input: $input) {\n      id\n      ...HabitRecordItem\n      habit {\n        id\n        tooHard\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

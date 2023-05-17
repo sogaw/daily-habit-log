@@ -11,7 +11,7 @@ export const Fallback = ({ loading, error, children }: { loading: boolean; error
 
   if (error)
     return (
-      <VStack py="4">
+      <VStack p="2">
         <Box fontWeight="bold" fontSize="xl">
           Error happened
         </Box>

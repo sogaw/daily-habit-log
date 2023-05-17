@@ -82,7 +82,7 @@ export class HabitRecordsCollection extends FireCollection<HabitRecord> {
     const success = await this.ref
       .where("status", "==", "SUCCESS")
       .orderBy("date", "desc")
-      .endBefore(beforeDate)
+      .endAt(beforeDate)
       .count()
       .get()
       .then((snap) => snap.data());

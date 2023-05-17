@@ -20,7 +20,7 @@ export const AuthFallback = ({
 
   if (error)
     return (
-      <VStack py="4">
+      <VStack p="2">
         <Box fontWeight="bold" fontSize="xl">
           Error happened
         </Box>

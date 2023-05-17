@@ -1,4 +1,4 @@
-import { compareDesc, isBefore, startOfDay, subDays } from "date-fns";
+import { compareDesc, isBefore, subDays } from "date-fns";
 
 import { Habit, HabitRecord } from "@/datasource";
 import { genDate } from "@/lib/gen";
@@ -15,9 +15,9 @@ builder.objectType(Habit, {
     habitRecords: t.field({
       type: [HabitRecord],
       resolve: async (habit) => {
-        const sixDaysAgo = subDays(genDate(), 6);
+        const fiveDaysAgo = subDays(genDate(), 4);
         const habitCreatedAt = habit.data.createdAt.toDate();
-        const [before] = [sixDaysAgo, habitCreatedAt].sort(compareDesc);
+        const [before] = [fiveDaysAgo, habitCreatedAt].sort(compareDesc);
 
         return habit.habitRecords.latest({
           userId: habit.data.userId,
@@ -29,13 +29,12 @@ builder.objectType(Habit, {
 
     tooHard: t.boolean({
       resolve: async (habit) => {
-        const threeDaysAgo = startOfDay(subDays(genDate(), 2));
+        const threeDaysAgo = subDays(genDate(), 2);
         const habitCreatedAt = habit.data.createdAt.toDate();
 
         if (isBefore(threeDaysAgo, habitCreatedAt)) return false;
 
-        const fourDaysAgo = startOfDay(subDays(genDate(), 3));
-        const success = await habit.habitRecords.success({ before: fourDaysAgo });
+        const success = await habit.habitRecords.success({ before: threeDaysAgo });
         return success.count == 0;
       },
     }),
