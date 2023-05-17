@@ -1,7 +1,9 @@
-import { compareDesc, isBefore, subDays } from "date-fns";
+import { compareDesc, isBefore, startOfDay, subDays } from "date-fns";
 
 import { Habit, HabitRecord } from "@/datasource";
+import { fixTimezone } from "@/lib/date";
 import { genDate } from "@/lib/gen";
+import { Identity } from "@/lib/identity";
 
 import { builder } from "../builder";
 
@@ -32,7 +34,10 @@ builder.objectType(Habit, {
         const threeDaysAgo = subDays(genDate(), 2);
         const habitCreatedAt = habit.data.createdAt.toDate();
 
-        if (isBefore(threeDaysAgo, habitCreatedAt)) return false;
+        const threeDaysAgoStart = Identity.of(threeDaysAgo).map(startOfDay).map(fixTimezone).unwrap();
+        const habitCreatedAtStart = Identity.of(habitCreatedAt).map(startOfDay).map(fixTimezone).unwrap();
+
+        if (isBefore(threeDaysAgoStart, habitCreatedAtStart)) return false;
 
         const success = await habit.habitRecords.success({ before: threeDaysAgo });
         return success.count == 0;

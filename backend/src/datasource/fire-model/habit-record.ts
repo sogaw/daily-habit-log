@@ -1,7 +1,7 @@
-import { eachDayOfInterval, startOfDay, subMinutes } from "date-fns";
+import { eachDayOfInterval, startOfDay } from "date-fns";
 import { CollectionGroup, CollectionReference, Timestamp } from "firebase-admin/firestore";
 
-import { DateFromISO } from "@/lib/date";
+import { DateFromISO, fixTimezone } from "@/lib/date";
 import { genDate, genId, genTimestamp } from "@/lib/gen";
 import { logger } from "@/lib/logger";
 
@@ -53,7 +53,7 @@ export class HabitRecordsCollection extends FireCollection<HabitRecord> {
     const end = startOfDay(genDate());
 
     const interval = eachDayOfInterval({ start, end })
-      .map((dateTime) => subMinutes(dateTime, dateTime.getTimezoneOffset())) // TimeZone の調整
+      .map(fixTimezone) // TimeZone の調整
       .map((dateTime) => {
         const date = DateFromISO(dateTime.toISOString());
 

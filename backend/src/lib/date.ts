@@ -1,4 +1,7 @@
+import { subMinutes } from "date-fns";
 import { Timestamp } from "firebase-admin/firestore";
+
+export const fixTimezone = (dateTime: Date) => subMinutes(dateTime, dateTime.getTimezoneOffset());
 
 export const formatDateTime = (timestamp: Timestamp) => {
   const d = timestamp.toDate();
