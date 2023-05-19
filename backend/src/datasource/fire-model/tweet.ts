@@ -1,9 +1,6 @@
 import { CollectionGroup, CollectionReference, Timestamp } from "firebase-admin/firestore";
 
 import { genId, genTimestamp } from "@/lib/gen";
-import { PageInfo } from "@/resolver/object/page-info";
-import { TweetConnection } from "@/resolver/object/tweet-connection";
-import { TweetEdge } from "@/resolver/object/tweet-edge";
 
 import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model-package";
 
@@ -32,10 +29,7 @@ export class TweetsCollection extends FireCollection<Tweet> {
       ref.orderBy("createdAt", "desc").startAfter(afterDateTime).limit(first)
     );
 
-    const edges = tweets.map((tweet) => new TweetEdge(tweet.data.createdAt.toDate().toISOString(), tweet));
-    const pageInfo = new PageInfo(edges.length == first, edges.at(-1)?.cursor);
-
-    return new TweetConnection(edges, pageInfo);
+    return tweets;
   }
 }
 

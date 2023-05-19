@@ -59,31 +59,6 @@ input UpdateSprintInput {
   description: String!
 }
 
-type PageInfo {
-  hasNextPage: Boolean!
-  endCursor: String
-}
-
-type SprintEdge {
-  cursor: String!
-  node: Sprint!
-}
-
-type SprintConnection {
-  edges: [SprintEdge!]!
-  pageInfo: PageInfo!
-}
-
-type TweetEdge {
-  cursor: String!
-  node: Tweet!
-}
-
-type TweetConnection {
-  edges: [TweetEdge!]!
-  pageInfo: PageInfo!
-}
-
 type HabitRecord {
   id: ID!
   date: String!
@@ -100,6 +75,11 @@ type Habit {
   tooHard: Boolean!
 }
 
+type PageInfo {
+  hasNextPage: Boolean!
+  endCursor: String
+}
+
 type Sprint {
   id: ID!
   name: String!
@@ -110,11 +90,31 @@ type Sprint {
   createdOn: String!
 }
 
+type SprintEdge {
+  cursor: String!
+  node: Sprint!
+}
+
+type SprintConnection {
+  edges: [SprintEdge!]!
+  pageInfo: PageInfo!
+}
+
 type Tweet {
   id: ID!
   content: String!
   createdAt: String!
   formattedCreatedAt: String!
+}
+
+type TweetEdge {
+  cursor: String!
+  node: Tweet!
+}
+
+type TweetConnection {
+  edges: [TweetEdge!]!
+  pageInfo: PageInfo!
 }
 
 type User {

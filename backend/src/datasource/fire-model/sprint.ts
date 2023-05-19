@@ -2,9 +2,6 @@ import { startOfDay } from "date-fns";
 import { CollectionGroup, CollectionReference, Timestamp } from "firebase-admin/firestore";
 
 import { genDate, genId, genTimestamp } from "@/lib/gen";
-import { PageInfo } from "@/resolver/object/page-info";
-import { SprintConnection } from "@/resolver/object/sprint-connection";
-import { SprintEdge } from "@/resolver/object/sprint-edge";
 
 import { FireCollection, FireCollectionGroup, FireDocument } from "../fire-model-package";
 
@@ -62,10 +59,7 @@ export class SprintsCollection extends FireCollection<Sprint> {
       return res.limit(first);
     });
 
-    const edges = sprints.map((sprint) => new SprintEdge(sprint.data.createdAt.toDate().toISOString(), sprint));
-    const pageInfo = new PageInfo(edges.length == first, edges.at(-1)?.cursor);
-
-    return new SprintConnection(edges, pageInfo);
+    return sprints;
   }
 
   async past() {

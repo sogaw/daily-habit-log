@@ -5,8 +5,9 @@ import { getSignedUrl } from "@/lib/storage";
 
 import { builder } from "../builder";
 import { SprintsFilter } from "../enum/sprints-filter";
-import { SprintConnection } from "./sprint-connection";
-import { TweetConnection } from "./tweet-connection";
+import { PageInfo } from "./page-info";
+import { SprintConnection, SprintEdge } from "./sprint";
+import { TweetConnection, TweetEdge } from "./tweet";
 
 builder.objectType(User, {
   name: "User",
@@ -44,12 +45,17 @@ builder.objectType(User, {
         after: t.arg({ type: "String" }),
         filter: t.arg({ type: SprintsFilter }),
       },
-      resolve: (user, args) => {
-        return user.sprints.paginate({
+      resolve: async (user, args) => {
+        const sprints = await user.sprints.paginate({
           first: args.first || 10,
           after: args.after || genDate().toISOString(),
           filter: args.filter || "ALL",
         });
+
+        const edges = sprints.map(SprintEdge.fromNode);
+        const pageInfo = new PageInfo(edges.length == (args.first || 10), edges.at(-1)?.cursor);
+
+        return new SprintConnection(edges, pageInfo);
       },
     }),
 
@@ -69,11 +75,16 @@ builder.objectType(User, {
         first: t.arg({ type: "Int" }),
         after: t.arg({ type: "String" }),
       },
-      resolve: (user, args) => {
-        return user.tweets.paginate({
+      resolve: async (user, args) => {
+        const tweets = await user.tweets.paginate({
           first: args.first || 10,
           after: args.after || genDate().toISOString(),
         });
+
+        const edges = tweets.map(TweetEdge.fromNode);
+        const pageInfo = new PageInfo(edges.length == (args.first || 10), edges.at(-1)?.cursor);
+
+        return new TweetConnection(edges, pageInfo);
       },
     }),
   }),
