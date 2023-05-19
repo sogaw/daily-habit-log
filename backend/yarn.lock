@@ -945,6 +945,11 @@
   resolved "https://registry.yarnpkg.com/@pothos/core/-/core-3.29.0.tgz#cc3fa43980280637de9bd42d653e363812aa0e91"
   integrity sha512-6LcrnZ3QRQrbWvKLfdSvfrk1nyezLaDAT8yIhQXLOhhtm3iK+knIpdGbNfKiTgxbdSDkK69IcXNV4ifcq23bIQ==
 
+"@pothos/plugin-complexity@^3.12.1":
+  version "3.12.1"
+  resolved "https://registry.yarnpkg.com/@pothos/plugin-complexity/-/plugin-complexity-3.12.1.tgz#05c59a0e4a3f4da909c1767fd3efe54a77d68dd8"
+  integrity sha512-VMsowMlziTZ7aN3spzQ0NfqhLcqZaE0cbQM8mlnOEg5EilysLDG6c2mr7Mktt0qFgpveTDzyVuuwW59TM5hOfg==
+
 "@pothos/plugin-validation@^3.9.1":
   version "3.9.1"
   resolved "https://registry.yarnpkg.com/@pothos/plugin-validation/-/plugin-validation-3.9.1.tgz#7dac96d1e4ac8df708a70359c6b539ea0848a99d"

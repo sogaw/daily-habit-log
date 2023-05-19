@@ -1,4 +1,5 @@
 import SchemaBuilder from "@pothos/core";
+import ComplexityPlugin from "@pothos/plugin-complexity";
 import ValidationPlugin from "@pothos/plugin-validation";
 
 import { BadRequest } from "@/lib/error";
@@ -6,7 +7,16 @@ import { logger } from "@/lib/logger";
 import { Context } from "@/types";
 
 export const builder = new SchemaBuilder<{ Context: Context }>({
-  plugins: [ValidationPlugin],
+  plugins: [ComplexityPlugin, ValidationPlugin],
+  complexity: {
+    defaultComplexity: 1,
+    defaultListMultiplier: 10,
+    limit: {
+      complexity: 1_000,
+      depth: 10,
+      breadth: 50,
+    },
+  },
   validationOptions: {
     validationError: (e) => {
       logger.child({ original: e }).error("zod parse error");
