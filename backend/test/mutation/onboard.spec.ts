@@ -1,16 +1,11 @@
-import { createDatasourceContext } from "@/resolver";
-
-import { clearFirestore, execute, mockWithAuth } from "../util";
-
-const { users } = createDatasourceContext();
+import { clearDatasource } from "../datasource-util";
+import { execute, mockWithAuth } from "../util";
 
 beforeAll(async () => {
-  await clearFirestore();
+  await clearDatasource();
 });
 afterEach(async () => {
-  await clearFirestore();
-  users.loader.clearAll();
-
+  await clearDatasource();
   jest.clearAllMocks();
 });
 

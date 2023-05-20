@@ -1,17 +1,12 @@
-import { createDatasourceContext } from "@/resolver";
-
+import { clearDatasource, datasource } from "../datasource-util";
 import { UserFactory } from "../factory";
-import { clearFirestore, execute, mockGetSignedUrl, mockWithAuth } from "../util";
-
-const { users } = createDatasourceContext();
+import { execute, mockGetSignedUrl, mockWithAuth } from "../util";
 
 beforeAll(async () => {
-  await clearFirestore();
+  await clearDatasource();
 });
 afterEach(async () => {
-  await clearFirestore();
-  users.loader.clearAll();
-
+  await clearDatasource();
   jest.clearAllMocks();
 });
 
@@ -27,8 +22,8 @@ describe("viewer", () => {
   `;
 
   beforeEach(async () => {
-    const me = UserFactory(users, "user-1", { name: "me", iconPath: "users/user-1/icon" });
-    const other = UserFactory(users, "user-2", { name: "other" });
+    const me = UserFactory(datasource.users, "user-1", { name: "me", iconPath: "users/user-1/icon" });
+    const other = UserFactory(datasource.users, "user-2", { name: "other" });
 
     await Promise.all([me.save(), other.save()]);
   });

@@ -1,19 +1,14 @@
 import { Habit, User } from "@/datasource";
-import { createDatasourceContext } from "@/resolver";
 
+import { clearDatasource, datasource } from "../datasource-util";
 import { HabitFactory, HabitRecordFactory, TimestampFactory, UserFactory } from "../factory";
-import { clearFirestore, execute, mockGenDate, mockWithAuth } from "../util";
-
-const { users, habitRecords } = createDatasourceContext();
+import { execute, mockGenDate, mockWithAuth } from "../util";
 
 beforeAll(async () => {
-  await clearFirestore();
+  await clearDatasource();
 });
 afterEach(async () => {
-  await clearFirestore();
-  users.loader.clearAll();
-  habitRecords.loader.clearAll();
-
+  await clearDatasource;
   jest.clearAllMocks();
 });
 
@@ -38,7 +33,7 @@ describe("updateHabitRecord", () => {
   let habit: Habit;
 
   beforeEach(async () => {
-    me = UserFactory(users, "user-1", {});
+    me = UserFactory(datasource.users, "user-1", {});
     habit = HabitFactory(me.habits, "habit-1", { createdAt: TimestampFactory("2023-01-01"), userId: me.id });
 
     await Promise.all([me.save(), habit.save()]);
@@ -49,7 +44,7 @@ describe("updateHabitRecord", () => {
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q({ date: "2023-01-02", status: "SUCCESS", habitId: "habit-1" }));
-    const habitRecord = await habitRecords.findOne(res.data.updateHabitRecord.id);
+    const habitRecord = await datasource.habitRecords.findOne(res.data.updateHabitRecord.id);
 
     expect(habitRecord.data).toMatchObject({
       date: "2023-01-02",
@@ -71,7 +66,7 @@ describe("updateHabitRecord", () => {
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q({ date: "2023-01-02", status: "SUCCESS", habitId: "habit-1" }));
-    const habitRecord = await habitRecords.findOne(res.data.updateHabitRecord.id);
+    const habitRecord = await datasource.habitRecords.findOne(res.data.updateHabitRecord.id);
 
     expect(habitRecord.data).toMatchObject({
       date: "2023-01-02",

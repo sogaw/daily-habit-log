@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Badge, Box, Button, Divider, Flex, HStack, Icon, Stack } from "@chakra-ui/react";
+import { Badge, Box, Button, Divider, Flex, HStack, Icon, Stack, Tooltip } from "@chakra-ui/react";
 import { FaPen, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -48,7 +48,7 @@ gql`
 const HabitItem = ({ habit, mode }: { habit: HabitItemFragment; mode: "edit" | "view" }) => {
   const navigate = useNavigate();
 
-  const { deleteHabit, loading } = useDeleteHabit();
+  const { deleteHabit, loading: deleteHabitLoading } = useDeleteHabit();
 
   const onDeleteHabit = async () => {
     if (confirm("Are you sure?")) await deleteHabit({ variables: { id: habit.id } });
@@ -59,7 +59,11 @@ const HabitItem = ({ habit, mode }: { habit: HabitItemFragment; mode: "edit" | "
       <Flex justify="space-between" align="center">
         <HStack>
           <Box fontWeight="semibold">{habit.name}</Box>
-          {habit.tooHard && <Badge colorScheme="red">Too Hard</Badge>}
+          {habit.tooHard && (
+            <Tooltip label="No success status within 3 days." placement="top">
+              <Badge colorScheme="red">Too Hard</Badge>
+            </Tooltip>
+          )}
         </HStack>
 
         {mode == "edit" && (
@@ -68,7 +72,7 @@ const HabitItem = ({ habit, mode }: { habit: HabitItemFragment; mode: "edit" | "
               <Icon as={FaPen} color="gray.500" />
             </Button>
 
-            <Button size="xs" variant="ghost" onClick={onDeleteHabit} isDisabled={loading}>
+            <Button size="xs" variant="ghost" onClick={onDeleteHabit} isDisabled={deleteHabitLoading}>
               <Icon as={FaTrash} color="gray.500" />
             </Button>
           </HStack>
