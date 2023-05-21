@@ -1,7 +1,7 @@
 import { User } from "@/datasource";
 import { parseAuth } from "@/lib/parse";
 
-import { builder } from "../builder";
+import { builder } from "../../builder";
 
 builder.mutationField("deleteAllPastSprints", (t) =>
   t.field({

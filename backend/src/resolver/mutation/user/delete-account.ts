@@ -3,7 +3,7 @@ import { Forbidden } from "@/lib/error";
 import { parseAuth } from "@/lib/parse";
 import { deleteFileRecursive } from "@/lib/storage";
 
-import { builder } from "../builder";
+import { builder } from "../../builder";
 
 builder.mutationField("deleteAccount", (t) =>
   t.field({

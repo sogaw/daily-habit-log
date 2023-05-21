@@ -2,8 +2,8 @@ import { HabitRecord } from "@/datasource";
 import { parseAuth } from "@/lib/parse";
 import { dateSchema } from "@/lib/schema";
 
-import { builder } from "../builder";
-import { HabitRecordStatus } from "../enum/habit-record-status";
+import { builder } from "../../builder";
+import { HabitRecordStatus } from "../../enum/habit-record-status";
 
 const UpdateHabitRecordInput = builder.inputType("UpdateHabitRecordInput", {
   fields: (t) => ({

@@ -1,8 +1,8 @@
 import { Sprint } from "@/datasource";
 import { parseAuth, parseId } from "@/lib/parse";
 
-import { builder } from "../builder";
-import { SprintStatus } from "../enum/sprint-status";
+import { builder } from "../../builder";
+import { SprintStatus } from "../../enum/sprint-status";
 
 const UpdateSprintStatusInput = builder.inputType("UpdateSprintStatusInput", {
   fields: (t) => ({

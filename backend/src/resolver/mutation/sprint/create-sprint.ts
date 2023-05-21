@@ -1,7 +1,7 @@
 import { Sprint } from "@/datasource";
 import { parseAuth } from "@/lib/parse";
 
-import { builder } from "../builder";
+import { builder } from "../../builder";
 
 const CreateSprintInput = builder.inputType("CreateSprintInput", {
   fields: (t) => ({

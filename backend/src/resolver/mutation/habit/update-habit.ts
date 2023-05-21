@@ -1,7 +1,7 @@
 import { Habit } from "@/datasource";
 import { parseAuth, parseId } from "@/lib/parse";
 
-import { builder } from "../builder";
+import { builder } from "../../builder";
 
 const UpdateHabitInput = builder.inputType("UpdateHabitInput", {
   fields: (t) => ({

@@ -2,7 +2,7 @@ import { User } from "@/datasource";
 import { parseAuth } from "@/lib/parse";
 import { deleteFile } from "@/lib/storage";
 
-import { builder } from "../builder";
+import { builder } from "../../builder";
 
 const UpdateProfileInput = builder.inputType("UpdateProfileInput", {
   fields: (t) => ({

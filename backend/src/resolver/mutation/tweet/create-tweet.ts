@@ -1,7 +1,7 @@
 import { Tweet } from "@/datasource";
 import { parseAuth } from "@/lib/parse";
 
-import { builder } from "../builder";
+import { builder } from "../../builder";
 
 const CreateTweetInput = builder.inputType("CreateTweetInput", {
   fields: (t) => ({

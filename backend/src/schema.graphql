@@ -15,23 +15,24 @@ enum SprintsFilter {
   ALL
 }
 
+input OnboardInput {
+  name: String!
+  iconPath: String!
+}
+
+input UpdateProfileInput {
+  name: String!
+  iconPath: String!
+}
+
 input CreateHabitInput {
   name: String!
   description: String!
 }
 
-input CreateSprintInput {
+input UpdateHabitInput {
   name: String!
   description: String!
-}
-
-input CreateTweetInput {
-  content: String!
-}
-
-input OnboardInput {
-  name: String!
-  iconPath: String!
 }
 
 input UpdateHabitRecordInput {
@@ -40,14 +41,9 @@ input UpdateHabitRecordInput {
   status: HabitRecordStatus!
 }
 
-input UpdateHabitInput {
+input CreateSprintInput {
   name: String!
   description: String!
-}
-
-input UpdateProfileInput {
-  name: String!
-  iconPath: String!
 }
 
 input UpdateSprintStatusInput {
@@ -57,6 +53,10 @@ input UpdateSprintStatusInput {
 input UpdateSprintInput {
   name: String!
   description: String!
+}
+
+input CreateTweetInput {
+  content: String!
 }
 
 type HabitRecord {
@@ -133,18 +133,18 @@ type Query {
 }
 
 type Mutation {
-  createHabit(input: CreateHabitInput!): Habit!
-  createSprint(input: CreateSprintInput!): Sprint!
-  createTweet(input: CreateTweetInput!): Tweet!
-  deleteAccount: ID!
-  deleteAllPastSprints: User!
-  deleteHabit(id: ID!): Habit!
-  deleteSprint(id: ID!): Sprint!
-  deleteTweet(id: ID!): Tweet!
   onboard(input: OnboardInput!): User!
-  updateHabitRecord(input: UpdateHabitRecordInput!): HabitRecord!
-  updateHabit(id: ID!, input: UpdateHabitInput!): Habit!
   updateProfile(input: UpdateProfileInput!): User!
+  deleteAccount: ID!
+  createHabit(input: CreateHabitInput!): Habit!
+  updateHabit(id: ID!, input: UpdateHabitInput!): Habit!
+  updateHabitRecord(input: UpdateHabitRecordInput!): HabitRecord!
+  deleteHabit(id: ID!): Habit!
+  createSprint(input: CreateSprintInput!): Sprint!
   updateSprintStatus(id: ID!, input: UpdateSprintStatusInput!): Sprint!
   updateSprint(id: ID!, input: UpdateSprintInput!): Sprint!
+  deleteAllPastSprints: User!
+  deleteSprint(id: ID!): Sprint!
+  createTweet(input: CreateTweetInput!): Tweet!
+  deleteTweet(id: ID!): Tweet!
 }
