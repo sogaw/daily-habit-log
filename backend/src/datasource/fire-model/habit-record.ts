@@ -86,7 +86,7 @@ export class HabitRecordsCollection extends FireCollection<HabitRecord> {
       .count()
       .get()
       .then((snap) => snap.data());
-    logger.debug(`[Fire] read 1 aggregate from ${this.constructor.name} collection`);
+    logger.debug(`[Fire] Read 1 aggregate from ${this.constructor.name}.`);
     return success;
   }
 

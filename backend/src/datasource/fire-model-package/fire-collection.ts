@@ -11,11 +11,11 @@ const createLoader = (ref: CollectionReference) => {
           .doc(id)
           .get()
           .catch((e) => {
-            logger.child({ original: e }).error("cannot get snapshot");
+            logger.child({ original: e }).error("[Fire] Query failed.");
             return undefined;
           });
         if (snap?.exists) return snap;
-        return new Error("snapshot does not exist");
+        return new Error("[Fire] Snapshot not found.");
       })
     )
   );
@@ -33,7 +33,7 @@ export class FireCollection<TTransformed extends { data: DocumentData }> {
   }
 
   findOne(id: string, { cache } = { cache: true }) {
-    logger.debug(`[Fire] read 1 doc from ${this.constructor.name} collection`);
+    logger.debug(`[Fire] Read 1 doc from ${this.constructor.name}.`);
     return cache ? this.loader.load(id).then(this.transformer) : this.loader.clear(id).load(id).then(this.transformer);
   }
 
@@ -43,7 +43,7 @@ export class FireCollection<TTransformed extends { data: DocumentData }> {
 
   async findManyByQuery(queryFn: (ref: CollectionReference) => Query, { prime } = { prime: false }) {
     const snaps = await queryFn(this.ref).get();
-    logger.debug(`[Fire] read ${snaps.size} docs from ${this.constructor.name} collection`);
+    logger.debug(`[Fire] Read ${snaps.size} docs from ${this.constructor.name}.`);
     if (prime) snaps.forEach((snap) => this.loader.prime(snap.id, snap));
     return snaps.docs.map(this.transformer);
   }
@@ -58,12 +58,12 @@ const createGroupLoader = (ref: CollectionGroup, idField: string) => {
           .get()
           .then(({ docs }) => docs)
           .catch((e) => {
-            logger.child({ original: e }).error("cannot get snapshot");
+            logger.child({ original: e }).error("[Fire] Query failed.");
             return [];
           });
         const snap = snaps[0];
         if (snap) return snap;
-        return new Error("snapshot does not exist");
+        return new Error("[Fire] Snapshot not found.");
       })
     );
   });
@@ -86,7 +86,7 @@ export class FireCollectionGroup<TTransformed extends { data: DocumentData }> {
   }
 
   findOne(id: string, { cache } = { cache: true }) {
-    logger.debug(`[Fire] read 1 doc from ${this.constructor.name} collection`);
+    logger.debug(`[Fire] Read 1 doc from ${this.constructor.name}.`);
     return cache ? this.loader.load(id).then(this.transformer) : this.loader.clear(id).load(id).then(this.transformer);
   }
 
@@ -96,7 +96,7 @@ export class FireCollectionGroup<TTransformed extends { data: DocumentData }> {
 
   async findManyByQuery(queryFn: (ref: CollectionGroup) => Query, { prime } = { prime: false }) {
     const snaps = await queryFn(this.ref).get();
-    logger.debug(`[Fire] read ${snaps.size} docs from ${this.constructor.name} collection`);
+    logger.debug(`[Fire] Read ${snaps.size} docs from ${this.constructor.name}.`);
     if (prime) snaps.forEach((snap) => this.loader.prime(snap.id, snap));
     return snaps.docs.map(this.transformer);
   }

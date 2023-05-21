@@ -19,7 +19,7 @@ export const builder = new SchemaBuilder<{ Context: Context }>({
   },
   validationOptions: {
     validationError: (e) => {
-      logger.child({ original: e }).error("zod parse error");
+      logger.child({ original: e }).error("Zod parsing failed.");
       const fields = Object.fromEntries(e.errors.map((err) => [err.path, err.message]));
       return new BadRequest(undefined, { extensions: { fields } });
     },

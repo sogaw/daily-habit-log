@@ -14,9 +14,8 @@ export const decodeJWT = async (token: string): Promise<Auth> => {
   try {
     const decoded = await getAuth().verifyIdToken(token);
     return decoded;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (e: any) {
-    logger.child({ original: e }).error("decodeJWT error.");
+  } catch (e: unknown) {
+    logger.child({ original: e }).error("Decoding jwt failed.");
     throw new Unauthorized(undefined, { extensions: { original: e } });
   }
 };
