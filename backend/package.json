@@ -27,7 +27,8 @@
     "fire:emu:kill": "kill-port --port 4000,5000,9099,8080,9199",
     "dev:all": "concurrently -n \"dev,fir\" \"yarn dev\" \"yarn fire:emu:dev\"",
     "script:run:dev": "dotenv -e .env.development -- ts-node --project ./script/tsconfig.json -r tsconfig-paths/register -r ./script/setup.ts",
-    "script:run:prod": "dotenv -e .env.production -- ts-node --project ./script/tsconfig.json -r tsconfig-paths/register -r ./script/setup.ts"
+    "script:run:prod": "dotenv -e .env.production -- ts-node --project ./script/tsconfig.json -r tsconfig-paths/register -r ./script/setup.ts",
+    "seed": "yarn script:run:dev ./script/src/seed"
   },
   "_moduleAliases": {
     "@": "dist"

@@ -1,6 +1,6 @@
+import { auth } from "@script/setup";
 import { subDays } from "date-fns";
 import { Timestamp } from "firebase-admin/firestore";
-import { auth } from "script/setup";
 
 import { Habit, Sprint, User } from "@/datasource";
 import { createDatasourceContext } from "@/resolver";
@@ -34,4 +34,4 @@ const ArrayFrom = (length: number) => Array.from({ length });
         .save();
     }),
   ]);
-})();
+})().catch(console.error);
