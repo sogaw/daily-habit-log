@@ -1,6 +1,6 @@
-import { clearDatasource, datasource } from "../datasource-util";
-import { UserFactory } from "../factory";
-import { execute, mockGetSignedUrl, mockWithAuth } from "../util";
+import { clearDatasource, datasource } from "@test/datasource-util";
+import { UserFactory } from "@test/factory";
+import { execute, mockGetSignedUrl, mockWithAuth } from "@test/util";
 
 beforeAll(async () => {
   await clearDatasource();

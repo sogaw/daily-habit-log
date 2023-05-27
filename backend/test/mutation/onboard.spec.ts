@@ -1,5 +1,5 @@
-import { clearDatasource } from "../datasource-util";
-import { execute, mockWithAuth } from "../util";
+import { clearDatasource } from "@test/datasource-util";
+import { execute, mockWithAuth } from "@test/util";
 
 beforeAll(async () => {
   await clearDatasource();

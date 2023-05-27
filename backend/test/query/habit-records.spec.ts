@@ -1,8 +1,8 @@
-import { Habit, User } from "@/datasource";
+import { clearDatasource, datasource } from "@test/datasource-util";
+import { HabitFactory, HabitRecordFactory, TimestampFactory, UserFactory } from "@test/factory";
+import { execute, mockGenDate, mockWithAuth } from "@test/util";
 
-import { clearDatasource, datasource } from "../datasource-util";
-import { HabitFactory, HabitRecordFactory, TimestampFactory, UserFactory } from "../factory";
-import { execute, mockGenDate, mockWithAuth } from "../util";
+import { Habit, User } from "@/datasource";
 
 beforeAll(async () => {
   await clearDatasource();
