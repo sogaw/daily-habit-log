@@ -1,4 +1,4 @@
-import { clearDatasource } from "@test/datasource-util";
+import { clearDatasource, datasource } from "@test/datasource-util";
 import { execute, mockWithAuth } from "@test/util";
 
 beforeAll(async () => {
@@ -24,7 +24,8 @@ describe("onboard", () => {
     mockWithAuth({ uid: "user-1" });
 
     const res = await execute(q({ name: "me", iconPath: "" }));
+    const me = await datasource.users.findOne(res.data.onboard.id);
 
-    expect(res.data.onboard).toMatchObject({ id: "user-1", name: "me", iconUrl: null });
+    expect(me.data).toMatchObject({ id: "user-1", name: "me", iconPath: "" });
   });
 });
